@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#070b19">
+<title>Flash Frenzy</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#070b19;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+body{padding:max(10px,env(safe-area-inset-top)) 10px max(14px,env(safe-area-inset-bottom))}
+.app{max-width:620px;margin:auto}
+h1{margin:4px 0 0;text-align:center;font-size:36px;letter-spacing:-1.5px}
+.sub{text-align:center;color:#aebbd2;margin:5px 0 12px}
+.panel{background:linear-gradient(180deg,rgba(22,31,55,.97),rgba(11,18,34,.97));border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:14px;margin-bottom:10px;box-shadow:0 18px 45px rgba(0,0,0,.28)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.row{display:flex;gap:8px}
+label{display:block;color:#bac5d8;font-size:13px;font-weight:800;margin-bottom:5px}
+input,select,button{font:inherit}
+input,select{width:100%;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:13px;background:#0a1222;color:#fff}
+button{border:0;border-radius:15px;padding:13px;font-weight:900;touch-action:manipulation}
+.primary{background:linear-gradient(135deg,#67e8f9,#22d3ee);color:#06202a}
+.good{background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff}
+.secondary{background:#293958;color:#fff}
+.danger{background:linear-gradient(135deg,#fb7185,#dc2626);color:#fff}
+.hidden{display:none!important}
+.small{font-size:12px;color:#aab6cb;line-height:1.4}
+.big{font-size:28px;font-weight:1000}
+#homeBtn{position:fixed;left:12px;top:max(12px,env(safe-area-inset-top));z-index:1000;background:rgba(7,11,25,.86);color:#fff;border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);padding:9px 11px;font-size:13px}
+#arena{position:relative;height:min(68vh,650px);min-height:420px;border-radius:24px;overflow:hidden;background:
+radial-gradient(circle at 50% 45%,rgba(30,64,175,.22),transparent 45%),
+linear-gradient(180deg,#080d1d,#050812);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 45px rgba(0,0,0,.7),0 18px 50px rgba(0,0,0,.3);touch-action:none}
+#arena:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;pointer-events:none}
+#target,#decoy{position:absolute;width:92px;height:92px;border-radius:50%;transform:translate(-50%,-50%);display:none;border:6px solid rgba(255,255,255,.88);z-index:5;touch-action:none}
+#target{background:radial-gradient(circle at 35% 30%,#fff 0 7%,#bbf7d0 15%,#22c55e 55%,#15803d 100%);box-shadow:0 0 18px #4ade80,0 0 42px #22c55e,0 0 80px rgba(34,197,94,.55);animation:pop .11s ease-out}
+#decoy{background:radial-gradient(circle at 35% 30%,#fff 0 7%,#fecaca 15%,#ef4444 55%,#991b1b 100%);box-shadow:0 0 18px #fb7185,0 0 44px #ef4444,0 0 80px rgba(239,68,68,.5);animation:pop .11s ease-out}
+@keyframes pop{from{scale:.45;opacity:.2}to{scale:1;opacity:1}}
+#countdown{position:absolute;inset:0;display:grid;place-items:center;font-size:92px;font-weight:1000;text-shadow:0 0 28px #22d3ee;pointer-events:none;z-index:4}
+#arenaMessage{position:absolute;left:12px;right:12px;top:12px;text-align:center;font-size:16px;font-weight:900;color:#dbeafe;z-index:3;pointer-events:none}
+#flash{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:8}
+.flash-red{animation:redflash .22s ease}
+.flash-green{animation:greenflash .18s ease}
+@keyframes redflash{0%{opacity:.55;background:#ef4444}100%{opacity:0}}
+@keyframes greenflash{0%{opacity:.30;background:#22c55e}100%{opacity:0}}
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
+.stat{background:#16233c;border-radius:13px;padding:8px;text-align:center}
+.stat b{display:block;font-size:16px}.stat span{font-size:9px;color:#91a1bc;text-transform:uppercase;letter-spacing:.4px}
+.result{display:flex;justify-content:space-between;align-items:center;background:#182742;padding:12px;border-radius:14px;margin-top:8px}
+.podium{font-size:25px;font-weight:1000;text-align:center;margin:8px 0}
+.tip{padding:9px 11px;border-radius:13px;background:#0c1729;color:#cbd5e1;font-size:12px;line-height:1.4;margin-top:10px}
+.penalty{color:#fda4af}.success{color:#86efac}
+</style>
+</head>
+<body>
+<button id="homeBtn">⌂ Bonkers Box</button>
+<div class="app">
+<h1>💡 Flash Frenzy!</h1>
+<p class="sub">Hit every green light. Fastest reactions win.</p>
+
+<section id="setup" class="panel">
+  <div class="grid2">
+    <div><label>Players</label><select id="playerCount"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
+    <div><label>Number of lights</label><select id="lightCount"><option value="10">10 — Quick</option><option value="20" selected>20 — Standard</option><option value="30">30 — Marathon</option></select></div>
+    <div><label>Mode</label><select id="mode"><option value="classic">Classic — green only</option><option value="bonkers" selected>Bonkers — red decoys</option></select></div>
+    <div><label>Target size</label><select id="targetSize"><option value="104">Large</option><option value="92" selected>Normal</option><option value="76">Pro</option></select></div>
+  </div>
+  <div id="names"></div>
+  <div class="tip"><b>Fair play:</b> every player gets the same target positions, delays and decoys. Only your reaction time is scored — waiting for the next light does not count.</div>
+  <button id="beginGame" class="primary" style="width:100%;margin-top:10px">Start Flash Frenzy</button>
+</section>
+
+<section id="pass" class="panel hidden">
+  <div style="text-align:center;padding:16px 4px">
+    <div class="small">PASS THE PHONE TO</div>
+    <div id="passName" class="big" style="margin:7px 0"></div>
+    <div style="font-size:58px">👆</div>
+    <p class="small">Keep your finger away from the arena until the green light appears. Tapping early adds a penalty.</p>
+    <button id="readyBtn" class="primary" style="width:100%">I'm ready</button>
+  </div>
+</section>
+
+<section id="play" class="hidden">
+  <div class="hud">
+    <div class="stat"><b id="hudPlayer">—</b><span>Player</span></div>
+    <div class="stat"><b id="hudProgress">0/20</b><span>Lights</span></div>
+    <div class="stat"><b id="hudAvg">—</b><span>Average</span></div>
+    <div class="stat"><b id="hudPenalty">0ms</b><span>Penalty</span></div>
+  </div>
+  <div id="arena">
+    <div id="arenaMessage">Get ready…</div>
+    <div id="countdown"></div>
+    <button id="target" aria-label="Green reaction light"></button>
+    <button id="decoy" aria-label="Red decoy light"></button>
+    <div id="flash"></div>
+  </div>
+  <div class="small" style="text-align:center;margin-top:7px">🟢 TAP green &nbsp; • &nbsp; 🔴 DON'T TAP red</div>
+</section>
+
+<section id="playerResult" class="panel hidden">
+  <div style="text-align:center">
+    <div class="small">RUN COMPLETE</div>
+    <div id="resultName" class="big"></div>
+    <div id="resultTime" style="font-size:52px;font-weight:1000;color:#67e8f9;margin:6px 0"></div>
+    <div id="resultBreakdown" class="small"></div>
+    <button id="nextPlayer" class="primary" style="width:100%;margin-top:12px"></button>
+  </div>
+</section>
+
+<section id="final" class="panel hidden">
+  <div id="winnerText" class="podium"></div>
+  <div id="leaderboard"></div>
+  <button id="rematch" class="primary" style="width:100%;margin-top:12px">Rematch — same settings</button>
+  <button id="newSetup" class="secondary" style="width:100%;margin-top:8px">Change settings</button>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var setup=$("setup"),pass=$("pass"),play=$("play"),playerResult=$("playerResult"),final=$("final");
+var arena=$("arena"),target=$("target"),decoy=$("decoy"),countdown=$("countdown"),arenaMessage=$("arenaMessage"),flash=$("flash");
+var players=[],sequence=[],currentPlayer=0,currentTrial=0,state="idle",shownAt=0,timeoutId=null;
+var reactions=[],penalty=0,falseStarts=0,decoyHits=0,audio=null;
+var settings={count:20,mode:"bonkers",size:92};
+var PENALTY_FALSE=500,PENALTY_DECOY=750,TIMEOUT_PENALTY=2500;
+
+function show(id){
+ [setup,pass,play,playerResult,final].forEach(function(x){x.classList.add("hidden")});
+ id.classList.remove("hidden");
+}
+function buildNames(){
+ var n=Number($("playerCount").value);$("names").innerHTML="";
+ for(var i=0;i<n;i++){
+  var d=document.createElement("div");d.style.marginTop="7px";
+  d.innerHTML='<input id="p'+i+'" maxlength="14" value="Player '+(i+1)+'" aria-label="Player '+(i+1)+' name">';
+  $("names").appendChild(d);
+ }
+}
+$("playerCount").onchange=buildNames;buildNames();
+
+function rngFactory(seed){
+ var x=seed|0;
+ return function(){
+  x^=x<<13;x^=x>>>17;x^=x<<5;
+  return ((x>>>0)%1000000)/1000000;
+ };
+}
+function buildSequence(){
+ var seed=(Date.now()&0x7fffffff) ^ (settings.count*7919);
+ var rnd=rngFactory(seed);sequence=[];
+ var lastX=.5,lastY=.5;
+ for(var i=0;i<settings.count;i++){
+  var x,y,tries=0;
+  do{
+   x=.10+rnd()*.80;
+   y=.16+rnd()*.76;
+   tries++;
+  }while(tries<15 && Math.hypot(x-lastX,y-lastY)<.22);
+  lastX=x;lastY=y;
+  sequence.push({
+   x:x,y:y,
+   wait:420+Math.floor(rnd()*720),
+   decoy:settings.mode==="bonkers"&&rnd()<.28,
+   decoyTime:300+Math.floor(rnd()*340),
+   afterDecoy:150+Math.floor(rnd()*300)
+  });
+ }
+}
+function startGame(){
+ settings.count=Number($("lightCount").value);
+ settings.mode=$("mode").value;
+ settings.size=Number($("targetSize").value);
+ players=[];
+ for(var i=0;i<Number($("playerCount").value);i++){
+  players.push({name:($("p"+i).value||("Player "+(i+1))).trim(),score:null,avg:null,best:null,penalty:0,falseStarts:0,decoyHits:0});
+ }
+ target.style.width=target.style.height=settings.size+"px";
+ decoy.style.width=decoy.style.height=settings.size+"px";
+ buildSequence();currentPlayer=0;preparePass();
+}
+function preparePass(){
+ clearTimeout(timeoutId);state="idle";target.style.display=decoy.style.display="none";
+ $("passName").textContent=players[currentPlayer].name;
+ show(pass);
+}
+function ensureAudio(){
+ try{
+  if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();
+  if(audio.state==="suspended")audio.resume();
+ }catch(e){}
+}
+function beep(freq,duration,volume){
+ if(!audio)return;
+ try{
+  var o=audio.createOscillator(),g=audio.createGain();
+  o.frequency.value=freq;o.type="sine";g.gain.value=volume||.08;
+  o.connect(g);g.connect(audio.destination);o.start();
+  g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
+  o.stop(audio.currentTime+duration);
+ }catch(e){}
+}
+function ready(){
+ ensureAudio();show(play);currentTrial=0;reactions=[];penalty=0;falseStarts=0;decoyHits=0;
+ updateHud();countdown.textContent="3";arenaMessage.textContent="Hands off…";
+ var token=Date.now();state="countdown";ready.token=token;
+ setTimeout(function(){if(ready.token===token){countdown.textContent="2";beep(500,.08)}},500);
+ setTimeout(function(){if(ready.token===token){countdown.textContent="1";beep(600,.08)}},1000);
+ setTimeout(function(){if(ready.token===token){countdown.textContent="";beep(800,.1);scheduleTrial()}},1500);
+}
+function scheduleTrial(){
+ if(currentTrial>=settings.count){finishPlayer();return}
+ state="waiting";target.style.display=decoy.style.display="none";
+ arenaMessage.textContent="Wait for green…";
+ clearTimeout(timeoutId);
+ var trial=sequence[currentTrial];
+ timeoutId=setTimeout(function(){
+  if(trial.decoy)showDecoy(trial);else showTarget(trial);
+ },trial.wait);
+}
+function position(el,t){
+ var w=arena.clientWidth,h=arena.clientHeight;
+ var pad=settings.size/2+8;
+ var x=pad+t.x*(w-pad*2),y=pad+t.y*(h-pad*2);
+ el.style.left=x+"px";el.style.top=y+"px";
+}
+function showDecoy(trial){
+ if(state!=="waiting")return;
+ state="decoy";position(decoy,trial);decoy.style.display="block";arenaMessage.textContent="RED — DON'T TAP!";
+ beep(180,.05,.035);
+ timeoutId=setTimeout(function(){
+  decoy.style.display="none";state="waiting";
+  timeoutId=setTimeout(function(){showTarget(trial)},trial.afterDecoy);
+ },trial.decoyTime);
+}
+function showTarget(trial){
+ if(state!=="waiting"&&state!=="decoy")return;
+ decoy.style.display="none";state="target";position(target,trial);target.style.display="block";
+ shownAt=performance.now();arenaMessage.textContent="GO!";
+ beep(1050,.045,.045);
+ timeoutId=setTimeout(function(){
+  if(state==="target"){
+   target.style.display="none";
+   reactions.push(TIMEOUT_PENALTY);penalty+=TIMEOUT_PENALTY;
+   state="between";badFlash();currentTrial++;updateHud();
+   arenaMessage.textContent="Missed! +"+TIMEOUT_PENALTY+"ms";
+   timeoutId=setTimeout(scheduleTrial,420);
+  }
+ },4000);
+}
+function targetHit(e){
+ e.preventDefault();e.stopPropagation();
+ if(state!=="target")return;
+ clearTimeout(timeoutId);
+ var rt=Math.max(60,performance.now()-shownAt);
+ reactions.push(rt);target.style.display="none";state="between";
+ goodFlash();beep(1350,.04,.055);
+ if(navigator.vibrate)navigator.vibrate(20);
+ currentTrial++;updateHud();
+ arenaMessage.textContent=Math.round(rt)+" ms";
+ timeoutId=setTimeout(scheduleTrial,230);
+}
+function decoyHit(e){
+ e.preventDefault();e.stopPropagation();
+ if(state!=="decoy")return;
+ penalty+=PENALTY_DECOY;decoyHits++;badFlash();beep(120,.09,.06);
+ if(navigator.vibrate)navigator.vibrate([35,25,35]);
+ arenaMessage.textContent="Wrong light! +"+PENALTY_DECOY+"ms";
+ updateHud();
+}
+function earlyTap(e){
+ if(state==="waiting"||state==="countdown"){
+  e.preventDefault();penalty+=PENALTY_FALSE;falseStarts++;badFlash();beep(100,.08,.055);
+  arenaMessage.textContent="FALSE START +"+PENALTY_FALSE+"ms";
+  updateHud();
+ }
+}
+function goodFlash(){flash.className="";void flash.offsetWidth;flash.className="flash-green"}
+function badFlash(){flash.className="";void flash.offsetWidth;flash.className="flash-red"}
+function updateHud(){
+ $("hudPlayer").textContent=players[currentPlayer]?players[currentPlayer].name:"—";
+ $("hudProgress").textContent=currentTrial+"/"+settings.count;
+ var valid=reactions.filter(function(x){return x<TIMEOUT_PENALTY});
+ var avg=valid.length?valid.reduce(function(a,b){return a+b},0)/valid.length:null;
+ $("hudAvg").textContent=avg?Math.round(avg)+"ms":"—";
+ $("hudPenalty").textContent=Math.round(penalty)+"ms";
+}
+function finishPlayer(){
+ state="done";target.style.display=decoy.style.display="none";show(playerResult);
+ var reactionTotal=reactions.reduce(function(a,b){return a+b},0);
+ var total=reactionTotal+penalty;
+ var avg=reactions.length?reactionTotal/reactions.length:0;
+ var best=reactions.length?Math.min.apply(null,reactions):0;
+ var p=players[currentPlayer];
+ p.score=total;p.avg=avg;p.best=best;p.penalty=penalty;p.falseStarts=falseStarts;p.decoyHits=decoyHits;
+ $("resultName").textContent=p.name;
+ $("resultTime").textContent=(total/1000).toFixed(3)+"s";
+ $("resultBreakdown").innerHTML="Average reaction <b>"+Math.round(avg)+"ms</b> · Best <b>"+Math.round(best)+"ms</b> · Penalties <b class='"+(penalty?"penalty":"success")+"'>"+Math.round(penalty)+"ms</b>";
+ $("nextPlayer").textContent=currentPlayer+1<players.length?"Pass to "+players[currentPlayer+1].name:"See final results";
+ beep(700,.08,.06);setTimeout(function(){beep(950,.12,.06)},90);
+}
+function next(){
+ currentPlayer++;
+ if(currentPlayer<players.length)preparePass();else showFinal();
+}
+function showFinal(){
+ show(final);
+ var order=players.slice().sort(function(a,b){return a.score-b.score});
+ $("winnerText").textContent="🏆 "+order[0].name+" wins — "+(order[0].score/1000).toFixed(3)+"s!";
+ $("leaderboard").innerHTML="";
+ order.forEach(function(p,i){
+  var d=document.createElement("div");d.className="result";
+  d.innerHTML="<div><b>#"+(i+1)+" "+p.name+"</b><br><span class='small'>Avg "+Math.round(p.avg)+"ms · Best "+Math.round(p.best)+"ms</span></div><div style='font-weight:1000'>"+(p.score/1000).toFixed(3)+"s</div>";
+  $("leaderboard").appendChild(d);
+ });
+ try{
+  var key="bonkersFlashFrenzyBest";
+  var best=JSON.parse(localStorage.getItem(key)||"null");
+  if(!best||order[0].score<best.score)localStorage.setItem(key,JSON.stringify({name:order[0].name,score:order[0].score,date:Date.now()}));
+ }catch(e){}
+ if(navigator.vibrate)navigator.vibrate([70,40,70,40,180]);
+}
+function rematch(){
+ buildSequence();currentPlayer=0;preparePass();
+}
+function newSetup(){
+ clearTimeout(timeoutId);state="idle";show(setup);
+}
+$("beginGame").onclick=startGame;$("readyBtn").onclick=ready;$("nextPlayer").onclick=next;
+$("rematch").onclick=rematch;$("newSetup").onclick=newSetup;
+target.addEventListener("pointerdown",targetHit,{passive:false});
+decoy.addEventListener("pointerdown",decoyHit,{passive:false});
+arena.addEventListener("pointerdown",earlyTap,{passive:false});
+$("homeBtn").onclick=function(){try{window.parent.postMessage({type:"BONKERS_FLASH_FRENZY_HOME"},"*")}catch(e){history.back()}};
+})();
+</script>
+</body>
+</html>

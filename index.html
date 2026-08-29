@@ -3264,6 +3264,7 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
 }
 const GAMES = [
     { id: "drawdash", name: "Draw Dash 1.0", desc: "Draw the whole race — finger speed is throttle. 12 circuits!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "2-4"] },
+    { id: "flash", name: "Flash Frenzy!", desc: "Hit every green light — fastest reactions win!", emoji: "💡", emoji2: "👆", color: "#67E8F9", bg: "linear-gradient(135deg,#071827,#12314a)", tags: ["Reaction", "2-6"] },
     { id: "dive", name: "Treasure Dive!", desc: "Dive deep for treasure — watch out for monsters!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "noodle", name: "Noodle Noggin", desc: "Watch the emoji sequence and tap it back!", emoji: "🧠", emoji2: "🍜", color: "#E040FB", bg: "linear-gradient(135deg,#1a0533,#0d0220)", tags: ["Memory", "2-6"] },
     { id: "zappy", name: "Zappy Tappy", desc: "Tap the target emoji before it vanishes!", emoji: "⚡", emoji2: "👆", color: "#FF6B35", bg: "linear-gradient(135deg,#3d1200,#1a0500)", tags: ["Reaction", "2-6"] },
@@ -3317,7 +3318,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : id === "flash" ? "flash" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3362,6 +3363,8 @@ function BonkersBox() {
             React.createElement("div", { style: { maxWidth: 520, margin: "0 auto" } },
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
+        screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
+            React.createElement("iframe", { src: "flash-frenzy/index.html", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#070b19" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
             React.createElement("iframe", { src: "draw-dash/index.html", title: "Draw Dash 1.0", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#07111f" } }))));
 }
@@ -3412,6 +3415,7 @@ try {
    <h2>Games included</h2>
    <div class="bb-game-list">
     <div class="bb-game-rule"><strong>🏁 Draw Dash 1.0</strong><small>Draw the entire selected race in one continuous stroke. Follow the direction arrows, move quickly on straights and slow your finger before corners. Includes 12 distinct circuits.</small></div>
+    <div class="bb-game-rule"><strong>💡 Flash Frenzy!</strong><small>Each player gets the same sequence of lights. Tap green as quickly as possible. In Bonkers mode, ignore red decoys — false starts and red taps add time penalties. Lowest total reaction time wins.</small></div>
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🧠 Noodle Noggin</strong><small>Watch an emoji sequence, remember it, then tap the same sequence back in the correct order.</small></div>
     <div class="bb-game-rule"><strong>⚡ Zappy Tappy</strong><small>A reaction game. Tap the correct target before it disappears. Fastest accurate players score best.</small></div>
@@ -3500,6 +3504,18 @@ try {
      // React state is internal; a clean reload returns to the native Bonkers Box home screen.
      window.location.reload();
    }
+ });
+})();
+</script>
+
+
+
+<script id="bb-flash-frenzy-message-bridge">
+(function(){
+ window.addEventListener('message',function(event){
+   if(!event.data||event.data.type!=='BONKERS_FLASH_FRENZY_HOME')return;
+   var frame=document.querySelector('iframe[title="Flash Frenzy!"]');
+   if(frame)window.location.reload();
  });
 })();
 </script>
