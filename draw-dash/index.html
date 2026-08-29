@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07111f">
+<title>Draw Dash V7.2 Endurance Edition</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#172554,#07111f 52%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:max(10px,env(safe-area-inset-top)) 10px max(16px,env(safe-area-inset-bottom))}
+.app{max-width:640px;margin:auto}
+h1{margin:0;text-align:center;font-size:34px;letter-spacing:-1.5px}
+.sub{text-align:center;color:#b8c5dc;margin:5px 0 12px}
+.panel{background:rgba(16,27,48,.95);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:13px;margin-bottom:10px;box-shadow:0 14px 36px rgba(0,0,0,.25)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.row{display:flex;gap:8px}
+label{display:block;color:#b8c5dc;font-size:13px;font-weight:800;margin-bottom:5px}
+select,input,button{font:inherit}
+select,input{width:100%;border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:11px;background:#0b1425;color:#fff}
+button{border:0;border-radius:14px;padding:13px;font-weight:900;touch-action:manipulation}
+button:disabled{opacity:.42}
+.primary{background:linear-gradient(135deg,#facc15,#f97316);color:#111827}
+.good{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}
+.danger{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
+.secondary{background:#283956;color:#fff}
+.hidden{display:none!important}
+#status,#raceStatus{text-align:center;font-weight:900;min-height:24px}
+#playerCard{text-align:center;font-size:21px;font-weight:1000}
+.small{font-size:12px;color:#aab7ce;text-align:center;margin-top:7px}
+.badge{display:inline-block;background:#263754;border-radius:999px;padding:5px 9px;margin:2px;font-size:11px}
+#scores{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}
+.score{background:#22324d;border-radius:12px;padding:8px;font-size:12px}
+canvas{display:block;width:100%;height:auto;max-height:68vh;border-radius:22px;touch-action:none;box-shadow:0 20px 55px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.08)}
+#results{display:grid;gap:8px}
+.result{display:flex;justify-content:space-between;align-items:center;background:#22324d;border-radius:14px;padding:12px}
+.winner{text-align:center;font-size:27px;font-weight:1000;margin:4px 0 10px}
+.trackHelp{background:#101b30;border-radius:14px;padding:10px;color:#d6def0;line-height:1.4;font-size:13px;margin-top:10px}
+.shake{animation:shake .18s linear 1}
+@keyframes shake{0%{transform:translate(0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-3px,1px)}100%{transform:translate(0)}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🏁 Draw Dash V7.2 Endurance Edition</h1>
+<p class="sub">Longer circuits, smoother acceleration and stronger finger-speed control.</p>
+
+<section id="setupPanel" class="panel">
+  <div class="grid2">
+    <div><label>Racers</label><select id="playerCount"><option>2</option><option>3</option><option selected>4</option></select></div>
+    <div><label>Laps to draw</label><select id="lapCount"><option>1</option><option selected>2</option><option>3</option><option>5</option></select></div>
+    <div><label>Course</label><select id="trackSelect">
+      <option value="silverstone">Silverstone Style</option>
+      <option value="monza">Monza Style</option>
+      <option value="spa">Spa Style</option>
+      <option value="monaco">Monaco Style</option>
+      <option value="bahrain">Bahrain Style</option>
+    </select></div>
+    <div><label>Race event</label><select id="eventSelect">
+      <option value="random" selected>Random</option><option value="clear">Clean Race</option>
+      <option value="rain">Heavy Rain</option><option value="boost">Double Boost</option>
+      <option value="oil">Oil Everywhere</option><option value="wind">Strong Wind</option>
+    </select></div>
+  </div>
+  <div id="trackHelp" class="trackHelp"></div>
+  <div id="nameFields"></div>
+  <button id="startGame" class="primary" style="width:100%;margin-top:10px">Set up race</button>
+</section>
+
+<section id="drawPanel" class="panel hidden">
+  <div id="playerCard"></div>
+  <div id="status"></div>
+  <div class="row" style="margin-top:10px">
+    <button id="drawBtn" class="primary">Start drawing</button>
+    <button id="saveBtn" class="good" disabled>Save route</button>
+  </div>
+  <div id="metrics" class="small">Smoothness — · Pace — · Risk — · Crossings —</div>
+</section>
+
+<section id="racePanel" class="panel hidden">
+  <div id="raceStatus">Ready</div>
+  <div id="badges" style="text-align:center"></div>
+  <div id="scores"></div>
+  <div class="row" style="margin-top:10px">
+    <button id="raceBtn" class="danger">Start race</button>
+    <button id="newBtn" class="secondary">New setup</button>
+  </div>
+</section>
+
+<section id="resultsPanel" class="panel hidden">
+  <div id="winner" class="winner"></div>
+  <div id="results"></div>
+  <div class="row" style="margin-top:10px">
+    <button id="replayBtn" class="primary">Replay routes</button>
+    <button id="newRaceBtn" class="secondary">New race</button>
+  </div>
+</section>
+
+<canvas id="canvas" width="900" height="1200"></canvas>
+<div class="small">Begin on the chequered gate. Draw every selected lap without lifting your finger.</div>
+<div class="panel" style="padding:9px;margin-top:8px">
+  <div style="text-align:center;font-size:12px;font-weight:900">Your drawing speed becomes the car's throttle</div>
+  <div style="display:flex;justify-content:center;gap:12px;margin-top:6px;font-size:12px">
+    <span>🔵 Slow / braking</span><span>🟡 Medium</span><span>🔴 Fast / full throttle</span>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var canvas=$("canvas"),ctx=canvas.getContext("2d");
+var playerCount=$("playerCount"),lapCount=$("lapCount"),trackSelect=$("trackSelect"),eventSelect=$("eventSelect");
+var setupPanel=$("setupPanel"),drawPanel=$("drawPanel"),racePanel=$("racePanel"),resultsPanel=$("resultsPanel");
+var nameFields=$("nameFields"),trackHelp=$("trackHelp"),status=$("status"),metrics=$("metrics"),playerCard=$("playerCard");
+var raceStatus=$("raceStatus"),badges=$("badges"),scores=$("scores"),winner=$("winner"),results=$("results");
+var startGame=$("startGame"),drawBtn=$("drawBtn"),saveBtn=$("saveBtn"),raceBtn=$("raceBtn"),newBtn=$("newBtn"),replayBtn=$("replayBtn"),newRaceBtn=$("newRaceBtn");
+
+var COLORS=["#ef4444","#38bdf8","#facc15","#a78bfa"];
+var CARS=["🏎️","🚙","🚗","🚕"];
+var CAR_CLASSES=[
+ {name:"Formula",top:1.16,grip:.82,accel:1.12},
+ {name:"SUV",top:.88,grip:1.22,accel:.82},
+ {name:"Sports",top:1.04,grip:1.02,accel:1.04},
+ {name:"Taxi",top:.96,grip:1.10,accel:.94}
+];
+
+var TRACKS={
+ silverstone:{name:"Silverstone Style",desc:"Fast British-style circuit with a long start straight, sweeping changes of direction and a technical final sector.",width:108,
+   pts:[[180,790],[560,790],[655,700],[625,575],[485,520],[610,415],[650,275],[540,145],[330,120],[210,180],[120,310],[165,440],[310,485],[185,585],[105,690],[180,790]]},
+ monza:{name:"Monza Style",desc:"Very long straights broken by heavy-braking chicanes. Finger-speed control matters enormously here.",width:110,
+   pts:[[150,790],[610,790],[675,700],[650,585],[535,535],[640,455],[655,280],[590,135],[355,110],[150,145],[95,270],[110,450],[210,535],[105,615],[95,715],[150,790]]},
+ spa:{name:"Spa Style",desc:"Long flowing lap with a steep-looking opening sweep, fast middle sector and slow final chicane.",width:106,
+   pts:[[150,790],[560,790],[655,710],[620,610],[505,535],[610,430],[650,250],[560,115],[345,90],[190,145],[100,285],[145,425],[300,470],[210,565],[95,660],[150,790]]},
+ monaco:{name:"Monaco Style",desc:"Tight street-style circuit with short straights and many slow corners. Precision beats raw speed.",width:90,
+   pts:[[170,800],[540,800],[620,735],[595,650],[475,610],[580,535],[610,420],[520,350],[390,385],[300,315],[165,340],[105,255],[155,145],[365,115],[555,155],[650,270],[605,390],[470,455],[330,520],[195,600],[115,700],[170,800]]},
+ bahrain:{name:"Bahrain Style",desc:"Wide desert-style track with a long main straight, hard braking zones and multiple acceleration sections.",width:112,
+   pts:[[145,790],[610,790],[675,695],[620,585],[470,525],[610,445],[650,300],[560,165],[380,125],[245,175],[120,290],[155,430],[320,485],[190,565],[95,665],[145,790]]}
+};
+
+// Scale the circuits to fill the larger portrait canvas.
+Object.keys(TRACKS).forEach(function(key){
+  var track=TRACKS[key];
+  track.pts=track.pts.map(function(p){
+    return [
+      55+(p[0]-55)*1.22,
+      55+(p[1]-55)*1.37
+    ];
+  });
+  track.width=Math.round(track.width*1.08);
+});
+
+var racers=[],current=0,points=[],drawing=false,enabled=false,raceRunning=false;
+var selectedTrack=TRACKS.silverstone,selectedLaps=2,selectedEvent="clear";
+var animation=null,lastFrame=0,lineFade=1,particles=[],raceToken=0,lastScoreUpdate=0;
+var hazards=[],boosts=[];
+
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):(ctx.rect(x,y,w,h));}
+
+function buildNames(){
+ nameFields.innerHTML="";
+ for(var i=0;i<Number(playerCount.value);i++){
+  var d=document.createElement("div");d.style.marginTop="7px";
+  d.innerHTML='<input id="name'+i+'" value="Player '+(i+1)+'" maxlength="14">';
+  nameFields.appendChild(d);
+ }
+}
+function updateHelp(){trackHelp.innerHTML="<b>"+TRACKS[trackSelect.value].name+"</b><br>"+TRACKS[trackSelect.value].desc;}
+playerCount.onchange=buildNames;trackSelect.onchange=function(){selectedTrack=TRACKS[trackSelect.value];updateHelp();render()};
+buildNames();updateHelp();
+
+function polyDistance(p,a,b){
+ var vx=b[0]-a[0],vy=b[1]-a[1],wx=p.x-a[0],wy=p.y-a[1];
+ var c1=vx*wx+vy*wy,c2=vx*vx+vy*vy,t=Math.max(0,Math.min(1,c1/c2));
+ var dx=p.x-(a[0]+t*vx),dy=p.y-(a[1]+t*vy);
+ return Math.sqrt(dx*dx+dy*dy);
+}
+function onRoad(p){
+ var best=1e9,pts=selectedTrack.pts;
+ for(var i=1;i<pts.length;i++)best=Math.min(best,polyDistance(p,pts[i-1],pts[i]));
+ return best<=selectedTrack.width*.53;
+}
+function drawCourse(){
+ var bg=selectedTrack===TRACKS.monaco?"#475569":selectedTrack===TRACKS.bahrain?"#b98b45":"#2f7d42";
+ ctx.fillStyle=bg;ctx.fillRect(0,0,900,1200);
+
+ if(selectedTrack===TRACKS.monaco){
+  ctx.fillStyle="#1f2937";
+  for(var x=20;x<880;x+=135)for(var y=35;y<1160;y+=160){ctx.fillRect(x,y,70,90);ctx.fillStyle="#facc15";ctx.fillRect(x+12,y+15,8,8);ctx.fillRect(x+42,y+15,8,8);ctx.fillStyle="#1f2937";}
+ }else if(selectedTrack===TRACKS.bahrain){
+  ctx.fillStyle="rgba(245,222,179,.45)";
+  for(var d=0;d<35;d++){ctx.beginPath();ctx.arc((d*127)%900,(d*191)%1200,5+(d%4)*3,0,7);ctx.fill()}
+ }else{
+  ctx.fillStyle="rgba(255,255,255,.13)";
+  for(var g=0;g<28;g++){ctx.beginPath();ctx.arc((g*113)%900,(g*173)%1200,4+(g%3)*2,0,7);ctx.fill()}
+ }
+
+ var pts=selectedTrack.pts;
+ ctx.save();
+ ctx.lineCap="round";ctx.lineJoin="round";
+ ctx.strokeStyle="rgba(0,0,0,.35)";ctx.lineWidth=selectedTrack.width+24;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.stroke();
+ ctx.strokeStyle="#5b6470";ctx.lineWidth=selectedTrack.width;ctx.stroke();
+ ctx.setLineDash([24,20]);ctx.strokeStyle="rgba(255,255,255,.68)";ctx.lineWidth=5;ctx.stroke();ctx.setLineDash([]);
+ ctx.restore();
+
+ // start gate at first segment, perpendicular
+ var a=pts[0],b=pts[1],ang=Math.atan2(b[1]-a[1],b[0]-a[0]),nx=-Math.sin(ang),ny=Math.cos(ang);
+ var half=selectedTrack.width*.48,cell=12;
+ for(var r=0;r<10;r++)for(var c=0;c<2;c++){
+  var along=(r-4.5)*cell,across=(c-.5)*cell;
+  var px=a[0]+nx*along+Math.cos(ang)*across,py=a[1]+ny*along+Math.sin(ang)*across;
+  ctx.save();ctx.translate(px,py);ctx.rotate(ang);ctx.fillStyle=((r+c)%2)?"#111":"#fff";ctx.fillRect(-cell/2,-cell/2,cell,cell);ctx.restore();
+ }
+ ctx.fillStyle="#fff";ctx.font="bold 22px sans-serif";ctx.textAlign="center";ctx.fillText("START",a[0]+55,a[1]+35);
+
+ for(var j=0;j<boosts.length;j++){var q=boosts[j];ctx.fillStyle="#22d3ee";ctx.beginPath();ctx.arc(q.x,q.y,25,0,7);ctx.fill();ctx.fillStyle="#fff";ctx.font="22px sans-serif";ctx.fillText("⚡",q.x,q.y+8)}
+ for(var h=0;h<hazards.length;h++){var z=hazards[h];ctx.fillStyle="#111827";ctx.beginPath();ctx.ellipse(z.x,z.y,28,18,.3,0,7);ctx.fill();ctx.font="20px sans-serif";ctx.fillText("🛢️",z.x,z.y+7)}
+}
+
+function preparePath(path){
+ var cum=[0],cross=[],speeds=[0],total=0,gate=selectedTrack.pts[0],next=selectedTrack.pts[1];
+ var ang=Math.atan2(next[1]-gate[1],next[0]-gate[0]),nx=-Math.sin(ang),ny=Math.cos(ang);
+ function side(p){return (p.x-gate[0])*Math.cos(ang)+(p.y-gate[1])*Math.sin(ang)}
+ function lateral(p){return Math.abs((p.x-gate[0])*nx+(p.y-gate[1])*ny)}
+ var raw=[];
+ for(var i=1;i<path.length;i++){
+  var dx=path[i].x-path[i-1].x,dy=path[i].y-path[i-1].y,dist=Math.hypot(dx,dy),dt=Math.max(8,path[i].t-path[i-1].t);
+  total+=dist;cum.push(total);raw.push(dist/dt*1000);
+  if(side(path[i-1])*side(path[i])<=0&&lateral(path[i])<selectedTrack.width*.65&&total>50){if(!cross.length||total-cross[cross.length-1]>120)cross.push(total)}
+ }
+ for(var s=0;s<raw.length;s++){var sum=0,count=0;for(var w=Math.max(0,s-10);w<=Math.min(raw.length-1,s+10);w++){sum+=raw[w];count++}speeds.push(sum/count)}
+ var sorted=raw.slice().sort(function(a,b){return a-b}),low=sorted[Math.floor(sorted.length*.08)]||100,high=sorted[Math.floor(sorted.length*.92)]||900;if(high-low<100)high=low+100;
+ return {cum:cum,cross:cross,speeds:speeds,total:Math.max(1,total),speedLow:low,speedHigh:high}
+}
+function pointAt(r,d){
+ d=Math.max(0,Math.min(r.info.total,d));var c=r.info.cum,lo=0,hi=c.length-1;
+ while(lo<hi){var m=(lo+hi)>>1;if(c[m]<d)lo=m+1;else hi=m}
+ var i=Math.max(1,lo),a=r.path[i-1],b=r.path[i],span=Math.max(.001,c[i]-c[i-1]),t=(d-c[i-1])/span;
+ var rawSpeed=r.info.speeds[Math.min(i,r.info.speeds.length-1)]||r.info.speedLow;
+ var throttle=Math.max(0,Math.min(1,(rawSpeed-r.info.speedLow)/(r.info.speedHigh-r.info.speedLow)));
+ return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,a:Math.atan2(b.y-a.y,b.x-a.x),throttle:throttle,rawSpeed:rawSpeed,index:i}
+}
+function analyse(path){
+ var turn=0,speed=0;
+ for(var i=1;i<path.length;i++){var dx=path[i].x-path[i-1].x,dy=path[i].y-path[i-1].y,dt=Math.max(8,path[i].t-path[i-1].t);speed+=Math.hypot(dx,dy)/dt*1000;
+  if(i>1){var a1=Math.atan2(path[i-1].y-path[i-2].y,path[i-1].x-path[i-2].x),a2=Math.atan2(dy,dx),da=Math.abs(a2-a1);if(da>Math.PI)da=6.283-da;turn+=da}}
+ var avg=speed/Math.max(1,path.length-1),smooth=Math.max(1,Math.min(100,Math.round(100-turn*3.2))),pace=Math.max(1,Math.min(100,Math.round(avg/9)));
+ return {smooth:smooth,pace:pace,risk:Math.min(100,Math.round(pace*.45+(100-smooth)*.55))}
+}
+function addP(x,y,color,n){for(var i=0;i<n;i++)particles.push({x:x,y:y,vx:(Math.random()-.5)*110,vy:(Math.random()-.5)*110,l:.6+Math.random()*.5,c:color})}
+function speedColour(t){if(t<.38)return "#38bdf8";if(t<.68)return "#facc15";return "#ef4444"}
+function drawSpeedPath(path,info,alpha,width){if(!path||path.length<2)return;ctx.save();ctx.globalAlpha=alpha;ctx.lineWidth=width;ctx.lineCap="round";ctx.lineJoin="round";for(var i=1;i<path.length;i++){var raw=info&&info.speeds?info.speeds[Math.min(i,info.speeds.length-1)]:0;var throttle=info?Math.max(0,Math.min(1,(raw-info.speedLow)/(info.speedHigh-info.speedLow))):.5;ctx.strokeStyle=speedColour(throttle);ctx.beginPath();ctx.moveTo(path[i-1].x,path[i-1].y);ctx.lineTo(path[i].x,path[i].y);ctx.stroke()}ctx.restore()}
+function render(){
+ drawCourse();
+ for(var i=0;i<racers.length;i++)if(racers[i].path)drawSpeedPath(racers[i].path,racers[i].info,raceRunning?.18*lineFade:.24,7);
+ if(points.length){var liveInfo=preparePath(points);drawSpeedPath(points,liveInfo,1,9)}
+ for(var k=0;k<racers.length;k++){var r=racers[k];if(!r.state)continue;var s=r.state,pose=pointAt(r,s.d),x=s.x||pose.x,y=s.y||pose.y,a=s.h||pose.a;
+  ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.globalAlpha=.35;ctx.fillStyle="#000";ctx.beginPath();ctx.ellipse(2,7,29,17,0,0,7);ctx.fill();ctx.globalAlpha=1;
+  if(s.boost>0){ctx.fillStyle="#facc15";ctx.beginPath();ctx.moveTo(-28,-8);ctx.lineTo(-52,0);ctx.lineTo(-28,8);ctx.fill()}
+  ctx.fillStyle="#111";ctx.fillRect(-18,-18,9,8);ctx.fillRect(9,-18,9,8);ctx.fillRect(-18,10,9,8);ctx.fillRect(9,10,9,8);
+  var g=ctx.createLinearGradient(-25,-15,25,15);g.addColorStop(0,r.color);g.addColorStop(1,"#fff");ctx.fillStyle=g;ctx.beginPath();ctx.roundRect?ctx.roundRect(-25,-14,50,28,9):ctx.rect(-25,-14,50,28);ctx.fill();
+  ctx.fillStyle="#111827";ctx.fillRect(-8,-11,18,22);ctx.fillStyle="#fff";ctx.fillRect(17,-7,6,5);ctx.fillRect(17,3,6,5);ctx.restore()}
+ for(var z=particles.length-1;z>=0;z--){var e=particles[z];ctx.globalAlpha=Math.max(0,e.l);ctx.fillStyle=e.c;ctx.beginPath();ctx.arc(e.x,e.y,4,0,7);ctx.fill();ctx.globalAlpha=1}
+}
+function buildHazards(){
+ boosts=[];hazards=[];var pts=selectedTrack.pts;
+ for(var i=2;i<pts.length-1;i+=Math.max(2,Math.floor(pts.length/4)))boosts.push({x:pts[i][0],y:pts[i][1]});
+ if(selectedEvent==="boost")boosts=boosts.concat(boosts.map(function(q){return{x:q.x+28,y:q.y+18}}));
+ if(selectedEvent==="oil"||selectedEvent==="random")for(var j=3;j<pts.length-1;j+=4)hazards.push({x:pts[j][0]+18,y:pts[j][1]-12});
+}
+function pointer(e){var r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*900/r.width,y:(e.clientY-r.top)*1200/r.height,t:performance.now()}}
+function begin(e){if(!enabled)return;e.preventDefault();points=[pointer(e)];drawing=true;status.textContent="Keep drawing all "+selectedLaps+" laps. Your finger speed is being recorded continuously."}
+function move(e){if(!drawing)return;e.preventDefault();var p=pointer(e),q=points[points.length-1];if((p.x-q.x)**2+(p.y-q.y)**2>20){points.push(p);render()}}
+function end(e){if(!drawing)return;e.preventDefault();drawing=false;enabled=false;if(points.length<50){status.textContent="Route too short. Try again.";return}
+ var info=preparePath(points),a=analyse(points);metrics.textContent="Smoothness "+a.smooth+" · Finger pace "+a.pace+" · Speed range recorded · Crossings "+info.cross.length+"/"+selectedLaps;
+ if(info.cross.length<selectedLaps){status.textContent="Not enough finish-line crossings. Draw the whole race again.";saveBtn.disabled=true}else{status.textContent="Full race recorded.";saveBtn.disabled=false}}
+function save(){
+ var info=preparePath(points);if(info.cross.length<selectedLaps)return;
+ racers[current].path=points.slice();racers[current].info=info;racers[current].analysis=analyse(points);current++;
+ if(current<racers.length)preparePlayer();else{drawPanel.classList.add("hidden");racePanel.classList.remove("hidden");raceStatus.textContent="Routes ready";renderScores();render()}
+}
+function preparePlayer(){points=[];enabled=false;drawing=false;saveBtn.disabled=true;playerCard.textContent=CARS[current]+" "+racers[current].name+" — "+racers[current].class.name;status.textContent="Draw the entire "+selectedLaps+"-lap race. Move quickly on straights and slow your finger for corners.";metrics.textContent="Smoothness — · Pace — · Risk — · Crossings —";render()}
+function renderScores(){scores.innerHTML="";racers.forEach(function(r){var d=document.createElement("div");d.className="score";var s=r.state,lap=s?Math.min(selectedLaps,s.completed+1):1;d.innerHTML='<b style="color:'+r.color+'">'+r.car+" "+r.name+'</b><br>'+r.class.name+(s?'<br>Lap '+lap+'/'+selectedLaps+(r.finish?' · #'+r.finish:''):'');scores.appendChild(d)})}
+function startSetup(){
+ selectedTrack=TRACKS[trackSelect.value];selectedLaps=Number(lapCount.value);selectedEvent=eventSelect.value;
+ if(selectedEvent==="random"){var ev=["clear","rain","wind","boost","oil"];selectedEvent=ev[Math.floor(Math.random()*ev.length)]}
+ buildHazards();racers=[];for(var i=0;i<Number(playerCount.value);i++){racers.push({name:$("name"+i).value||"Player "+(i+1),color:COLORS[i],car:CARS[i],class:CAR_CLASSES[i],path:null,info:null,analysis:null,state:null,finish:null,time:0})}
+ badges.innerHTML='<span class="badge">'+selectedTrack.name+'</span><span class="badge">'+selectedLaps+' laps</span><span class="badge">'+selectedEvent+'</span>';
+ setupPanel.classList.add("hidden");drawPanel.classList.remove("hidden");current=0;preparePlayer()
+}
+function near(p,o,r){return Math.hypot(p.x-o.x,p.y-o.y)<r}
+function startRace(){
+ if(raceRunning)return;raceRunning=true;raceToken++;var token=raceToken;raceBtn.disabled=true;resultsPanel.classList.add("hidden");lineFade=1;
+ racers.forEach(function(r){var p=pointAt(r,0);r.finish=null;r.state={d:0,x:p.x,y:p.y,h:p.a,v:0,throttle:0,targetSpeed:0,completed:0,finished:false,boost:0,oil:0,wall:false,collisions:0,time:0}})
+ raceStatus.textContent="3…";setTimeout(function(){if(token===raceToken)raceStatus.textContent="2…"},500);setTimeout(function(){if(token===raceToken)raceStatus.textContent="1…"},1000);
+ setTimeout(function(){if(token!==raceToken)return;lastFrame=performance.now();animation=requestAnimationFrame(step)},1500)
+}
+function step(now){
+ if(!raceRunning)return;var dt=Math.min(.032,(now-lastFrame)/1000);lastFrame=now;lineFade=Math.max(0,lineFade-dt*.2);
+ racers.forEach(function(r){
+  var s=r.state;if(s.finished)return;var pose=pointAt(r,s.d),follow=Math.min(1,dt*(selectedEvent==="rain"?3.8:6));
+  s.x+=(pose.x-s.x)*follow;s.y+=(pose.y-s.y)*follow;var da=((pose.a-s.h+Math.PI*3)%(Math.PI*2))-Math.PI;s.h+=da*Math.min(1,dt*5);
+  // Finger speed remains the main throttle input, but is filtered so the car
+  // accelerates and brakes progressively instead of reacting to every sample.
+  s.throttle+=(pose.throttle-s.throttle)*Math.min(1,dt*2.4);
+
+  var idx=pose.index,curvature=0;
+  if(idx>4&&idx<r.path.length-4){
+    var p0=r.path[idx-4],p1=r.path[idx],p2=r.path[idx+4];
+    var a1=Math.atan2(p1.y-p0.y,p1.x-p0.x),a2=Math.atan2(p2.y-p1.y,p2.x-p1.x);
+    curvature=Math.abs(a2-a1);
+    if(curvature>Math.PI)curvature=Math.PI*2-curvature;
+  }
+
+  var weatherFactor=selectedEvent==="wind"?.88:1;
+  var grip=r.class.grip*(selectedEvent==="rain"?.76:1);
+  var requested=(8+s.throttle*40)*r.class.top*weatherFactor;
+
+  // Smooth speed cap through corners. Fast finger movement still matters,
+  // but an over-fast corner creates a gradual loss instead of a sudden jump.
+  var cornerSeverity=Math.min(1,curvature/1.15);
+  var cornerCap=42-(cornerSeverity*27/grip);
+  var target=Math.max(7,Math.min(requested,cornerCap));
+
+  if(s.throttle>.72&&cornerSeverity>.55){
+    target*=.78;
+    if(Math.random()<.025)addP(s.x,s.y,"#d1d5db",1);
+  }
+
+  if(s.boost>0){s.boost-=dt;target+=12}
+  if(s.oil>0){s.oil-=dt;target*=.52}
+
+  s.targetSpeed+=(target-s.targetSpeed)*Math.min(1,dt*2.0);
+  boosts.forEach(function(b){if(near(s,b,30)&&s.boost<=0){s.boost=1;addP(s.x,s.y,"#22d3ee",10)}})
+  hazards.forEach(function(o){if(near(s,o,30)&&s.oil<=0){s.oil=.8;s.v*=.55;addP(s.x,s.y,"#111827",8)}})
+  s.v+=(s.targetSpeed-s.v)*dt*1.18*r.class.accel;
+  var road=onRoad(s);if(!road){s.v*=.965;if(!s.wall){s.wall=true;s.collisions++;canvas.classList.remove("shake");void canvas.offsetWidth;canvas.classList.add("shake")}}else s.wall=false;
+  // drafting and light car contact
+  racers.forEach(function(o){if(o===r||!o.state||o.state.finished)return;var dist=Math.hypot(s.x-o.state.x,s.y-o.state.y);if(dist<36){s.v*=.995;o.state.v*=.995}else if(dist<88&&o.state.d>s.d)s.v+=dt*.75})
+  s.d+=Math.max(2.2,s.v*8.2)*dt;s.time+=dt;r.time=s.time;
+  var completed=0;r.info.cross.forEach(function(c){if(s.d>=c)completed++});s.completed=Math.min(selectedLaps,completed);
+  if(s.d>=r.info.total){s.d=r.info.total;s.finished=true;s.v=0;var place=1;racers.forEach(function(x){if(x.finish)place++});r.finish=place;addP(s.x,s.y,r.color,20)}
+ })
+ for(var i=particles.length-1;i>=0;i--){particles[i].x+=particles[i].vx*dt;particles[i].y+=particles[i].vy*dt;particles[i].l-=dt;if(particles[i].l<=0)particles.splice(i,1)}
+ render();if(now-lastScoreUpdate>150){renderScores();lastScoreUpdate=now}
+ var finished=racers.filter(function(r){return r.state.finished}).length;
+ if(finished===racers.length){raceRunning=false;cancelAnimationFrame(animation);showResults();return}
+ var lead=racers.slice().sort(function(a,b){return b.state.d/b.info.total-a.state.d/a.info.total})[0];raceStatus.textContent="Leader: "+lead.car+" "+lead.name;animation=requestAnimationFrame(step)
+}
+function showResults(){
+ var order=racers.slice().sort(function(a,b){return a.finish-b.finish});winner.textContent="🏆 "+order[0].name+" wins!";results.innerHTML="";
+ order.forEach(function(r){var d=document.createElement("div");d.className="result";d.innerHTML="<div><b>#"+r.finish+" "+r.car+" "+r.name+"</b><br><span class='small'>"+r.time.toFixed(1)+"s · "+r.state.collisions+" collisions</span></div><div>"+r.class.name+"</div>";results.appendChild(d)});
+ if(order.length>1&&Math.abs(order[0].time-order[1].time)<.5)winner.textContent="📸 PHOTO FINISH — "+order[0].name+" wins by "+Math.abs(order[0].time-order[1].time).toFixed(2)+"s";
+ resultsPanel.classList.remove("hidden");raceBtn.disabled=false;
+ try{localStorage.setItem("drawDashV7LastWinner",order[0].name)}catch(e){}
+}
+function reset(){raceToken++;raceRunning=false;if(animation)cancelAnimationFrame(animation);setupPanel.classList.remove("hidden");drawPanel.classList.add("hidden");racePanel.classList.add("hidden");resultsPanel.classList.add("hidden");racers=[];points=[];render()}
+drawBtn.onclick=function(){points=[];enabled=true;saveBtn.disabled=true;status.textContent="Draw all "+selectedLaps+" laps now.";render()};
+saveBtn.onclick=save;startGame.onclick=startSetup;raceBtn.onclick=startRace;newBtn.onclick=reset;newRaceBtn.onclick=reset;
+replayBtn.onclick=function(){resultsPanel.classList.add("hidden");racers.forEach(function(r){r.state=null;r.finish=null});startRace()};
+canvas.addEventListener("pointerdown",begin,{passive:false});canvas.addEventListener("pointermove",move,{passive:false});canvas.addEventListener("pointerup",end,{passive:false});canvas.addEventListener("pointercancel",end,{passive:false});
+selectedTrack=TRACKS.silverstone;buildHazards();render();
+})();
+</script>
+</body>
+</html>
