@@ -53,9 +53,16 @@
   let joinRoomSettings=null, timerHandle=null, creativeTimerHandle=null, autoRevealBusy=false, joinLookupTimer=null;
   let mediaStream=null, mediaRecorder=null, mediaChunks=[], recordingStopTimer=null;
   let pendingMediaBlob=null, pendingMediaMime='', pendingMediaUrl='', captureRoundKey='';
-  let renderedQrValue='';
+  let renderedQrValue='', answerSubmitBusy=false, reconnectBusy=false;
+  const SESSION_KEY='spencer_live_room_v2';
   const mediaUrlCache=new Map();
   let renderSerial=0;
+  const music=window.SpencerMusic||null;
+  let hostMusicPreview=false;
+  function musicHostActive(){return role==='host'||hostMusicPreview;}
+  function updateMusicButton(){const b=$('music-toggle');if(!b)return;const visible=music&&musicHostActive();b.classList.toggle('hidden',!visible);if(!music)return;const on=music.isEnabled();b.textContent=on?'🎵 Music On':'🔇 Music Off';b.classList.toggle('off',!on);b.setAttribute('aria-pressed',on?'true':'false');}
+  function syncMusic(mode){if(!music)return;music.setHostActive(musicHostActive());music.setMode(mode||'lobby');updateMusicButton();}
+  function stopHostMusic(){if(!music)return;hostMusicPreview=false;music.setHostActive(false);updateMusicButton();}
 
   const screens=['choice','host','join','lobby','game','creative-capture','creative-vote','creative-result','leaderboard','finished'];
   function show(name){screens.forEach(x=>{const el=$('screen-'+x);if(el)el.classList.toggle('hidden',x!==name);});}
@@ -86,8 +93,10 @@
   function creativeRoundForState(state=gs()){if(settingsOf().gameKey==='mix'&&state.creativeId)return mixCreativeById.get(String(state.creativeId))||null;return creativeAt(state.creativeIndex);}
   function questionVariant(q,player){const s=settingsOf();return s.adaptive&&player&&isJunior(player.age_band)?'junior':'standard';}
   function myPlayer(){return currentPlayers.find(p=>p.id===playerId)||null;}
-  function saveSession(){sessionStorage.setItem('spencer_live_room',JSON.stringify({roomId,roomCode,role,playerId}));}
-  function clearSession(){sessionStorage.removeItem('spencer_live_room');}
+  function saveSession(){const value=JSON.stringify({roomId,roomCode,role,playerId,savedAt:Date.now()});try{localStorage.setItem(SESSION_KEY,value);}catch(_){}try{sessionStorage.setItem(SESSION_KEY,value);}catch(_){}}
+  function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem('spencer_live_room');}catch(_){}}
+  function savedSession(){for(const store of [localStorage,sessionStorage]){try{const raw=store.getItem(SESSION_KEY)||store.getItem('spencer_live_room');if(raw){const parsed=JSON.parse(raw);if(parsed&&parsed.roomId&&parsed.role)return parsed;}}catch(_){}}return null;}
+  function setHomeGuard(active){const home=$('site-home');if(!home)return;home.classList.toggle('guarded',Boolean(active));home.setAttribute('aria-disabled',active?'true':'false');home.textContent=active?'🎮 Game Active':'← Spencer Games';}
   function gameName(key=settingsOf().gameKey){return key==='creative'?'Creative Party':key==='mix'?'Spencer Mix':'Family Mega Quiz';}
   function isCreativeState(state=gs()){return String(state.phase||'').startsWith('creative_');}
   function isCreativeRoundState(state=gs()){return isCreativeState(state)||state.roundType==='creative';}
@@ -160,9 +169,9 @@
   $('topics-all').addEventListener('click',()=>document.querySelectorAll('#topic-grid input[type=checkbox]').forEach(x=>x.checked=true));
   $('topics-none').addEventListener('click',()=>document.querySelectorAll('#topic-grid input[type=checkbox]').forEach(x=>x.checked=false));
 
-  $('choose-host').addEventListener('click',()=>show('host'));
-  $('choose-join').addEventListener('click',()=>show('join'));
-  document.querySelectorAll('.back-choice').forEach(b=>b.addEventListener('click',()=>show('choice')));
+  $('choose-host').addEventListener('click',()=>{hostMusicPreview=true;show('host');if(music){music.awaken();syncMusic('lobby');}});
+  $('choose-join').addEventListener('click',()=>{hostMusicPreview=false;if(music)music.setHostActive(false);updateMusicButton();show('join');});
+  document.querySelectorAll('.back-choice').forEach(b=>b.addEventListener('click',()=>{if(!roomId){hostMusicPreview=false;if(music)music.setHostActive(false);updateMusicButton();}show('choice');}));
   $('join-code').addEventListener('input',e=>{e.target.value=cleanCode(e.target.value);clearTimeout(joinLookupTimer);joinLookupTimer=setTimeout(lookupJoinRoom,250);});
 
   async function lookupJoinRoom(){
@@ -207,7 +216,7 @@
         if(error.code!=='23505')throw error;
       }
       if(!room)throw new Error('Could not create a unique room code. Please try again.');
-      roomId=room.id;roomCode=room.code;role='host';playerId=null;currentRoom=room;if(selectedGame==='quiz')rememberQuestionIds(questionOrder);if(selectedGame==='mix'){rememberQuestionIds(settings.questionOrder);rememberCreativeIds(mixOrder.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)));}saveSession();await subscribeRoom();await openExperience();
+      roomId=room.id;roomCode=room.code;role='host';hostMusicPreview=false;playerId=null;currentRoom=room;syncMusic('lobby');if(selectedGame==='quiz')rememberQuestionIds(questionOrder);if(selectedGame==='mix'){rememberQuestionIds(settings.questionOrder);rememberCreativeIds(mixOrder.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)));}saveSession();await subscribeRoom();await openExperience();
     }catch(e){msg($('host-message'),friendlyError(e));}
     finally{$('create-room').disabled=false;}
   }
@@ -281,7 +290,7 @@
     const {data,error}=await db.from('answers').select('*').eq('room_id',roomId).eq('question_index',q);if(error){console.error(error);return;}currentAnswers=data||[];renderHostAnswerCount();if((settingsOf().gameKey==='quiz'||settingsOf().gameKey==='mix')&&!isCreativeRoundState(gs()))renderGame();
   }
   async function loadCreativeData(){
-    if(!db||!roomId)return;const r=Number(gs().creativeIndex);if(!Number.isFinite(r)){currentSubmissions=[];currentVotes=[];return;}
+    if(!db||!roomId)return;const r=creativeDataRoundIndex(gs());if(!Number.isFinite(r)){currentSubmissions=[];currentVotes=[];return;}
     const [{data:subs,error:subErr},{data:votes,error:voteErr}]=await Promise.all([
       db.from('creative_submissions').select('*').eq('room_id',roomId).eq('round_index',r).order('submitted_at',{ascending:true}),
       db.from('creative_votes').select('*').eq('room_id',roomId).eq('round_index',r)
@@ -320,7 +329,7 @@
   function renderRoomQr(value){const box=$('room-qr');if(!box)return;if(renderedQrValue===value&&box.childNodes.length)return;renderedQrValue=value;box.innerHTML='';try{if(window.SpencerQR){window.SpencerQR.render(box,value);return;}}catch(e){console.error(e);}box.innerHTML='<div class="room-qr-fallback">QR unavailable<br><small>Use code '+escapeHtml(roomCode||'----')+'</small></div>';}
 
   function openLobby(){
-    stopTimers();stopAllMedia();$('room-code-display').textContent=roomCode||'----';const url=new URL(window.location.href);url.search='';url.hash='';url.searchParams.set('join',roomCode||'');const joinUrl=url.toString();$('join-url').textContent=joinUrl;$('qr-room-code').textContent=roomCode||'----';
+    setHomeGuard(true);syncMusic('lobby');stopTimers();stopAllMedia();$('room-code-display').textContent=roomCode||'----';const url=new URL(window.location.href);url.search='';url.hash='';url.searchParams.set('join',roomCode||'');const joinUrl=url.toString();$('join-url').textContent=joinUrl;$('qr-room-code').textContent=roomCode||'----';
     const showQr=role==='host';$('qr-join').classList.toggle('hidden',!showQr);if(showQr)renderRoomQr(joinUrl);
     $('lobby-title').textContent=role==='host'?'Your Spencer Live Lobby':'You’re in!';$('start-game').classList.toggle('hidden',role!=='host');$('start-game').disabled=role!=='host'||currentPlayers.length<1;
     const s=settingsOf();$('start-game').textContent='Start '+gameName(s.gameKey);
@@ -357,7 +366,7 @@
   function newMixedState(index){const token=settingsOf().mixOrder[index];if(!token)return null;const [kind,id]=String(token).split(':');if(kind==='c'){const creativeIndex=mixCreativeRounds.findIndex(r=>String(r.id)===id);return newCreativeCaptureState(creativeIndex,{mixIndex:index,roundType:'creative',creativeId:id});}return newQuestionState(index,{mixIndex:index,roundType:'quiz',questionId:id});}
 
   function renderCurrentView(){
-    if(!currentRoom)return;const state=gs();
+    if(!currentRoom)return;setHomeGuard(currentRoom.status==='lobby'||currentRoom.status==='playing');const state=gs();
     if(currentRoom.status==='finished'||state.phase==='finished'){renderFinished();return;}
     if(state.phase==='leaderboard'){renderLeaderboard();return;}
     if(settingsOf().gameKey==='creative'||isCreativeState(state)){renderCreativeView();return;}
@@ -367,7 +376,7 @@
   // ---------------- Quiz engine (Phase 2) ----------------
   function renderGame(){
     if(!currentRoom||currentRoom.status==='lobby')return;const state=gs(),q=questionForState(state);if(!q)return;
-    const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.questionIndex),total=mixed?mixTotal():quizTotal();show('game');$('round-category').textContent=(mixed?'🎲 QUIZ • ':'')+q.category.toUpperCase();$('round-title').textContent=mixed?'Round '+(current+1)+' of '+total+' • Quiz':'Question '+(current+1)+' of '+total;$('round-progress').style.width=((current+1)/total*100)+'%';
+    const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.questionIndex),total=mixed?mixTotal():quizTotal();syncMusic(state.phase==='reveal'?'result':'quiz');show('game');$('round-category').textContent=(mixed?'🎲 QUIZ • ':'')+q.category.toUpperCase();$('round-title').textContent=mixed?'Round '+(current+1)+' of '+total+' • Quiz':'Question '+(current+1)+' of '+total;$('round-progress').style.width=((current+1)/total*100)+'%';
     const s=settingsOf();const host=role==='host';const player=myPlayer();const variant=host?'standard':questionVariant(q,player);const v=q[variant];
     $('host-adaptive-view').classList.toggle('hidden',!(host&&s.adaptive));
     if(host&&s.adaptive){$('host-adaptive-view').innerHTML='<div class="mini-q"><b>Junior • ages 5–11</b><span>'+escapeHtml(q.junior.question)+'</span></div><div class="mini-q"><b>Standard • ages 12+</b><span>'+escapeHtml(q.standard.question)+'</span></div>';$('question-level').textContent='Family Adaptive • players answer on their phones';$('question-text').textContent='Check your phones!';}
@@ -381,7 +390,7 @@
     const mine=currentAnswers.find(a=>a.player_id===playerId);const revealed=state.phase==='reveal';
     v.answers.forEach((label,i)=>{const b=document.createElement('button');b.type='button';b.className='answer '+['a','b','c','d'][i];b.textContent=label;
       if(mine&&mine.answer_index===i)b.classList.add('selected');if(revealed&&i===v.correct)b.classList.add('correct');if(revealed&&mine&&mine.answer_index===i&&!mine.is_correct)b.classList.add('wrong');
-      b.disabled=host||role!=='player'||Boolean(mine)||state.phase!=='question'||state.paused||remainingMs()<=0;b.addEventListener('click',()=>submitAnswer(i));box.appendChild(b);});
+      b.disabled=host||role!=='player'||answerSubmitBusy||state.phase!=='question'||state.paused||remainingMs()<=0;b.addEventListener('click',()=>submitAnswer(i));box.appendChild(b);});
   }
 
   function renderAnswerStatus(v,state,host){
@@ -389,7 +398,7 @@
     const mine=currentAnswers.find(a=>a.player_id===playerId);
     if(state.paused){target.innerHTML='<div class="waiting">⏸ Game paused by the host.</div>';return;}
     if(state.phase==='question'){
-      if(mine)target.innerHTML='<div class="waiting">Answer locked in! '+mine.points+' points if the scoring stands. Waiting for everyone else…</div>';
+      if(mine)target.innerHTML='<div class="waiting">✅ Answer selected. Tap a different answer to change it until time runs out.</div>';
       else if(remainingMs()<=0)target.innerHTML='<div class="waiting">Time’s up! Waiting for the reveal…</div>';
       return;
     }
@@ -400,11 +409,20 @@
   }
 
   async function submitAnswer(index){
-    if(role!=='player'||!currentRoom)return;const state=gs();if(state.phase!=='question'||state.paused||remainingMs()<=0)return;const p=myPlayer(),q=questionForState(state);if(!p||!q)return;const variant=questionVariant(q,p),v=q[variant],isCorrect=index===v.correct;
-    const duration=settingsOf().questionSeconds*1000;const response=clamp(Math.round(effectiveElapsedMs()),0,duration);const speed=isCorrect?Math.round(200*(1-response/duration)):0;const points=isCorrect?800+clamp(speed,0,200):0;
-    const row={room_id:roomId,player_id:playerId,question_index:Number(state.questionIndex),variant,answer_index:index,is_correct:isCorrect,response_ms:response,points};
-    const {error}=await db.from('answers').insert(row);if(error){if(error.code!=='23505')console.error(error);return;}
-    const newScore=(Number(p.score)||0)+points;await db.from('players').update({score:newScore}).eq('id',playerId);await loadAnswers();
+    if(role!=='player'||!currentRoom||answerSubmitBusy)return;const state=gs();if(state.phase!=='question'||state.paused||remainingMs()<=0)return;const p=myPlayer(),q=questionForState(state);if(!p||!q)return;const variant=questionVariant(q,p),v=q[variant],isCorrect=index===v.correct;
+    const existing=currentAnswers.find(a=>a.player_id===playerId)||null;if(existing&&Number(existing.answer_index)===Number(index))return;
+    answerSubmitBusy=true;renderAnswers(v,state,false);
+    try{
+      const duration=settingsOf().questionSeconds*1000;const response=clamp(Math.round(effectiveElapsedMs()),0,duration);const speed=isCorrect?Math.round(200*(1-response/duration)):0;const points=isCorrect?800+clamp(speed,0,200):0;
+      const row={variant,answer_index:index,is_correct:isCorrect,response_ms:response,points};let error=null;
+      if(existing)({error}=await db.from('answers').update(row).eq('id',existing.id).eq('player_id',playerId));
+      else ({error}=await db.from('answers').insert({room_id:roomId,player_id:playerId,question_index:Number(state.questionIndex),...row}));
+      if(error)throw error;
+      const oldPoints=existing?Number(existing.points)||0:0,newScore=Math.max(0,(Number(p.score)||0)-oldPoints+points);p.score=newScore;
+      const {error:scoreError}=await db.from('players').update({score:newScore}).eq('id',playerId);if(scoreError)throw scoreError;
+      await loadAnswers();
+    }catch(e){console.error(e);msg($('answer-status'),friendlyError(e));}
+    finally{answerSubmitBusy=false;if(currentRoom&&gs().phase==='question')renderGame();}
   }
 
   function effectiveElapsedMs(){const state=gs();if(!state.startedAt)return 0;const start=new Date(state.startedAt).getTime();let end=Date.now();let pauses=Number(state.pauseMs)||0;if(state.paused&&state.pausedStartedAt)end=new Date(state.pausedStartedAt).getTime();return Math.max(0,end-start-pauses);}
@@ -421,14 +439,15 @@
     const phase=gs().phase;if(phase==='creative_capture')renderCreativeCapture();else if(phase==='creative_vote')renderCreativeVote();else if(phase==='creative_result')renderCreativeResult();else renderCreativeCapture();
   }
 
-  function creativeRoundKey(){const s=gs(),r=creativeRoundForState(s);return [roomId,s.mixIndex??s.creativeIndex,s.creativeId||s.creativeIndex,r&&r.kind].join(':');}
+  function creativeDataRoundIndex(state=gs()){return settingsOf().gameKey==='mix'?Number(state.mixIndex):Number(state.creativeIndex);}
+  function creativeRoundKey(){const s=gs(),r=creativeRoundForState(s);return [roomId,creativeDataRoundIndex(s),s.creativeId||s.creativeIndex,r&&r.kind].join(':');}
   function renderCreativeCounts(){
     if(!$('creative-host-count'))return;const s=gs();if(s.phase==='creative_capture')$('creative-host-count').textContent='Submissions: '+currentSubmissions.length+' / '+currentPlayers.length;
     if(s.phase==='creative_vote'){$('vote-progress-text').textContent=currentStageVotes().length+'/'+currentPlayers.length;}
   }
 
   function renderCreativeCapture(){
-    const state=gs(),round=creativeRoundForState(state);if(!round)return;stopQuizOnly();show('creative-capture');
+    const state=gs(),round=creativeRoundForState(state);if(!round)return;syncMusic('creative');stopQuizOnly();show('creative-capture');
     const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.creativeIndex),total=mixed?mixTotal():creative.rounds.length;$('creative-kind').textContent=(round.kind==='picture'?'📸 PICTURE':'🎙️ SOUND')+(mixed?' • MIX':'');$('creative-round-title').textContent=round.title+' • Round '+(current+1)+' of '+total;$('creative-progress').style.width=((current+1)/total*100)+'%';$('creative-prompt').textContent=round.prompt;
     startCreativeTimer(round);
     const host=role==='host';$('creative-host-capture').classList.toggle('hidden',!host);$('creative-player-capture').classList.toggle('hidden',host);
@@ -480,10 +499,10 @@
   function extensionForMime(mime){if(mime==='image/jpeg')return'jpg';if(mime==='image/png')return'png';if(mime==='audio/mp4')return'mp4';if(mime==='audio/ogg')return'ogg';if(mime==='audio/mpeg')return'mp3';return'webm';}
   async function uploadCreativeBlob(blob,mime){
     if(role!=='player'||!blob)return;const state=gs(),round=creativeRoundForState(state);if(!round||state.phase!=='creative_capture')return;const btn=round.kind==='picture'?$('submit-photo'):$('submit-sound');btn.disabled=true;msg($('creative-player-status'),'Uploading your masterpiece…','success');
-    const unique=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);const path=roomId+'/'+state.creativeIndex+'/'+playerId+'-'+unique+'.'+extensionForMime(mime);
+    const unique=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);const dataRound=creativeDataRoundIndex(state);const path=roomId+'/'+dataRound+'/'+playerId+'-'+unique+'.'+extensionForMime(mime);
     try{
       const {error:uploadError}=await db.storage.from(MEDIA_BUCKET).upload(path,blob,{contentType:mime,upsert:false,cacheControl:'3600'});if(uploadError)throw uploadError;
-      const {error:rowError}=await db.from('creative_submissions').insert({room_id:roomId,player_id:playerId,round_index:Number(state.creativeIndex),kind:round.kind,storage_path:path,mime_type:mime});
+      const {error:rowError}=await db.from('creative_submissions').insert({room_id:roomId,player_id:playerId,round_index:dataRound,kind:round.kind,storage_path:path,mime_type:mime});
       if(rowError){await db.storage.from(MEDIA_BUCKET).remove([path]);throw rowError;}
       msg($('creative-player-status'),'Submitted!','success');stopAllMedia();await loadCreativeData();
     }catch(e){msg($('creative-player-status'),friendlyError(e));btn.disabled=false;}
@@ -506,7 +525,7 @@
   async function fillMediaBody(card,sub,opts={}){const body=card.querySelector('.media-body'),url=await signedMediaUrl(sub);body.innerHTML='';if(!url){body.innerHTML='<div class="error">Media unavailable.</div>';return;}if(sub.kind==='picture'){const img=document.createElement('img');img.src=url;img.alt='Anonymous picture submission';body.appendChild(img);}else{const audio=document.createElement('audio');audio.controls=true;audio.preload='metadata';audio.src=url;body.appendChild(audio);}if(opts.name){const n=document.createElement('div');n.className='media-name';n.textContent=opts.name;body.appendChild(n);}if(Number.isFinite(opts.votes)){const v=document.createElement('div');v.className='vote-count';v.textContent=opts.votes+' vote'+(opts.votes===1?'':'s');body.appendChild(v);}}
 
   async function renderCreativeVote(){
-    const token=++renderSerial,state=gs(),round=creativeRoundForState(state);if(!round)return;stopTimers();stopAllMedia();show('creative-vote');$('vote-stage-pill').textContent=state.voteStage==='heat'?'🔥 HEAT '+(Number(state.heatIndex)+1)+'/'+(state.heatGroups||[]).length:'🏆 GRAND FINAL';$('vote-title').textContent=state.voteStage==='heat'?'Vote for the heat winner':'Vote for the overall winner';$('vote-prompt').textContent=round.prompt;renderCreativeCounts();
+    const token=++renderSerial,state=gs(),round=creativeRoundForState(state);if(!round)return;syncMusic('creative');stopTimers();stopAllMedia();show('creative-vote');$('vote-stage-pill').textContent=state.voteStage==='heat'?'🔥 HEAT '+(Number(state.heatIndex)+1)+'/'+(state.heatGroups||[]).length:'🏆 GRAND FINAL';$('vote-title').textContent=state.voteStage==='heat'?'Vote for the heat winner':'Vote for the overall winner';$('vote-prompt').textContent=round.prompt;renderCreativeCounts();
     const candidates=(state.candidateIds||[]).map(submissionById).filter(Boolean),box=$('vote-media-grid');box.innerHTML='';const labels='ABCDEFGHIJKLMNOPQRSTUVWXYZ';const mineVote=currentStageVotes().find(v=>v.voter_player_id===playerId);candidates.forEach((sub,i)=>{const card=mediaCardShell(labels[i]||String(i+1));box.appendChild(card);fillMediaBody(card,sub);if(role==='player'){const b=document.createElement('button');b.type='button';b.className='vote-btn'+(mineVote&&mineVote.submission_id===sub.id?' selected':'');const own=sub.player_id===playerId;b.textContent=own?'Your entry':(mineVote?'Vote locked':'Vote '+(labels[i]||i+1));b.disabled=own||Boolean(mineVote);b.addEventListener('click',()=>castCreativeVote(sub.id));card.appendChild(b);}});
     if(token!==renderSerial)return;$('vote-host-tools').classList.toggle('hidden',role!=='host');$('reveal-creative-vote').disabled=role!=='host'||candidates.length<1;
     if(role==='player')$('vote-player-status').innerHTML=mineVote?'<div class="submission-badge">🗳️ Vote locked in. Waiting for the reveal.</div>':'<div class="waiting">Choose your favourite. Your own entry is disabled.</div>';else $('vote-player-status').innerHTML='';
@@ -514,7 +533,7 @@
 
   async function castCreativeVote(submissionId){
     if(role!=='player')return;const state=gs(),sub=submissionById(submissionId);if(!sub||sub.player_id===playerId||state.phase!=='creative_vote')return;
-    const row={room_id:roomId,voter_player_id:playerId,round_index:Number(state.creativeIndex),stage_key:String(state.stageKey),submission_id:submissionId};const {error}=await db.from('creative_votes').insert(row);if(error){msg($('vote-player-status'),friendlyError(error));return;}await loadCreativeData();
+    const row={room_id:roomId,voter_player_id:playerId,round_index:creativeDataRoundIndex(state),stage_key:String(state.stageKey),submission_id:submissionId};const {error}=await db.from('creative_votes').insert(row);if(error){msg($('vote-player-status'),friendlyError(error));return;}await loadCreativeData();
   }
 
   function tallyStage(candidateIds){const counts={};candidateIds.forEach(id=>counts[id]=0);currentStageVotes().forEach(v=>{if(Object.prototype.hasOwnProperty.call(counts,v.submission_id))counts[v.submission_id]++;});return counts;}
@@ -530,12 +549,12 @@
     const state=gs(),entries=Object.entries(counts||{}),top=entries.length?Math.max(...entries.map(([,n])=>n)):0;let secondIds=[];
     if(entries.length){const lower=entries.map(([,n])=>n).filter(n=>n<top);if(lower.length){const second=Math.max(...lower);secondIds=entries.filter(([,n])=>n===second).map(([id])=>id);}}
     const winnerSet=new Set(winnerIds),secondSet=new Set(secondIds);for(const sub of currentSubmissions){let points=100,reason='Participation';if(winnerSet.has(sub.id)){points+=1000;reason='Winner + participation';}else if(secondSet.has(sub.id)){points+=500;reason='Second place + participation';}
-      const {error}=await db.from('creative_awards').insert({room_id:roomId,player_id:sub.player_id,round_index:Number(state.creativeIndex),points,reason});if(error&&error.code!=='23505')console.error(error);
+      const {error}=await db.from('creative_awards').insert({room_id:roomId,player_id:sub.player_id,round_index:creativeDataRoundIndex(state),points,reason});if(error&&error.code!=='23505')console.error(error);
     }await loadPlayers();
   }
 
   async function renderCreativeResult(){
-    const token=++renderSerial,state=gs(),round=creativeRoundForState(state);if(!round)return;stopTimers();stopAllMedia();show('creative-result');$('result-prompt').textContent=round.prompt;const heat=state.voteStage==='heat',winners=new Set(state.lastWinners||[]),counts=state.stageVoteCounts||{};$('creative-result-heading').innerHTML=heat?'🔥 <span>Heat Result</span>':'🏆 <span>Round Result</span>';
+    const token=++renderSerial,state=gs(),round=creativeRoundForState(state);if(!round)return;syncMusic('result');stopTimers();stopAllMedia();show('creative-result');$('result-prompt').textContent=round.prompt;const heat=state.voteStage==='heat',winners=new Set(state.lastWinners||[]),counts=state.stageVoteCounts||{};$('creative-result-heading').innerHTML=heat?'🔥 <span>Heat Result</span>':'🏆 <span>Round Result</span>';
     const candidateIds=(state.candidateIds||[]),box=$('result-media-grid');box.innerHTML='';const labels='ABCDEFGHIJKLMNOPQRSTUVWXYZ';candidateIds.forEach((id,i)=>{const sub=submissionById(id);if(!sub)return;const card=mediaCardShell(labels[i]||String(i+1));if(winners.has(id))card.classList.add('creative-winner');box.appendChild(card);const p=currentPlayers.find(x=>x.id===sub.player_id);fillMediaBody(card,sub,{name:(winners.has(id)?'🏆 ':'')+(p?(p.avatar||'🙂')+' '+p.name:'Player'),votes:Number(counts[id]||0)});});
     if(token!==renderSerial)return;const host=role==='host';$('creative-result-host-tools').classList.toggle('hidden',!host);$('creative-result-player-wait').classList.toggle('hidden',host);
     if(host){if(heat){const next=Number(state.heatIndex)+1,more=next<(state.heatGroups||[]).length;$('creative-result-next').textContent=more?'Next Heat':'Grand Final';}else $('creative-result-next').textContent='Show Leaderboard';}
@@ -566,8 +585,8 @@
     return Object.entries(groups).map(([name,scores])=>({name:name+' Team',score:Math.round(scores.reduce((a,b)=>a+b,0)/scores.length),members:scores.length})).sort((a,b)=>b.score-a.score);
   }
   function fillLeaderboard(target){const rows=getLeaderboardRows(),box=$(target);box.innerHTML='';if(!rows.length){box.innerHTML='<div class="empty">No scores yet.</div>';return;}rows.forEach((r,i)=>{const d=document.createElement('div');d.className='leader-row';d.innerHTML='<span class="rank">'+(i+1)+'</span><span class="who">'+escapeHtml(r.name)+(r.members?' <small>('+r.members+')</small>':'')+'</span><span class="pts">'+r.score+' pts</span>';box.appendChild(d);});}
-  function renderLeaderboard(){stopTimers();stopAllMedia();show('leaderboard');const s=settingsOf(),state=gs();$('leaderboard-title').textContent=s.gameKey==='creative'?'🏆 Leaderboard • Creative Round '+(Number(state.creativeIndex)+1):s.gameKey==='mix'?'🏆 Leaderboard • Round '+(Number(state.mixIndex)+1)+' of '+mixTotal():'🏆 Leaderboard • Round '+(Number(state.questionIndex)+1);fillLeaderboard('leaderboard');$('next-question').classList.toggle('hidden',role!=='host');$('next-question').textContent=s.gameKey==='quiz'?'Next Question':'Next Round';$('player-wait-next').classList.toggle('hidden',role==='host');}
-  function renderFinished(){stopTimers();stopAllMedia();show('finished');fillLeaderboard('final-leaderboard');$('play-again').classList.toggle('hidden',role!=='host');}
+  function renderLeaderboard(){syncMusic('result');stopTimers();stopAllMedia();show('leaderboard');const s=settingsOf(),state=gs();$('leaderboard-title').textContent=s.gameKey==='creative'?'🏆 Leaderboard • Creative Round '+(Number(state.creativeIndex)+1):s.gameKey==='mix'?'🏆 Leaderboard • Round '+(Number(state.mixIndex)+1)+' of '+mixTotal():'🏆 Leaderboard • Round '+(Number(state.questionIndex)+1);fillLeaderboard('leaderboard');$('next-question').classList.toggle('hidden',role!=='host');$('next-question').textContent=s.gameKey==='quiz'?'Next Question':'Next Round';$('player-wait-next').classList.toggle('hidden',role==='host');}
+  function renderFinished(){syncMusic('finished');stopTimers();stopAllMedia();show('finished');fillLeaderboard('final-leaderboard');$('play-again').classList.toggle('hidden',role!=='host');}
   async function playAgain(){
     if(role!=='host')return;await db.from('answers').delete().eq('room_id',roomId);const s=settingsOf();if(s.gameKey==='creative'||s.gameKey==='mix')await cleanupCreativeMedia(true);await db.from('players').update({score:0}).eq('room_id',roomId);
     if(s.gameKey==='quiz'){const order=buildQuestionOrder(s.topics,s.questionCount),nextSettings={...(currentRoom.settings||{}),questionOrder:order};const {error}=await db.from('rooms').update({settings:nextSettings,game_state:{},status:'lobby',updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;rememberQuestionIds(order);currentRoom={...currentRoom,settings:nextSettings,game_state:{},status:'lobby'};await openExperience();return;}
@@ -589,11 +608,12 @@
   async function leave(){
     stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;
     if(db&&roomId){try{if(role==='player'&&playerId){await cleanupPlayerMedia(playerId);await db.from('players').delete().eq('id',playerId);}else if(role==='host'){if(settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')await cleanupCreativeMedia(true);await db.from('rooms').update({status:'closed',updated_at:new Date().toISOString()}).eq('id',roomId);}}catch(e){console.error(e);}}
-    roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];clearSession();show('choice');
+    roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];clearSession();setHomeGuard(false);stopHostMusic();show('choice');
   }
-  async function roomClosed(){stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
+  async function roomClosed(){stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];setHomeGuard(false);stopHostMusic();serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
 
   // Base controls
+  if($('music-toggle'))$('music-toggle').addEventListener('click',async()=>{if(!music)return;await music.setEnabled(!music.isEnabled());if(musicHostActive())await music.setHostActive(true);updateMusicButton();});
   $('create-room').addEventListener('click',createRoom);$('join-room').addEventListener('click',joinRoom);$('leave-lobby').addEventListener('click',leave);$('start-game').addEventListener('click',startGame);
   $('pause-game').addEventListener('click',togglePause);$('reveal-now').addEventListener('click',revealRound);$('skip-question').addEventListener('click',skipQuestion);$('end-game').addEventListener('click',finishGame);$('show-leaderboard').addEventListener('click',showLeaderboard);$('next-question-direct').addEventListener('click',nextQuestion);$('next-question').addEventListener('click',nextQuestion);$('play-again').addEventListener('click',playAgain);$('finish-leave').addEventListener('click',leave);
   // Creative capture controls
@@ -602,11 +622,23 @@
   $('creative-start-voting').addEventListener('click',startCreativeVoting);$('creative-skip-round').addEventListener('click',skipCreativeRound);$('creative-end-game').addEventListener('click',finishGame);$('reveal-creative-vote').addEventListener('click',revealCreativeVote);$('creative-vote-end-game').addEventListener('click',finishGame);$('creative-result-next').addEventListener('click',continueCreativeResult);$('creative-result-end').addEventListener('click',finishGame);
 
   async function restore(){
-    if(!configured)return false;let saved=null;try{saved=JSON.parse(sessionStorage.getItem('spencer_live_room')||'null');}catch(_){saved=null;}if(!saved||!saved.roomId||!saved.role)return false;
-    roomId=saved.roomId;roomCode=saved.roomCode;role=saved.role;playerId=saved.playerId||null;
-    if(!(await loadRoom()))return false;await loadPlayers();if(role==='player'&&!currentPlayers.some(p=>p.id===playerId)){clearSession();return false;}await subscribeRoom();await openExperience();return true;
+    if(!configured)return false;const saved=savedSession();if(!saved||!saved.roomId||!saved.role)return false;
+    roomId=saved.roomId;roomCode=saved.roomCode;role=saved.role;hostMusicPreview=false;playerId=saved.playerId||null;if(role==='host')syncMusic('lobby');else stopHostMusic();
+    if(!(await loadRoom())){clearSession();return false;}await loadPlayers();if(role==='player'&&!currentPlayers.some(p=>p.id===playerId)){clearSession();roomId=roomCode=role=playerId=null;return false;}saveSession();await subscribeRoom();await openExperience();return true;
+  }
+  async function reconnectActiveSession(){
+    if(!configured||reconnectBusy)return;reconnectBusy=true;
+    try{
+      if(!roomId){await restore();return;}
+      if(!(await loadRoom()))return;await loadPlayers();if(role==='player'&&!currentPlayers.some(p=>p.id===playerId))return;saveSession();if(realtimeState!=='subscribed')await subscribeRoom();await openExperience();
+    }catch(e){console.error('Reconnect failed',e);startPolling('Connection interrupted. Reconnecting automatically.');}
+    finally{reconnectBusy=false;}
   }
 
+  const siteHome=$('site-home');if(siteHome)siteHome.addEventListener('click',e=>{if(roomId&&currentRoom&&(currentRoom.status==='lobby'||currentRoom.status==='playing')){e.preventDefault();serviceStatus.textContent='Game still active — use Leave Game if you really want to exit. Your connection has been kept.';serviceStatus.className='status good';}});
+  window.addEventListener('pageshow',()=>setTimeout(reconnectActiveSession,50));window.addEventListener('online',reconnectActiveSession);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')reconnectActiveSession();});
+
+  updateMusicButton();
   const params=new URLSearchParams(location.search),join=params.get('join'),mode=params.get('mode');
   restore().then(restored=>{if(restored)return;if(join){$('join-code').value=cleanCode(join);show('join');lookupJoinRoom();}else if(mode==='host')show('host');else if(mode==='join')show('join');else show('choice');});
 })();

@@ -65,3 +65,16 @@ The host screen never needs camera/microphone access unless the host also joins 
 - The host browser remembers question recency and prefers unseen questions first. When reuse eventually becomes necessary, it prefers the least recently used questions.
 - “Play Again With Same Players” generates a fresh question order using the same length and topics.
 - No additional Supabase SQL migration is required for this upgrade.
+
+## Phase 3.3 — Spencer Mix
+
+- Hosts now have a third Spencer Live game option: **Spencer Mix**.
+- Spencer Mix combines the Family Mega Quiz with Creative Party picture/sound challenges in one room and one shared leaderboard.
+- The existing 5 / 10 / 15 / 20 game-length selector becomes total mixed rounds in this mode.
+- The mix is approximately two quiz rounds for every one creative round. For example, a 10-round game contains 7 quiz rounds and 3 creative rounds.
+- Creative rounds are distributed through the game rather than grouped together.
+- Quiz topics and Family Adaptive still apply to the quiz rounds inside Spencer Mix.
+- Spencer Mix includes a separate bank of 24 family-friendly picture/sound challenges and prefers creative prompts that the host has not used recently.
+- The exact quiz/creative sequence is saved in the existing room settings JSON so every device follows the same order.
+- “Play Again With Same Players” builds a fresh mixed sequence while retaining the host’s length/topic choices.
+- No additional Supabase migration is required beyond the existing Phase 3 setup.

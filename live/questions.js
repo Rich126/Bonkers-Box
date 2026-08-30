@@ -216,6 +216,13 @@
   add('UK & Everyday','Which bin is commonly used for recyclable items where local rules allow?','Recycling bin',['Laundry basket','Toolbox','Suitcase'],'Which material can usually be recycled repeatedly without losing its basic material properties?','Aluminium',['Food waste','Ceramic plates','Used tissues']);
   add('UK & Everyday','What should you do before crossing a road?','Look and listen for traffic',['Close your eyes','Run immediately','Stand in the carriageway'],'The Green Cross Code advises pedestrians to stop, look and what?','Listen',['Wave','Shout','Point']);
 
+  // Family Adaptive should give children a genuinely different question, not simply
+  // reverse the wording of the adult question. Rotate the existing junior bank within
+  // each topic so both age groups stay on the same topic while answering distinct facts.
+  const categoryGroups=new Map();
+  questions.forEach(q=>{if(!categoryGroups.has(q.category))categoryGroups.set(q.category,[]);categoryGroups.get(q.category).push(q);});
+  categoryGroups.forEach(group=>{if(group.length<2)return;const juniors=group.map(q=>q.junior),offset=Math.max(1,Math.floor(group.length/3));group.forEach((q,i)=>{q.junior=juniors[(i+offset)%juniors.length];});});
+
   const topics=[...new Set(questions.map(q=>q.category))];
   window.SPENCER_LIVE_QUIZ={
     id:'family-mega-quiz',
