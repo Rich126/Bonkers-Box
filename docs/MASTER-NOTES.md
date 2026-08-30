@@ -9,3 +9,17 @@ The master main page contains menu integration for:
 Draw Dash menu description in this build: "Draw the whole race — finger speed is throttle. 12 circuits!"
 
 The working game logic was preserved from that recovered package. Only user-facing branding and deployment documentation were updated during the Spencer Games rebrand; internal compatibility identifiers remain unchanged.
+
+
+## Spencer Live quiz/lobby upgrade — 30 August 2026
+
+The current master adds:
+- QR-code room joining with automatic `?join=ROOM` prefilling
+- host-selected quiz length (5 / 10 / 15 / 20 questions)
+- host-selected topic groups
+- a room-specific randomized and topic-balanced question order
+- repeat avoidance using local recency history on the host device
+- 210 adaptive question cards / 420 age-adjusted prompts across eight topic groups
+- fresh question selection when replaying with the same players
+
+This upgrade uses the existing JSON room settings and needs no Supabase schema change.
