@@ -1,7 +1,7 @@
 window.SPENCER_LIVE_QUIZ = {
   id: 'family-quick-quiz',
   name: 'Family Quick Quiz',
-  description: 'Five mixed-age questions to test Spencer Live Phase 2.',
+  description: 'Five mixed-age family-adaptive questions.',
   questions: [
     {
       category: 'Space',

@@ -27,7 +27,10 @@ Current recovered Draw Dash file: `draw-dash/index.html` (V7.2 Endurance Edition
 
 `archive/` contains the preceding Netlify package and the standalone V7.2 Draw Dash package for recovery only.
 
+## Spencer Live Phase 3
 
-## Spencer Live Phase 2
+`live/` now contains both the tested Family Adaptive quiz engine and **Creative Party** with camera/photo rounds, microphone/sound rounds, anonymous voting, no self-voting and automatic voting heats for larger rooms.
 
-`live/` now contains the Family Adaptive quiz engine. Existing Supabase projects must run `supabase/phase2.sql` once before this version is used. The public browser configuration remains in `live/config.js`.
+Existing Supabase projects must run `supabase/phase3.sql` once after the Phase 2 upgrade. The browser-safe Supabase configuration remains in `live/config.js`.
+
+See `README-SPENCER-LIVE.md` for the multiplayer setup and test flow.

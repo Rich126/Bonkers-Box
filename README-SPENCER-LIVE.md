@@ -1,42 +1,37 @@
-# Spencer Live — Phase 2: Family Adaptive Quiz Engine
+# Spencer Live — Phase 3: Creative Rounds
 
-## Important: upgrade Supabase first
-The existing Phase 1 database needs one small upgrade before this build can host Phase 2 games.
+This build keeps the working Phase 2 family-adaptive quiz engine and adds the first creative multiplayer game: **Creative Party**.
 
-1. Open Supabase → SQL Editor.
-2. Open `supabase/phase2.sql` from this package.
-3. Paste the full file into a new query and press **Run**.
-4. You should see **Success. No rows returned**.
-5. Then deploy this package to the GitHub `main` branch.
+## Before deploying
 
-Do not rerun the original Phase 1 SQL instead. `phase2.sql` is designed to upgrade the database you already have.
+Run `supabase/phase3.sql` once in your existing Spencer Games Supabase project.
 
-## Phase 2 features
-- up to **20 actual players** per room; the host display does not consume a player slot
-- individual or team play
-- optional age band / Standard selection on join
-- **Family Adaptive** mode: ages 5–11 can receive a junior version while ages 12+ / Standard receive the standard version
-- one synced family quiz round for all devices
-- correctness-first scoring: **800 points correct + up to 200 speed bonus**
-- big phone-friendly 2×2 answer controls
-- realtime answer counter on the host
-- host pause/resume
-- host reveal, skip and end-game controls
-- reveal screens and realtime leaderboard
-- team leaderboard uses average score so bigger teams do not get an advantage
-- play again with the same room and players
-- session recovery after an accidental page refresh
+That upgrade creates:
+- `creative_submissions`
+- `creative_votes`
+- `creative_awards`
+- a private `spencer-live-media` Storage bucket
+- realtime subscriptions for creative submissions/votes
+- database enforcement that blocks self-voting
+- idempotent creative-round scoring
 
-## Demo game
-`live/questions.js` contains the temporary **Family Quick Quiz** used to validate the multiplayer engine. Spencer Studio will eventually replace this hard-coded demo with games created through the website.
+Do not replace your Phase 2 SQL. `phase3.sql` is an upgrade designed to run after it.
 
-## Existing features preserved
-Local Mode, Draw Dash and Flash Frenzy are unchanged.
+## Creative Party flow
 
-## Next planned phase
-Creative round engine:
-- Picture Challenge
-- Sound Challenge
-- anonymous voting
-- no self-voting
-- voting heats for larger rooms
+1. Host creates a room and chooses **Creative Party**.
+2. Players join as normal (up to 20 players).
+3. Picture Challenge: each player takes/retakes a photo and submits it.
+4. Sound Challenge: each player records, replays and submits a short sound clip.
+5. Submissions are anonymous while voting.
+6. Players cannot vote for their own entry.
+7. With more than five submissions, entries are balanced into heats of at most five.
+8. Heat winners progress to a grand final. Ties progress together.
+9. Scores: 100 participation, +1000 winner, +500 second place. Ties are handled fairly.
+10. Media is stored in a private Supabase bucket and the host cleans it up when the game ends or closes.
+
+## Browser permissions
+
+Camera and microphone capture require HTTPS. Cloudflare Pages/custom domains provide HTTPS, so players should allow camera/microphone access when prompted by their phone browser.
+
+The host screen never needs camera/microphone access unless the host also joins separately as a player on another device.
