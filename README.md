@@ -50,5 +50,9 @@ Family testing fixes applied to `/live`: later creative-round submission isolati
 
 The host screen now has an original lightweight 8-bit/chiptune music engine generated in the browser with Web Audio. It changes feel between lobby, quiz, creative and result screens, includes a short final-results fanfare, automatically ducks while submitted audio is playing, and remembers the host's Music On/Off choice. Player phones remain silent by default so multiple devices do not create overlapping music. No audio files or third-party music licences are required.
 
+## Spencer Live v3.8 — Impressions
+
+Creative Party and Spencer Mix now include family-safe impression rounds. Celebrity prompts use text-only names, while player-impression rounds dynamically choose an actual player in the room and persist that target in the shared round state so every device sees the same prompt. Player targets rotate before reuse where possible. Impression recordings allow up to 15 seconds and use the existing anonymous creative voting flow.
+
 ## Build versioning (v3.7+)
 Every published build must update the single version constant in `/version.js`. A small fixed badge displays that version across every active Spencer Games screen.
