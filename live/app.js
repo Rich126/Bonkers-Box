@@ -13,12 +13,10 @@
   function cleanName(v){return String(v||'').trim().replace(/\s+/g,' ').slice(0,24);}
   function cleanCode(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);}
   function randomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<4;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s;}
-  function randomSecret(){const a=new Uint8Array(24);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');}
-  async function hash(v){const data=new TextEncoder().encode(v);const out=await crypto.subtle.digest('SHA-256',data);return Array.from(new Uint8Array(out),b=>b.toString(16).padStart(2,'0')).join('');}
 
   const status=$('service-status');
   if(configured){status.textContent='Online multiplayer service connected.';status.className='status good';}
-  else{status.innerHTML='<strong>Setup required:</strong> Spencer Live is built, but Supabase has not been connected yet. Host/Join will become live after adding the project URL and public anon key to <code>live/config.js</code>.';status.className='status warn';}
+  else{status.textContent='Spencer Live is not connected to its multiplayer service.';status.className='status warn';}
 
   const avatarBox=$('avatars');
   avatars.forEach((a,i)=>{const b=document.createElement('button');b.type='button';b.className='avatar'+(i===0?' selected':'');b.textContent=a;b.setAttribute('aria-label','Choose '+a+' avatar');b.addEventListener('click',()=>{selectedAvatar=a;avatarBox.querySelectorAll('.avatar').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});avatarBox.appendChild(b);});
@@ -30,22 +28,23 @@
 
   async function createRoom(){
     msg($('host-message'),'');
-    if(!configured){msg($('host-message'),'Connect Supabase first. The setup SQL and config file are included in this build.');return;}
+    if(!configured){msg($('host-message'),'Multiplayer service is not configured.');return;}
     const hostName=cleanName($('host-name').value)||'Host';
     $('create-room').disabled=true;
     try{
-      const secret=randomSecret(), secretHash=await hash(secret);
-      let result=null, code=null;
-      for(let attempt=0;attempt<5;attempt++){
+      let room=null, code=null;
+      for(let attempt=0;attempt<8;attempt++){
         code=randomCode();
-        const {data,error}=await db.rpc('create_live_room',{p_code:code,p_host_secret_hash:secretHash,p_host_name:hostName});
-        if(!error){result=data;break;}
-        if(!String(error.message||'').toLowerCase().includes('duplicate')) throw error;
+        const {data,error}=await db.from('rooms').insert({code,status:'lobby'}).select('id,code').single();
+        if(!error){room=data;break;}
+        if(error.code!=='23505') throw error;
       }
-      if(!result) throw new Error('Could not create a unique room code. Please try again.');
-      const row=Array.isArray(result)?result[0]:result;
-      roomId=row.room_id; roomCode=code; role='host'; playerId=row.host_player_id||null;
-      sessionStorage.setItem('spencer_live_host_secret',secret);
+      if(!room) throw new Error('Could not create a unique room code. Please try again.');
+      roomId=room.id; roomCode=room.code; role='host';
+      const {data:host,error:hostError}=await db.from('players').insert({room_id:roomId,name:hostName,avatar:'⭐',score:0}).select('id').single();
+      if(hostError){await db.from('rooms').delete().eq('id',roomId);throw hostError;}
+      playerId=host.id;
+      sessionStorage.setItem('spencer_live_room',JSON.stringify({roomId,roomCode,role,playerId}));
       await openLobby();
     }catch(e){msg($('host-message'),e.message||'Could not create room.');}
     finally{$('create-room').disabled=false;}
@@ -53,19 +52,19 @@
 
   async function joinRoom(){
     msg($('join-message'),'');
-    if(!configured){msg($('join-message'),'Connect Supabase first. The setup SQL and config file are included in this build.');return;}
+    if(!configured){msg($('join-message'),'Multiplayer service is not configured.');return;}
     const code=cleanCode($('join-code').value), name=cleanName($('player-name').value);
     if(code.length!==4){msg($('join-message'),'Enter the 4-character room code.');return;}
     if(!name){msg($('join-message'),'Enter your name.');return;}
     $('join-room').disabled=true;
     try{
-      const secret=randomSecret(), secretHash=await hash(secret);
-      const {data,error}=await db.rpc('join_live_room',{p_code:code,p_name:name,p_avatar:selectedAvatar,p_player_secret_hash:secretHash});
-      if(error) throw error;
-      const row=Array.isArray(data)?data[0]:data;
-      if(!row||!row.room_id) throw new Error('Room not found or is no longer open.');
-      roomId=row.room_id; roomCode=code; playerId=row.player_id; role='player';
-      sessionStorage.setItem('spencer_live_player_secret',secret);
+      const {data:room,error:roomError}=await db.from('rooms').select('id,code,status').eq('code',code).eq('status','lobby').maybeSingle();
+      if(roomError) throw roomError;
+      if(!room) throw new Error('Room not found or is no longer open.');
+      const {data:player,error:playerError}=await db.from('players').insert({room_id:room.id,name,avatar:selectedAvatar,score:0}).select('id').single();
+      if(playerError) throw playerError;
+      roomId=room.id; roomCode=room.code; playerId=player.id; role='player';
+      sessionStorage.setItem('spencer_live_room',JSON.stringify({roomId,roomCode,role,playerId}));
       await openLobby();
     }catch(e){msg($('join-message'),e.message||'Could not join room.');}
     finally{$('join-room').disabled=false;}
@@ -74,7 +73,7 @@
   async function loadPlayers(){
     if(!db||!roomId)return;
     const {data,error}=await db.from('players').select('id,name,avatar,joined_at').eq('room_id',roomId).order('joined_at',{ascending:true});
-    if(error)return;
+    if(error){console.error(error);return;}
     const box=$('players'); $('player-count').textContent=data.length;
     box.innerHTML='';
     if(!data.length){box.innerHTML='<div class="empty">Waiting for players…</div>';return;}
@@ -95,7 +94,15 @@
       .subscribe();
   }
 
-  async function leave(){if(channel&&db)await db.removeChannel(channel);channel=null;roomId=roomCode=role=playerId=null;show('choice');}
+  async function leave(){
+    if(channel&&db)await db.removeChannel(channel);
+    channel=null;
+    // Phase 1 deliberately leaves the database row in place because delete access is not yet enabled.
+    roomId=roomCode=role=playerId=null;
+    sessionStorage.removeItem('spencer_live_room');
+    show('choice');
+  }
+
   $('create-room').addEventListener('click',createRoom);
   $('join-room').addEventListener('click',joinRoom);
   $('leave-lobby').addEventListener('click',leave);

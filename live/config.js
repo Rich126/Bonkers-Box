@@ -1,6 +1,6 @@
 // Spencer Live public client configuration.
-// These values are safe to use in browser code when Supabase Row Level Security is enabled.
+// The Supabase publishable key is intended for browser use. Access is controlled by RLS policies.
 window.SPENCER_LIVE_CONFIG = {
-  SUPABASE_URL: '',
-  SUPABASE_ANON_KEY: ''
+  SUPABASE_URL: 'https://vqoiouvcpfzzmvoljqoa.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_3GBMeoZv_wyP5dtzlFOK8g_fe-gKmfH'
 };
