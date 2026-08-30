@@ -49,3 +49,6 @@ Family testing fixes applied to `/live`: later creative-round submission isolati
 ## Spencer Live v3.6 — background music
 
 The host screen now has an original lightweight 8-bit/chiptune music engine generated in the browser with Web Audio. It changes feel between lobby, quiz, creative and result screens, includes a short final-results fanfare, automatically ducks while submitted audio is playing, and remembers the host's Music On/Off choice. Player phones remain silent by default so multiple devices do not create overlapping music. No audio files or third-party music licences are required.
+
+## Build versioning (v3.7+)
+Every published build must update the single version constant in `/version.js`. A small fixed badge displays that version across every active Spencer Games screen.
