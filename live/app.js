@@ -13,6 +13,8 @@
   const teams=[['Red','🔴 Red'],['Blue','🔵 Blue'],['Green','🟢 Green'],['Yellow','🟡 Yellow']];
   let selectedAvatar=avatars[0], selectedAge='standard', selectedTeam='Red', selectedMode='individual', selectedGame='quiz';
   let roomId=null, roomCode=null, role=null, playerId=null, channel=null;
+  let pollingHandle=null,pollBusy=false,realtimeState='idle';
+  const POLL_MS=3000,REQUEST_TIMEOUT_MS=8000;
   let currentRoom=null, currentPlayers=[], currentAnswers=[], currentSubmissions=[], currentVotes=[];
   let joinRoomSettings=null, timerHandle=null, creativeTimerHandle=null, autoRevealBusy=false, joinLookupTimer=null;
   let mediaStream=null, mediaRecorder=null, mediaChunks=[], recordingStopTimer=null;
@@ -43,6 +45,19 @@
   const serviceStatus=$('service-status');
   if(configured){serviceStatus.textContent='Online multiplayer connected. Phase 3 creative rounds ready.';serviceStatus.className='status good';}
   else{serviceStatus.textContent='Spencer Live is not connected to its multiplayer service.';serviceStatus.className='status warn';}
+
+  function setDiagnostic(id,text,state='warn'){const el=$(id);if(!el)return;el.textContent=text;el.className='diag-value '+state;}
+  function errorKind(error){const text=String((error&&error.message)||error||'').toLowerCase();if(/abort|timeout|timed out/.test(text))return'timeout';if(/failed to fetch|networkerror|load failed|network request failed/.test(text))return'network';return'error';}
+  async function fetchWithTimeout(url,options={},timeout=REQUEST_TIMEOUT_MS){const controller=window.AbortController?new AbortController():null;const timer=setTimeout(()=>{if(controller)controller.abort();},timeout);try{return await fetch(url,{...options,signal:controller?controller.signal:undefined,cache:'no-store'});}finally{clearTimeout(timer);}}
+  async function runDiagnostics(){
+    setDiagnostic('diag-site','Reachable','good');setDiagnostic('diag-rest','Checking…','warn');
+    if(!$('diag-note'))return;
+    if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY){setDiagnostic('diag-rest','Not configured','bad');$('diag-note').textContent='The multiplayer service configuration is missing.';return;}
+    try{const response=await fetchWithTimeout(cfg.SUPABASE_URL+'/rest/v1/rooms?select=id&limit=1',{headers:{apikey:cfg.SUPABASE_ANON_KEY,Authorization:'Bearer '+cfg.SUPABASE_ANON_KEY}});if(!response.ok)throw new Error('REST HTTP '+response.status);setDiagnostic('diag-rest','Reachable','good');$('diag-note').textContent=realtimeState==='subscribed'?'REST and Realtime are connected.':'Supabase REST is reachable. Realtime will be tested when a room is opened.';}
+    catch(e){const kind=errorKind(e);setDiagnostic('diag-rest',kind==='timeout'?'Timed out':kind==='network'?'Network blocked':'Error','bad');$('diag-note').textContent=kind==='timeout'?'Supabase did not respond within 8 seconds. The Wi-Fi may be slow or filtering traffic.':kind==='network'?'This device can open Spencer Games but cannot reach Supabase. Check Wi-Fi filtering, parental controls or DNS.':'Supabase responded with an error: '+String((e&&e.message)||e);}
+  }
+  $('run-diagnostics').addEventListener('click',runDiagnostics);
+  runDiagnostics();
 
   function buildChoiceButtons(){
     const avatarBox=$('avatars');
@@ -150,7 +165,7 @@
     finally{$('join-room').disabled=false;}
   }
 
-  function friendlyError(e){const t=String((e&&e.message)||e||'');if(t.includes('ROOM_FULL'))return 'This room already has 20 players.';if(t.includes('ROOM_NOT_OPEN'))return 'That room has already started.';if(t.includes('SELF_VOTE'))return 'You cannot vote for your own submission.';if(t.includes('INVALID_VOTE'))return 'That vote is not valid for this round.';if(t.includes('creative_submissions')||t.includes('Phase 3'))return 'Supabase needs the Phase 3 upgrade. Run supabase/phase3.sql first.';if(isFetchFailure(e))return 'Network connection to Spencer Live was interrupted. Please tap Join again.';return t||'Something went wrong.';}
+  function friendlyError(e){const t=String((e&&e.message)||e||'');if(t.includes('ROOM_FULL'))return 'This room already has 20 players.';if(t.includes('ROOM_NOT_OPEN'))return 'That room has already started.';if(t.includes('SELF_VOTE'))return 'You cannot vote for your own submission.';if(t.includes('INVALID_VOTE'))return 'That vote is not valid for this round.';if(t.includes('creative_submissions')||t.includes('Phase 3'))return 'Supabase needs the Phase 3 upgrade. Run supabase/phase3.sql first.';const kind=errorKind(e);if(kind==='timeout')return 'Spencer Live took too long to respond. Check connection diagnostics and try again.';if(kind==='network')return 'This device cannot currently reach Spencer Live data. Check connection diagnostics and try again.';return t||'Something went wrong.';}
 
   async function loadRoom(){
     if(!db||!roomId)return false;
@@ -177,7 +192,16 @@
     currentSubmissions=subs||[];currentVotes=votes||[];renderCreativeCounts();if(settingsOf().gameKey==='creative')renderCurrentView();
   }
 
+  async function pollRoom(){
+    if(pollBusy||!roomId||!db)return;pollBusy=true;
+    try{if(!(await loadRoom()))return;await loadPlayers();if(currentRoom.status!=='lobby'){if(settingsOf().gameKey==='creative')await loadCreativeData();else await loadAnswers();renderCurrentView();}else openLobby();setDiagnostic('diag-updates','Polling active','good');}
+    catch(e){console.error(e);setDiagnostic('diag-updates',errorKind(e)==='timeout'?'Polling timed out':'Polling retrying','bad');}
+    finally{pollBusy=false;}
+  }
+  function startPolling(reason){if(pollingHandle||!roomId)return;setDiagnostic('diag-updates','Polling every 3 sec','good');if(reason)$('diag-note').textContent=reason+' Lobby and game updates will continue by polling.';pollRoom();pollingHandle=setInterval(pollRoom,POLL_MS);}
+  function stopPolling(){if(pollingHandle){clearInterval(pollingHandle);pollingHandle=null;}pollBusy=false;}
   async function subscribeRoom(){
+    stopPolling();
     if(channel&&db)await db.removeChannel(channel);
     channel=db.channel('spencer-live-'+roomId)
       .on('postgres_changes',{event:'*',schema:'public',table:'rooms',filter:'id=eq.'+roomId},async()=>{if(await loadRoom())await openExperience();})
@@ -185,7 +209,8 @@
       .on('postgres_changes',{event:'*',schema:'public',table:'answers',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='quiz')await loadAnswers();})
       .on('postgres_changes',{event:'*',schema:'public',table:'creative_submissions',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative')await loadCreativeData();})
       .on('postgres_changes',{event:'*',schema:'public',table:'creative_votes',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative')await loadCreativeData();})
-      .subscribe();
+      .subscribe(status=>{realtimeState=status==='SUBSCRIBED'?'subscribed':String(status||'').toLowerCase();if(status==='SUBSCRIBED'){setDiagnostic('diag-realtime','Connected','good');setDiagnostic('diag-updates','Realtime','good');stopPolling();$('diag-note').textContent='REST and Realtime are connected.';}else if(status==='TIMED_OUT'){setDiagnostic('diag-realtime','Timed out','bad');startPolling('Realtime timed out.');}else if(status==='CHANNEL_ERROR'){setDiagnostic('diag-realtime','Connection error','bad');startPolling('Realtime could not connect.');}else if(status==='CLOSED'){setDiagnostic('diag-realtime','Disconnected','bad');startPolling('Realtime disconnected.');}else{setDiagnostic('diag-realtime','Connecting…','warn');}});
+    setTimeout(()=>{if(roomId&&realtimeState!=='subscribed'){setDiagnostic('diag-realtime','Unavailable','bad');startPolling('Realtime did not establish promptly.');}},7000);
   }
 
   async function openExperience(){
@@ -451,11 +476,11 @@
   function stopTimers(){if(timerHandle){clearInterval(timerHandle);timerHandle=null;}if(creativeTimerHandle){clearInterval(creativeTimerHandle);creativeTimerHandle=null;}}
 
   async function leave(){
-    stopTimers();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;
+    stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;
     if(db&&roomId){try{if(role==='player'&&playerId){await cleanupPlayerMedia(playerId);await db.from('players').delete().eq('id',playerId);}else if(role==='host'){if(settingsOf().gameKey==='creative')await cleanupCreativeMedia(true);await db.from('rooms').update({status:'closed',updated_at:new Date().toISOString()}).eq('id',roomId);}}catch(e){console.error(e);}}
     roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];clearSession();show('choice');
   }
-  async function roomClosed(){stopTimers();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
+  async function roomClosed(){stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
 
   // Base controls
   $('create-room').addEventListener('click',createRoom);$('join-room').addEventListener('click',joinRoom);$('leave-lobby').addEventListener('click',leave);$('start-game').addEventListener('click',startGame);
