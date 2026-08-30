@@ -36,8 +36,16 @@ Current recovered Draw Dash file: `draw-dash/index.html` (V7.2 Endurance Edition
 
 ## Spencer Live Phase 3
 
-`live/` now contains both the tested Family Adaptive quiz engine and **Creative Party** with camera/photo rounds, microphone/sound rounds, anonymous voting, no self-voting and automatic voting heats for larger rooms.
+`live/` now contains the tested **Family Mega Quiz**, **Creative Party**, and **Spencer Mix**. Spencer Mix combines quiz questions with camera/photo and microphone/sound creative rounds in one shared game and leaderboard.
 
 Existing Supabase projects must run `supabase/phase3.sql` once after the Phase 2 upgrade. The browser-safe Supabase configuration remains in `live/config.js`.
 
 See `README-SPENCER-LIVE.md` for the multiplayer setup and test flow.
+
+## Latest testing fixes — Spencer Live v3.5
+
+Family testing fixes applied to `/live`: later creative-round submission isolation, genuinely distinct junior adaptive questions, changeable quiz answers until timeout/reveal, and persistent automatic session recovery. See `TESTING-FIXES-v3.5.md`.
+
+## Spencer Live v3.6 — background music
+
+The host screen now has an original lightweight 8-bit/chiptune music engine generated in the browser with Web Audio. It changes feel between lobby, quiz, creative and result screens, includes a short final-results fanfare, automatically ducks while submitted audio is playing, and remembers the host's Music On/Off choice. Player phones remain silent by default so multiple devices do not create overlapping music. No audio files or third-party music licences are required.
