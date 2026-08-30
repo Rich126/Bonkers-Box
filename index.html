@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#08051a">
-<title>Bonkers Box</title>
+<title>Spencer Games</title>
 <style>
   html, body, #root { min-height: 100%; margin: 0; }
   html { background: #08051a; }
@@ -54,7 +54,7 @@
 </head>
 <body>
 <div id="root"></div>
-<div id="boot-status">Opening Bonkers Box…</div>
+<div id="boot-status">Opening Spencer Games…</div>
 <pre id="fatal-error"></pre>
 <script>
 (function () {
@@ -82,7 +82,7 @@
     if (boot) boot.style.display = 'none';
     if (box) {
       box.style.display = 'block';
-      box.textContent = 'Bonkers Box could not start.\n\n' + (error && (error.stack || error.message) || String(error));
+      box.textContent = 'Spencer Games could not start.\n\n' + (error && (error.stack || error.message) || String(error));
     }
   };
   addEventListener('error', function (event) { self.__showBonkersError(event.error || event.message); });
@@ -3293,7 +3293,7 @@ function MainMenu({ onSelectGame }) {
                         backgroundSize: "300% 300%", animation: "shimmer 4s linear infinite",
                         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                         filter: "drop-shadow(0 3px 8px rgba(0,0,0,.5))",
-                    } }, "THE BONKERS BOX"),
+                    } }, "SPENCER GAMES"),
                 React.createElement("div", { style: { fontSize: 13, opacity: .5, letterSpacing: 1 } }, "Family Game Night Pack")),
             React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, GAMES.map(game => (React.createElement("button", { key: game.id, onClick: () => onSelectGame(game.id), style: {
                     background: game.bg, border: `2px solid ${game.color}33`, borderRadius: 20,
@@ -3384,9 +3384,9 @@ try {
 }
 </script>
 
-<div id="bb-welcome" aria-label="Bonkers Box introduction">
+<div id="bb-welcome" aria-label="Spencer Games introduction">
  <div class="bb-guide-inner">
-  <div class="bb-guide-logo">THE BONKERS <span>BOX</span></div>
+  <div class="bb-guide-logo">SPENCER <span>GAMES</span></div>
   <p class="bb-guide-sub">A collection of quick family games for ages 5 to adult, played together around one phone or tablet.</p>
   <div class="bb-guide-card">
    <h2>How this works</h2>
@@ -3398,7 +3398,7 @@ try {
   </div>
   <div class="bb-guide-card">
    <h2>What are we playing?</h2>
-   <p>Bonkers Box is not one single game. It is a <b>family game-night pack</b>. Pick a game from the menu based on the mood: racing, luck, memory, quizzes, drawing, bluffing or fast reactions.</p>
+   <p>Spencer Games is not one single game. It is a <b>family game-night pack</b>. Pick a game from the menu based on the mood: racing, luck, memory, quizzes, drawing, bluffing or fast reactions.</p>
   </div>
   <button id="bb-enter" class="bb-guide-btn bb-guide-primary">Open the game box</button>
   <button id="bb-rules-first" class="bb-guide-btn bb-guide-secondary">See every game explained</button>
@@ -3415,7 +3415,7 @@ try {
    <h2>Games included</h2>
    <div class="bb-game-list">
     <div class="bb-game-rule"><strong>🏁 Draw Dash 1.0</strong><small>Draw the entire selected race in one continuous stroke. Follow the direction arrows, move quickly on straights and slow your finger before corners. Includes 12 distinct circuits.</small></div>
-    <div class="bb-game-rule"><strong>💡 Flash Frenzy!</strong><small>Each player gets the same sequence of lights. Tap green as quickly as possible. In Bonkers mode, ignore red decoys — false starts and red taps add time penalties. Lowest total reaction time wins.</small></div>
+    <div class="bb-game-rule"><strong>💡 Flash Frenzy!</strong><small>Each player gets the same sequence of lights. Tap green as quickly as possible. In Frenzy mode, ignore red decoys — false starts and red taps add time penalties. Lowest total reaction time wins.</small></div>
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🧠 Noodle Noggin</strong><small>Watch an emoji sequence, remember it, then tap the same sequence back in the correct order.</small></div>
     <div class="bb-game-rule"><strong>⚡ Zappy Tappy</strong><small>A reaction game. Tap the correct target before it disappears. Fastest accurate players score best.</small></div>
@@ -3481,7 +3481,7 @@ try {
  document.getElementById('bb-resume-game').onclick=function(){setPaused(false);};
  document.getElementById('bb-open-guide-pause').onclick=function(){setPaused(false);var help=document.getElementById('bb-help-modal');if(help){help.style.display='block';document.body.style.overflow='hidden';}};
  document.getElementById('bb-end-to-home').onclick=function(){
-   if(confirm('End the current game and return to the Bonkers Box home screen? Current progress will be lost.')){
+   if(confirm('End the current game and return to the Spencer Games home screen? Current progress will be lost.')){
      try{localStorage.removeItem('bonkersPausedAt');}catch(e){}
      location.reload();
    }
@@ -3501,7 +3501,7 @@ try {
    if(!event.data||event.data.type!=='BONKERS_DRAW_DASH_HOME')return;
    var frame=document.querySelector('iframe[title="Draw Dash 1.0"]');
    if(frame){
-     // React state is internal; a clean reload returns to the native Bonkers Box home screen.
+     // React state is internal; a clean reload returns to the native Spencer Games home screen.
      window.location.reload();
    }
  });
