@@ -3286,15 +3286,14 @@ function MainMenu({ onSelectGame }) {
         Array.from({ length: 20 }).map((_, i) => React.createElement("div", { key: i, style: { position: "fixed", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, width: 2 + Math.random() * 3, height: 2 + Math.random() * 3, borderRadius: "50%", background: "rgba(255,255,255,.15)", animation: `pulse ${2 + Math.random() * 4}s ${Math.random() * 3}s infinite`, pointerEvents: "none" } })),
         React.createElement("div", { style: { maxWidth: 520, margin: "0 auto", position: "relative", zIndex: 1 } },
             React.createElement("div", { style: { textAlign: "center", marginBottom: 28 } },
-                React.createElement("div", { style: { fontSize: 52, marginBottom: 8 } }, "\uD83D\uDCE6"),
-                React.createElement("h1", { style: {
-                        fontFamily: "'Bungee Shade', cursive", fontSize: 32, margin: "0 0 6px",
-                        background: "linear-gradient(135deg,#FFD700,#FF6B35,#E040FB,#00B4D8)",
-                        backgroundSize: "300% 300%", animation: "shimmer 4s linear infinite",
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                        filter: "drop-shadow(0 3px 8px rgba(0,0,0,.5))",
-                    } }, "SPENCER GAMES"),
-                React.createElement("div", { style: { fontSize: 13, opacity: .5, letterSpacing: 1 } }, "Family Game Night Pack")),
+                React.createElement("img", {
+                    src: "assets/spencer-games-logo.png",
+                    alt: "Spencer Games — Family. Fun. Compete Together.",
+                    style: {
+                        display: "block", width: "min(100%, 420px)", height: "auto", margin: "0 auto",
+                        borderRadius: 18, boxShadow: "0 8px 30px rgba(0,0,0,.38)"
+                    }
+                })),
             React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, GAMES.map(game => (React.createElement("button", { key: game.id, onClick: () => onSelectGame(game.id), style: {
                     background: game.bg, border: `2px solid ${game.color}33`, borderRadius: 20,
                     padding: "20px 18px", cursor: "pointer", textAlign: "left",
