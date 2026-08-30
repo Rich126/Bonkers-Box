@@ -2,6 +2,14 @@
 
 This build keeps the working Phase 2 family-adaptive quiz engine and adds the first creative multiplayer game: **Creative Party**.
 
+## Fire tablet and unreliable Wi-Fi compatibility
+
+The Supabase browser client is bundled at `live/supabase.min.js`, so Spencer Live no longer needs jsDelivr when the page opens.
+
+The Connection diagnostics panel separately reports site reachability, Supabase REST reachability, Realtime/WebSocket status, and the active update method. Network failures and eight-second timeouts have distinct messages.
+
+If Realtime cannot connect, times out or disconnects, lobby and game-state updates automatically continue by polling every three seconds. Polling stops when Realtime reconnects.
+
 ## Before deploying
 
 Run `supabase/phase3.sql` once in your existing Spencer Games Supabase project.
