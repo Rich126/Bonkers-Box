@@ -99,6 +99,18 @@
     finally{$('create-room').disabled=false;}
   }
 
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  function isFetchFailure(error){return /failed to fetch|networkerror|load failed/i.test(String((error&&error.message)||error||''));}
+  async function retryRead(run,attempts=3){
+    let last=null;
+    for(let i=0;i<attempts;i++){
+      const result=await run();last=result;
+      if(!result||!result.error||!isFetchFailure(result.error))return result;
+      if(i<attempts-1)await wait(250*(i+1));
+    }
+    return last;
+  }
+
   async function joinRoom(){
     msg($('join-message'),'');if(!configured){msg($('join-message'),'Multiplayer service is not configured.');return;}
     const code=cleanCode($('join-code').value),name=cleanName($('player-name').value);
@@ -106,19 +118,39 @@
     if(!name){msg($('join-message'),'Enter your name.');return;}
     $('join-room').disabled=true;
     try{
-      const {data:room,error:roomError}=await db.from('rooms').select('*').eq('code',code).eq('status','lobby').maybeSingle();
+      // Keep joining deliberately lightweight. Creative/media readiness is checked by the host,
+      // not by every phone that joins the room.
+      const roomResult=await retryRead(()=>db.from('rooms').select('*').eq('code',code).eq('status','lobby').maybeSingle());
+      const {data:room,error:roomError}=roomResult||{};
       if(roomError)throw roomError;if(!room)throw new Error('Room not found or is no longer open.');
-      const s=settingsOf(room);if(s.gameKey==='creative')await assertPhase3Ready();
-      const {count,error:countError}=await db.from('players').select('*',{count:'exact',head:true}).eq('room_id',room.id);if(countError)throw countError;
+      const s=settingsOf(room);
+      const countResult=await retryRead(()=>db.from('players').select('id',{count:'exact',head:true}).eq('room_id',room.id));
+      const {count,error:countError}=countResult||{};if(countError)throw countError;
       if((count||0)>=20)throw new Error('ROOM_FULL');
+
+      // Use a client-generated UUID so a lost mobile response can be retried safely without
+      // accidentally creating the same player twice.
+      const joinId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():null;
       const row={room_id:room.id,name,avatar:selectedAvatar,score:0,age_band:selectedAge,team:s.gameMode==='teams'?selectedTeam:null};
-      const {data:player,error:playerError}=await db.from('players').insert(row).select('id').single();if(playerError)throw playerError;
+      if(joinId)row.id=joinId;
+      let player=null,lastInsertError=null;
+      for(let attempt=0;attempt<2&&!player;attempt++){
+        const {data,error}=await db.from('players').insert(row).select('id').single();
+        if(!error){player=data;break;}
+        lastInsertError=error;
+        if(!isFetchFailure(error)||!joinId)break;
+        await wait(350);
+        // The insert may have reached Supabase even if the response was lost. Check by the UUID.
+        const check=await retryRead(()=>db.from('players').select('id').eq('id',joinId).eq('room_id',room.id).maybeSingle(),2);
+        if(check&&check.data){player=check.data;break;}
+      }
+      if(!player)throw lastInsertError||new Error('Could not join the room. Please try again.');
       roomId=room.id;roomCode=room.code;playerId=player.id;role='player';currentRoom=room;saveSession();await subscribeRoom();await openExperience();
     }catch(e){msg($('join-message'),friendlyError(e));}
     finally{$('join-room').disabled=false;}
   }
 
-  function friendlyError(e){const t=String((e&&e.message)||e||'');if(t.includes('ROOM_FULL'))return 'This room already has 20 players.';if(t.includes('ROOM_NOT_OPEN'))return 'That room has already started.';if(t.includes('SELF_VOTE'))return 'You cannot vote for your own submission.';if(t.includes('INVALID_VOTE'))return 'That vote is not valid for this round.';if(t.includes('creative_submissions')||t.includes('Phase 3'))return 'Supabase needs the Phase 3 upgrade. Run supabase/phase3.sql first.';return t||'Something went wrong.';}
+  function friendlyError(e){const t=String((e&&e.message)||e||'');if(t.includes('ROOM_FULL'))return 'This room already has 20 players.';if(t.includes('ROOM_NOT_OPEN'))return 'That room has already started.';if(t.includes('SELF_VOTE'))return 'You cannot vote for your own submission.';if(t.includes('INVALID_VOTE'))return 'That vote is not valid for this round.';if(t.includes('creative_submissions')||t.includes('Phase 3'))return 'Supabase needs the Phase 3 upgrade. Run supabase/phase3.sql first.';if(isFetchFailure(e))return 'Network connection to Spencer Live was interrupted. Please tap Join again.';return t||'Something went wrong.';}
 
   async function loadRoom(){
     if(!db||!roomId)return false;

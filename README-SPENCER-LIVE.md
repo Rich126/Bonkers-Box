@@ -35,3 +35,11 @@ Do not replace your Phase 2 SQL. `phase3.sql` is an upgrade designed to run afte
 Camera and microphone capture require HTTPS. Cloudflare Pages/custom domains provide HTTPS, so players should allow camera/microphone access when prompted by their phone browser.
 
 The host screen never needs camera/microphone access unless the host also joins separately as a player on another device.
+
+
+## Phase 3.1 join reliability patch
+
+- Creative-room joins no longer perform the media-schema readiness probe on every player phone.
+- Room/player reads retry transient mobile network failures.
+- Player inserts use a client-generated UUID where available so a lost response can be recovered without duplicating a player.
+- No additional Supabase SQL migration is required beyond Phase 3.
