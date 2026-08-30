@@ -5,6 +5,7 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 ## Publish these files together
 
 - `index.html` — Spencer Games main application
+- `assets/spencer-games-logo.png` — Spencer Games homepage logo
 - `draw-dash/index.html` — Draw Race / Draw Dash 1.0
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
 
