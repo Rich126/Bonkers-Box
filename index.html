@@ -48,11 +48,7 @@
 .bb-guide-btn{display:block;width:100%;border:0;border-radius:17px;padding:15px 16px;font:900 18px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;touch-action:manipulation}.bb-guide-primary{background:linear-gradient(135deg,#FFD740,#FF8C00);color:#211300;box-shadow:0 8px 24px rgba(255,174,0,.25)}.bb-guide-secondary{background:#302447;color:#fff;margin-top:9px}
 #bb-help-button{position:fixed;right:13px;bottom:max(13px,env(safe-area-inset-bottom));z-index:150000;width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.22);background:#6f3dd1;color:#fff;font:1000 24px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);touch-action:manipulation}
 .bb-close-row{position:sticky;top:0;display:flex;justify-content:flex-end;z-index:2}.bb-close{width:auto;padding:10px 14px;background:#3b2d55;color:#fff;font-size:15px}
- .bb-guide-note{font-size:13px;text-align:center;color:#9e94af;margin-top:12px}
-.bb-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 12px}.bb-mode-card{border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:20px 16px;background:rgba(255,255,255,.07);color:#fff;text-align:left;cursor:pointer;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 36px rgba(0,0,0,.24)}.bb-mode-card:active{transform:scale(.985)}.bb-mode-icon{font-size:46px;line-height:1}.bb-mode-card h2{font-size:25px;margin:12px 0 6px}.bb-mode-card p{font-size:14px;line-height:1.45;color:#d2c9df;margin:0}.bb-mode-card.local{background:linear-gradient(145deg,rgba(0,212,255,.17),rgba(84,104,255,.16));border-color:rgba(71,196,255,.35)}.bb-mode-card.live{background:linear-gradient(145deg,rgba(255,215,64,.17),rgba(255,107,0,.15));border-color:rgba(255,190,64,.35)}.bb-mode-pill{display:inline-block;align-self:flex-start;margin-top:14px;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900;letter-spacing:.25px;background:rgba(255,255,255,.1)}
-#bb-live-shell{display:none;position:fixed;inset:0;z-index:210000;background:linear-gradient(180deg,#13072c,#08051a 58%,#05030f);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:auto;padding:max(20px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}#bb-live-shell *{box-sizing:border-box}.bb-live-hero{text-align:center;padding:8px 0 6px}.bb-live-mark{font-size:64px}.bb-live-title{font-size:clamp(36px,9vw,58px);font-weight:1000;letter-spacing:-1.5px;margin:8px 0 4px}.bb-live-title span{color:#FFD740}.bb-live-sub{color:#c7bddc;line-height:1.45;max-width:520px;margin:0 auto 18px}.bb-live-actions{display:grid;gap:10px}.bb-live-action{border-radius:18px;padding:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.bb-live-action strong{display:block;font-size:18px;margin-bottom:4px}.bb-live-action small{color:#bfb5d0;line-height:1.4}.bb-soon{display:inline-block;background:#FFD740;color:#211300;font-weight:1000;border-radius:999px;padding:6px 10px;font-size:12px;margin-bottom:8px}
-.bb-live-launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.bb-live-launch{min-height:180px;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:18px;color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer}.bb-live-launch.host{background:linear-gradient(145deg,rgba(0,212,255,.2),rgba(84,104,255,.2))}.bb-live-launch.join{background:linear-gradient(145deg,rgba(255,215,64,.2),rgba(255,107,0,.18))}.bb-live-launch-icon{font-size:38px}.bb-live-launch strong{font-size:21px;margin:9px 0 5px}.bb-live-launch small{color:#d2c9df;line-height:1.4;flex:1}.bb-live-launch b{margin-top:12px;font-size:13px;letter-spacing:.6px}
-@media(max-width:560px){.bb-mode-grid,.bb-live-launch-grid{grid-template-columns:1fr}.bb-mode-card{min-height:155px}.bb-live-launch{min-height:145px}}
+.bb-guide-note{font-size:13px;text-align:center;color:#9e94af;margin-top:12px}
 @media(max-width:430px){.bb-how-grid{grid-template-columns:1fr}.bb-how{display:grid;grid-template-columns:38px 90px 1fr;text-align:left;align-items:center}.bb-how b{margin:0}}
 </style>
 
@@ -3388,50 +3384,25 @@ try {
 }
 </script>
 
-<div id="bb-welcome" aria-label="Spencer Games mode selection">
+<div id="bb-welcome" aria-label="Spencer Games introduction">
  <div class="bb-guide-inner">
   <img class="bb-welcome-logo" src="assets/spencer-games-logo.png" alt="Spencer Games — Family. Fun. Compete Together.">
-  <p class="bb-guide-sub">How are you playing today?</p>
-  <div class="bb-mode-grid">
-   <button id="bb-local-mode" class="bb-mode-card local" type="button">
-    <div><div class="bb-mode-icon">🎮</div><h2>Local Mode</h2><p>Everything Spencer Games has today. Play together on one device with Draw Dash, Flash Frenzy and the full family game collection.</p></div>
-    <span class="bb-mode-pill">PLAY NOW</span>
-   </button>
-   <button id="bb-multiplayer-mode" class="bb-mode-card live" type="button">
-    <div><div class="bb-mode-icon">🌐</div><h2>Multiplayer Mode</h2><p>Spencer Live. Everyone joins on their own phone for online quizzes, voting, picture challenges, sound challenges and more.</p></div>
-    <span class="bb-mode-pill">SPENCER LIVE</span>
-   </button>
-  </div>
-  <button id="bb-rules-first" class="bb-guide-btn bb-guide-secondary">See the Local games guide</button>
-  <div class="bb-guide-note">Local Mode contains everything already built. Multiplayer Mode is where the new online games will live.</div>
- </div>
-</div>
-
-<div id="bb-live-shell" aria-label="Spencer Live">
- <div class="bb-guide-inner">
-  <div class="bb-live-hero">
-   <div class="bb-live-mark">🌐</div>
-   <div class="bb-live-title">SPENCER <span>LIVE</span></div>
-   <p class="bb-live-sub">The online multiplayer side of Spencer Games. Grab your phones, join a room and play together.</p>
-  </div>
+  <p class="bb-guide-sub">A collection of quick family games for ages 5 to adult, played together around one phone or tablet.</p>
   <div class="bb-guide-card">
-   <span class="bb-soon">SPENCER LIVE</span>
-   <h2>How are you playing?</h2>
-   <p>Use the main screen to host. Everyone else joins from their own phone.</p>
-   <div class="bb-live-launch-grid">
-    <button id="bb-live-host" class="bb-live-launch host" type="button"><span class="bb-live-launch-icon">📺</span><strong>Host a Game</strong><small>Create a room code and show the lobby on the big screen.</small><b>HOST →</b></button>
-    <button id="bb-live-join" class="bb-live-launch join" type="button"><span class="bb-live-launch-icon">📱</span><strong>Join a Game</strong><small>Enter the room code, pick your name and join from this device.</small><b>JOIN →</b></button>
+   <h2>How this works</h2>
+   <div class="bb-how-grid">
+    <div class="bb-how"><div class="e">🎮</div><b>Choose a game</b><span>Each game has different rules and skills.</span></div>
+    <div class="bb-how"><div class="e">📱</div><b>Share the screen</b><span>Keep it in the middle or pass it to the named player.</span></div>
+    <div class="bb-how"><div class="e">🏆</div><b>Follow the prompts</b><span>The game tracks turns, points and winners.</span></div>
    </div>
   </div>
   <div class="bb-guide-card">
-   <h3>Built for what comes next</h3>
-   <div class="bb-live-actions">
-    <div class="bb-live-action"><strong>🧠 Quiz rounds</strong><small>Right/wrong, speed, closest wins and wagers.</small></div>
-    <div class="bb-live-action"><strong>📸 Picture rounds</strong><small>Camera submissions followed by anonymous player voting.</small></div>
-    <div class="bb-live-action"><strong>🎙️ Sound rounds</strong><small>Microphone recordings, playback and voting.</small></div>
-   </div>
+   <h2>What are we playing?</h2>
+   <p>Spencer Games is not one single game. It is a <b>family game-night pack</b>. Pick a game from the menu based on the mood: racing, luck, memory, quizzes, drawing, bluffing or fast reactions.</p>
   </div>
-  <button id="bb-live-back" class="bb-guide-btn bb-guide-secondary" type="button">← Back to Local / Multiplayer</button>
+  <button id="bb-enter" class="bb-guide-btn bb-guide-primary">Open the game box</button>
+  <button id="bb-rules-first" class="bb-guide-btn bb-guide-secondary">See every game explained</button>
+  <div class="bb-guide-note">You can reopen this guide at any time using the purple <b>?</b> button.</div>
  </div>
 </div>
 <button id="bb-help-button" aria-label="Open game guide">?</button>
@@ -3470,12 +3441,7 @@ try {
  var modal=document.getElementById('bb-help-modal');
  function openHelp(){modal.style.display='block';document.body.style.overflow='hidden';}
  function closeHelp(){modal.style.display='none';document.body.style.overflow='';}
- var live=document.getElementById('bb-live-shell');
- document.getElementById('bb-local-mode').onclick=function(){welcome.style.display='none';document.body.style.overflow='';};
- document.getElementById('bb-multiplayer-mode').onclick=function(){welcome.style.display='none';live.style.display='block';document.body.style.overflow='hidden';};
- document.getElementById('bb-live-back').onclick=function(){live.style.display='none';welcome.style.display='block';document.body.style.overflow='hidden';};
- document.getElementById('bb-live-host').onclick=function(){window.location.href='live/?mode=host';};
- document.getElementById('bb-live-join').onclick=function(){window.location.href='live/?mode=join';};
+ document.getElementById('bb-enter').onclick=function(){welcome.style.display='none';document.body.style.overflow='';};
  document.getElementById('bb-rules-first').onclick=openHelp;
  document.getElementById('bb-help-button').onclick=openHelp;
  document.getElementById('bb-close-help').onclick=closeHelp;
