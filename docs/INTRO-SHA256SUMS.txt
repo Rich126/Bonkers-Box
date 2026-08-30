@@ -1,0 +1,2 @@
+ad0e5d44b17cafd62befe88325eaf632e4db3cc33d00b255fa333e51f1ab3837  index.html
+ae016c3c274f3c44cafbae6010af2145918ac7db56b44181827e43cf3bf162ab  assets/spencer-games-intro.png

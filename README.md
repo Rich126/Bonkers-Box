@@ -6,10 +6,17 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 
 - `index.html` — Spencer Games main application
 - `assets/spencer-games-logo.png` — Spencer Games homepage logo
+- `assets/spencer-games-intro.png` — transparent intro-ident artwork used on first load
 - `draw-dash/index.html` — Draw Race / Draw Dash 1.0
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
 
 Do not upload only `index.html`: Draw Dash and Flash Frenzy are loaded as embedded pages using those relative folder paths.
+
+## Spencer Games startup intro
+
+The main `index.html` now includes a lightweight studio-style Spencer Games startup ident. It uses the real phoenix, elephant, Coventry, family and motorsport branding, displays **PLAY • CREATE • TOGETHER**, and fades into the existing Local / Multiplayer mode screen.
+
+The intro plays once per browser tab/session using `sessionStorage` (`spencerGamesIntroPlayed`) so normal navigation and reloads do not repeatedly interrupt play. Users with reduced-motion enabled receive a shortened version. The application continues loading underneath the intro.
 
 ## Draw Race
 
