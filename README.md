@@ -26,3 +26,8 @@ Current recovered Draw Dash file: `draw-dash/index.html` (V7.2 Endurance Edition
 ## Archive
 
 `archive/` contains the preceding Netlify package and the standalone V7.2 Draw Dash package for recovery only.
+
+
+## Spencer Live Phase 2
+
+`live/` now contains the Family Adaptive quiz engine. Existing Supabase projects must run `supabase/phase2.sql` once before this version is used. The public browser configuration remains in `live/config.js`.
