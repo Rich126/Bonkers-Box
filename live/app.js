@@ -2,8 +2,10 @@
   'use strict';
   const $=id=>document.getElementById(id);
   const cfg=window.SPENCER_LIVE_CONFIG||{};
-  const quiz=window.SPENCER_LIVE_QUIZ||{questions:[]};
+  const quiz=window.SPENCER_LIVE_QUIZ||{questions:[],topics:[]};
   const creative=window.SPENCER_LIVE_CREATIVE||{rounds:[]};
+  const questionById=new Map((quiz.questions||[]).map(q=>[String(q.id),q]));
+  const RECENT_QUESTIONS_KEY='spencer_live_recent_questions_v2';
   const configured=Boolean(cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY&&window.supabase);
   const db=configured?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY):null;
   const MEDIA_BUCKET='spencer-live-media';
@@ -19,6 +21,7 @@
   let joinRoomSettings=null, timerHandle=null, creativeTimerHandle=null, autoRevealBusy=false, joinLookupTimer=null;
   let mediaStream=null, mediaRecorder=null, mediaChunks=[], recordingStopTimer=null;
   let pendingMediaBlob=null, pendingMediaMime='', pendingMediaUrl='', captureRoundKey='';
+  let renderedQrValue='';
   const mediaUrlCache=new Map();
   let renderSerial=0;
 
@@ -30,16 +33,24 @@
   function randomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<4;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s;}
   function msg(target,text,type='error'){target.innerHTML=text?'<div class="'+type+'">'+escapeHtml(text)+'</div>':'';}
   function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
-  function settingsOf(room=currentRoom){const s=(room&&room.settings)||{};return {gameMode:s.gameMode==='teams'?'teams':'individual',adaptive:s.adaptive!==false,questionSeconds:clamp(Number(s.questionSeconds)||30,10,120),gameKey:s.gameKey==='creative'?'creative':'quiz'};}
+  function quizTopics(){const source=Array.isArray(quiz.topics)&&quiz.topics.length?quiz.topics:[...new Set((quiz.questions||[]).map(q=>q.category))];return source.filter(Boolean);}
+  function settingsOf(room=currentRoom){
+    const s=(room&&room.settings)||{},availableTopics=quizTopics();
+    const topics=Array.isArray(s.topics)&&s.topics.length?s.topics.filter(t=>availableTopics.includes(t)):availableTopics.slice();
+    const order=Array.isArray(s.questionOrder)?s.questionOrder.map(String).filter(id=>questionById.has(id)):[];
+    const requested=clamp(Number(s.questionCount)||5,1,Math.max(1,quiz.questions.length));
+    return {gameMode:s.gameMode==='teams'?'teams':'individual',adaptive:s.adaptive!==false,questionSeconds:clamp(Number(s.questionSeconds)||30,10,120),gameKey:s.gameKey==='creative'?'creative':'quiz',questionCount:order.length?Math.min(requested,order.length):requested,topics,questionOrder:order};
+  }
   function gs(){return (currentRoom&&currentRoom.game_state)||{};}
   function isJunior(age){return age==='5-7'||age==='8-11';}
-  function questionAt(i){return quiz.questions[Number(i)]||null;}
+  function quizTotal(){const s=settingsOf();return s.questionOrder.length||Math.min(s.questionCount,quiz.questions.length);}
+  function questionAt(i){const index=Number(i),s=settingsOf();const id=s.questionOrder[index];return (id&&questionById.get(id))||quiz.questions[index]||null;}
   function creativeAt(i){return creative.rounds[Number(i)]||null;}
   function questionVariant(q,player){const s=settingsOf();return s.adaptive&&player&&isJunior(player.age_band)?'junior':'standard';}
   function myPlayer(){return currentPlayers.find(p=>p.id===playerId)||null;}
   function saveSession(){sessionStorage.setItem('spencer_live_room',JSON.stringify({roomId,roomCode,role,playerId}));}
   function clearSession(){sessionStorage.removeItem('spencer_live_room');}
-  function gameName(key=settingsOf().gameKey){return key==='creative'?'Creative Party':'Family Quick Quiz';}
+  function gameName(key=settingsOf().gameKey){return key==='creative'?'Creative Party':'Family Mega Quiz';}
   function isCreativeState(state=gs()){return String(state.phase||'').startsWith('creative_');}
 
   const serviceStatus=$('service-status');
@@ -59,6 +70,22 @@
   $('run-diagnostics').addEventListener('click',runDiagnostics);
   runDiagnostics();
 
+  function shuffle(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function recentQuestionIds(){try{const raw=JSON.parse(localStorage.getItem(RECENT_QUESTIONS_KEY)||'[]');return Array.isArray(raw)?raw.map(String).filter(id=>questionById.has(id)):[];}catch(_){return[];}}
+  function rememberQuestionIds(ids){try{const incoming=(ids||[]).map(String),old=recentQuestionIds().filter(id=>!incoming.includes(id));localStorage.setItem(RECENT_QUESTIONS_KEY,JSON.stringify([...incoming,...old].slice(0,quiz.questions.length)));}catch(_){}}
+  function selectedTopicNames(){return Array.from(document.querySelectorAll('#topic-grid input[type=checkbox]:checked')).map(x=>x.value).filter(Boolean);}
+  function buildQuestionOrder(topics,count){
+    const wanted=(topics||[]).filter(t=>quizTopics().includes(t)),recentList=recentQuestionIds(),recent=new Set(recentList),recentRank=new Map(recentList.map((id,i)=>[id,i])),chosen=[],chosenSet=new Set();
+    const topicOrder=shuffle(wanted);
+    const groups=topicOrder.map(topic=>{const all=shuffle(quiz.questions.filter(q=>q.category===topic)),oldestFirst=all.filter(q=>recent.has(String(q.id))).sort((a,b)=>(recentRank.get(String(b.id))??0)-(recentRank.get(String(a.id))??0));return {topic,fresh:all.filter(q=>!recent.has(String(q.id))),recent:oldestFirst};});
+    function takeFrom(key){let moved=true;while(chosen.length<count&&moved){moved=false;for(const g of groups){while(g[key].length&&chosenSet.has(String(g[key][0].id)))g[key].shift();if(g[key].length&&chosen.length<count){const q=g[key].shift();chosen.push(String(q.id));chosenSet.add(String(q.id));moved=true;}}}}
+    takeFrom('fresh');takeFrom('recent');
+    return chosen.slice(0,count);
+  }
+  function updateGameLengthNote(){if(!$('game-length-note')||!$('game-length'))return;const count=clamp(Number($('game-length').value)||10,1,20);$('game-length-note').textContent=count+' questions will be chosen for this room.';}
+  function syncGameSetupVisibility(){const quizMode=selectedGame==='quiz';$('quiz-settings').classList.toggle('hidden',!quizMode);$('creative-privacy').classList.toggle('hidden',quizMode);}
+  function buildTopicButtons(){const box=$('topic-grid');box.innerHTML='';quizTopics().forEach((topic,i)=>{const label=document.createElement('label');label.className='topic-option';const input=document.createElement('input');input.type='checkbox';input.value=topic;input.checked=true;input.id='topic-'+i;const span=document.createElement('span');span.textContent=topic;label.append(input,span);box.appendChild(label);});}
+
   function buildChoiceButtons(){
     const avatarBox=$('avatars');
     avatars.forEach((a,i)=>{const b=document.createElement('button');b.type='button';b.className='avatar'+(i===0?' selected':'');b.textContent=a;b.setAttribute('aria-label','Choose '+a+' avatar');b.addEventListener('click',()=>{selectedAvatar=a;avatarBox.querySelectorAll('.avatar').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});avatarBox.appendChild(b);});
@@ -67,9 +94,13 @@
     const teamBox=$('team-grid');
     teams.forEach(([value,label],i)=>{const b=document.createElement('button');b.type='button';b.className='team-btn'+(i===0?' selected':'');b.textContent=label;b.addEventListener('click',()=>{selectedTeam=value;teamBox.querySelectorAll('.team-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});teamBox.appendChild(b);});
     document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{selectedMode=b.dataset.mode;document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('selected',x===b));}));
-    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{selectedGame=b.dataset.game==='creative'?'creative':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));}));
+    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{selectedGame=b.dataset.game==='creative'?'creative':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));syncGameSetupVisibility();}));
   }
   buildChoiceButtons();
+  buildTopicButtons();syncGameSetupVisibility();updateGameLengthNote();
+  $('game-length').addEventListener('change',updateGameLengthNote);
+  $('topics-all').addEventListener('click',()=>document.querySelectorAll('#topic-grid input[type=checkbox]').forEach(x=>x.checked=true));
+  $('topics-none').addEventListener('click',()=>document.querySelectorAll('#topic-grid input[type=checkbox]').forEach(x=>x.checked=false));
 
   $('choose-host').addEventListener('click',()=>show('host'));
   $('choose-join').addEventListener('click',()=>show('join'));
@@ -84,7 +115,7 @@
     if(error){console.error(error);return;}
     if(!data||data.status!=='lobby'){$('join-room-info').innerHTML='<div class="error">Room not found or no longer open.</div>';return;}
     const s=settingsOf(data);joinRoomSettings=s;
-    $('join-room-info').innerHTML='<div class="room-info">Room found • '+escapeHtml(gameName(s.gameKey))+' • '+(s.gameMode==='teams'?'Teams':'Individuals')+(s.gameKey==='quiz'&&s.adaptive?' • Family Adaptive':'')+'</div>';
+    $('join-room-info').innerHTML='<div class="room-info">Room found • '+escapeHtml(gameName(s.gameKey))+' • '+(s.gameMode==='teams'?'Teams':'Individuals')+(s.gameKey==='quiz'?' • '+s.questionCount+' questions'+(s.adaptive?' • Family Adaptive':''):'')+'</div>';
     $('team-row').classList.toggle('hidden',s.gameMode!=='teams');
   }
 
@@ -96,7 +127,12 @@
   async function createRoom(){
     msg($('host-message'),'');if(!configured){msg($('host-message'),'Multiplayer service is not configured.');return;}
     const hostName=cleanName($('host-name').value)||'Host';
+    const topics=selectedGame==='quiz'?selectedTopicNames():[],questionCount=selectedGame==='quiz'?clamp(Number($('game-length').value)||10,1,20):0;
+    if(selectedGame==='quiz'&&!topics.length){msg($('host-message'),'Choose at least one question topic.');return;}
+    const questionOrder=selectedGame==='quiz'?buildQuestionOrder(topics,questionCount):[];
+    if(selectedGame==='quiz'&&questionOrder.length<questionCount){msg($('host-message'),'There are not enough questions for that combination yet. Choose another topic or a shorter game.');return;}
     const settings={gameMode:selectedMode,adaptive:$('adaptive').checked,questionSeconds:Number($('question-seconds').value)||30,gameKey:selectedGame};
+    if(selectedGame==='quiz'){settings.questionCount=questionCount;settings.topics=topics;settings.questionOrder=questionOrder;}
     $('create-room').disabled=true;
     try{
       if(selectedGame==='creative')await assertPhase3Ready();
@@ -109,7 +145,7 @@
         if(error.code!=='23505')throw error;
       }
       if(!room)throw new Error('Could not create a unique room code. Please try again.');
-      roomId=room.id;roomCode=room.code;role='host';playerId=null;currentRoom=room;saveSession();await subscribeRoom();await openExperience();
+      roomId=room.id;roomCode=room.code;role='host';playerId=null;currentRoom=room;if(selectedGame==='quiz')rememberQuestionIds(questionOrder);saveSession();await subscribeRoom();await openExperience();
     }catch(e){msg($('host-message'),friendlyError(e));}
     finally{$('create-room').disabled=false;}
   }
@@ -219,15 +255,18 @@
     if(settingsOf().gameKey==='creative')await loadCreativeData();else await loadAnswers();renderCurrentView();
   }
 
+  function renderRoomQr(value){const box=$('room-qr');if(!box)return;if(renderedQrValue===value&&box.childNodes.length)return;renderedQrValue=value;box.innerHTML='';try{if(window.SpencerQR){window.SpencerQR.render(box,value);return;}}catch(e){console.error(e);}box.innerHTML='<div class="room-qr-fallback">QR unavailable<br><small>Use code '+escapeHtml(roomCode||'----')+'</small></div>';}
+
   function openLobby(){
-    stopTimers();stopAllMedia();$('room-code-display').textContent=roomCode||'----';const url=new URL(window.location.href);url.search='';url.searchParams.set('join',roomCode||'');$('join-url').textContent=url.toString();
+    stopTimers();stopAllMedia();$('room-code-display').textContent=roomCode||'----';const url=new URL(window.location.href);url.search='';url.hash='';url.searchParams.set('join',roomCode||'');const joinUrl=url.toString();$('join-url').textContent=joinUrl;$('qr-room-code').textContent=roomCode||'----';
+    const showQr=role==='host';$('qr-join').classList.toggle('hidden',!showQr);if(showQr)renderRoomQr(joinUrl);
     $('lobby-title').textContent=role==='host'?'Your Spencer Live Lobby':'You’re in!';$('start-game').classList.toggle('hidden',role!=='host');$('start-game').disabled=role!=='host'||currentPlayers.length<1;
     const s=settingsOf();$('start-game').textContent='Start '+gameName(s.gameKey);
     const chips=['<span class="chip">'+(s.gameMode==='teams'?'👨‍👩‍👧‍👦 Teams':'👤 Individuals')+'</span>','<span class="chip">🎮 '+escapeHtml(gameName(s.gameKey))+'</span>'];
-    if(s.gameKey==='quiz'){chips.push('<span class="chip">'+(s.adaptive?'🧒 Family Adaptive':'🧠 Same questions')+'</span>','<span class="chip">⏱ '+s.questionSeconds+' sec</span>','<span class="chip">✅ 800 + up to 200 speed</span>');}
+    if(s.gameKey==='quiz'){chips.push('<span class="chip">🧩 '+s.questionCount+' questions</span>','<span class="chip">'+(s.adaptive?'🧒 Family Adaptive':'🧠 Same questions')+'</span>','<span class="chip">⏱ '+s.questionSeconds+' sec</span>','<span class="chip">📚 '+escapeHtml(s.topics.length===quizTopics().length?'All topics':s.topics.join(' • '))+'</span>','<span class="chip">✅ 800 + up to 200 speed</span>');}
     else chips.push('<span class="chip">📸 Camera</span>','<span class="chip">🎙️ Microphone</span>','<span class="chip">🗳️ Anonymous voting</span>');
     $('settings-summary').innerHTML=chips.join('');
-    $('lobby-note').textContent=role==='host'?'The host screen does not count toward the 20-player limit. Join separately from a phone if you want to play too.':'Waiting for the host to start the game…';show('lobby');renderPlayers();
+    $('lobby-note').textContent=role==='host'?'Scan the QR code or enter the room code. The host screen does not count toward the 20-player limit.':'Waiting for the host to start the game…';show('lobby');renderPlayers();
   }
 
   function renderPlayers(){
@@ -262,7 +301,7 @@
   // ---------------- Quiz engine (Phase 2) ----------------
   function renderGame(){
     if(!currentRoom||currentRoom.status==='lobby')return;const state=gs(),q=questionAt(state.questionIndex);if(!q)return;
-    show('game');$('round-category').textContent=q.category.toUpperCase();$('round-title').textContent='Question '+(Number(state.questionIndex)+1)+' of '+quiz.questions.length;$('round-progress').style.width=((Number(state.questionIndex)+1)/quiz.questions.length*100)+'%';
+    const total=quizTotal();show('game');$('round-category').textContent=q.category.toUpperCase();$('round-title').textContent='Question '+(Number(state.questionIndex)+1)+' of '+total;$('round-progress').style.width=((Number(state.questionIndex)+1)/total*100)+'%';
     const s=settingsOf();const host=role==='host';const player=myPlayer();const variant=host?'standard':questionVariant(q,player);const v=q[variant];
     $('host-adaptive-view').classList.toggle('hidden',!(host&&s.adaptive));
     if(host&&s.adaptive){$('host-adaptive-view').innerHTML='<div class="mini-q"><b>Junior • ages 5–11</b><span>'+escapeHtml(q.junior.question)+'</span></div><div class="mini-q"><b>Standard • ages 12+</b><span>'+escapeHtml(q.standard.question)+'</span></div>';$('question-level').textContent='Family Adaptive • players answer on their phones';$('question-text').textContent='Check your phones!';}
@@ -450,7 +489,7 @@
   // ---------------- Shared host / scoring / lifecycle ----------------
   async function updateGameState(next,status){if(role!=='host'||!currentRoom)return;const payload={game_state:next,updated_at:new Date().toISOString()};if(status)payload.status=status;const {error}=await db.from('rooms').update(payload).eq('id',roomId);if(error)throw error;}
   async function showLeaderboard(){await updateGameState({...gs(),phase:'leaderboard'});}
-  async function nextQuestion(){if(settingsOf().gameKey==='creative')return nextCreativeRound();const next=Number(gs().questionIndex)+1;if(next>=quiz.questions.length){await finishGame();return;}currentAnswers=[];await updateGameState(newQuestionState(next));}
+  async function nextQuestion(){if(settingsOf().gameKey==='creative')return nextCreativeRound();const next=Number(gs().questionIndex)+1;if(next>=quizTotal()){await finishGame();return;}currentAnswers=[];await updateGameState(newQuestionState(next));}
   async function skipQuestion(){await nextQuestion();}
   async function finishGame(){if(role!=='host')return;try{if(settingsOf().gameKey==='creative')await cleanupCreativeMedia(true);}catch(e){console.error(e);}await updateGameState({...gs(),phase:'finished'},'finished');}
 
@@ -462,7 +501,11 @@
   function fillLeaderboard(target){const rows=getLeaderboardRows(),box=$(target);box.innerHTML='';if(!rows.length){box.innerHTML='<div class="empty">No scores yet.</div>';return;}rows.forEach((r,i)=>{const d=document.createElement('div');d.className='leader-row';d.innerHTML='<span class="rank">'+(i+1)+'</span><span class="who">'+escapeHtml(r.name)+(r.members?' <small>('+r.members+')</small>':'')+'</span><span class="pts">'+r.score+' pts</span>';box.appendChild(d);});}
   function renderLeaderboard(){stopTimers();stopAllMedia();show('leaderboard');const s=settingsOf();$('leaderboard-title').textContent=s.gameKey==='creative'?'🏆 Leaderboard • Creative Round '+(Number(gs().creativeIndex)+1):'🏆 Leaderboard • Round '+(Number(gs().questionIndex)+1);fillLeaderboard('leaderboard');$('next-question').classList.toggle('hidden',role!=='host');$('next-question').textContent=s.gameKey==='creative'?'Next Round':'Next Question';$('player-wait-next').classList.toggle('hidden',role==='host');}
   function renderFinished(){stopTimers();stopAllMedia();show('finished');fillLeaderboard('final-leaderboard');$('play-again').classList.toggle('hidden',role!=='host');}
-  async function playAgain(){if(role!=='host')return;await db.from('answers').delete().eq('room_id',roomId);if(settingsOf().gameKey==='creative')await cleanupCreativeMedia(true);await db.from('players').update({score:0}).eq('room_id',roomId);await updateGameState({},'lobby');}
+  async function playAgain(){
+    if(role!=='host')return;await db.from('answers').delete().eq('room_id',roomId);const s=settingsOf();if(s.gameKey==='creative')await cleanupCreativeMedia(true);await db.from('players').update({score:0}).eq('room_id',roomId);
+    if(s.gameKey==='quiz'){const order=buildQuestionOrder(s.topics,s.questionCount),nextSettings={...(currentRoom.settings||{}),questionOrder:order};const {error}=await db.from('rooms').update({settings:nextSettings,game_state:{},status:'lobby',updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;rememberQuestionIds(order);currentRoom={...currentRoom,settings:nextSettings,game_state:{},status:'lobby'};await openExperience();return;}
+    await updateGameState({},'lobby');
+  }
 
   async function cleanupCreativeMedia(clearRows=true){
     if(!db||!roomId)return;let subs=currentSubmissions;if(clearRows){const {data}=await db.from('creative_submissions').select('storage_path').eq('room_id',roomId);subs=data||[];}const paths=Array.from(new Set((subs||[]).map(s=>s.storage_path).filter(Boolean)));if(paths.length){for(let i=0;i<paths.length;i+=100)await db.storage.from(MEDIA_BUCKET).remove(paths.slice(i,i+100));}

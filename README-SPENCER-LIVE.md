@@ -1,6 +1,6 @@
 # Spencer Live — Phase 3: Creative Rounds
 
-This build keeps the working Phase 2 family-adaptive quiz engine and adds the first creative multiplayer game: **Creative Party**.
+This build keeps the Phase 2 family-adaptive quiz engine, expands it into **Family Mega Quiz**, and includes the Phase 3 creative multiplayer game: **Creative Party**.
 
 ## Fire tablet and unreliable Wi-Fi compatibility
 
@@ -51,3 +51,17 @@ The host screen never needs camera/microphone access unless the host also joins 
 - Room/player reads retry transient mobile network failures.
 - Player inserts use a client-generated UUID where available so a lost response can be recovered without duplicating a player.
 - No additional Supabase SQL migration is required beyond Phase 3.
+
+
+## Phase 3.2 — QR joining, game length, topics and expanded quiz bank
+
+- When the host creates a room, the lobby now displays a bundled QR code. Scanning it opens Spencer Live with the four-character room code already filled in.
+- The QR encoder is bundled at `live/qr.js`; it does not add another CDN/network dependency.
+- Quiz hosts can choose 5, 10, 15 or 20 questions (shown as roughly 5, 10, 15 or 20 minute games).
+- Quiz hosts can select any mix of eight topic groups before creating the room.
+- Each room stores its exact randomized question order inside the existing `rooms.settings` JSON, so every player receives the same sequence without a database migration.
+- Topic selection is balanced when multiple topics are chosen.
+- The question bank now contains 210 family-adaptive cards / 420 age-adjusted prompts.
+- The host browser remembers question recency and prefers unseen questions first. When reuse eventually becomes necessary, it prefers the least recently used questions.
+- “Play Again With Same Players” generates a fresh question order using the same length and topics.
+- No additional Supabase SQL migration is required for this upgrade.
