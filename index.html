@@ -52,8 +52,140 @@
 @media(max-width:430px){.bb-how-grid{grid-template-columns:1fr}.bb-how{display:grid;grid-template-columns:38px 90px 1fr;text-align:left;align-items:center}.bb-how b{margin:0}}
 </style>
 
+
+<style id="sg-intro-styles">
+/* Spencer Games studio-style startup ident. Plays once per browser session. */
+#sg-intro{
+  position:fixed;inset:0;z-index:300000;display:grid;place-items:center;
+  overflow:hidden;background:
+    radial-gradient(circle at 29% 36%,rgba(255,118,0,.18),transparent 29%),
+    radial-gradient(circle at 69% 42%,rgba(122,162,194,.13),transparent 31%),
+    radial-gradient(circle at 50% 50%,#17243a 0%,#0a1222 43%,#03070f 100%);
+  opacity:0;visibility:hidden;color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+#sg-intro.sg-intro-play{
+  opacity:1;visibility:visible;
+  animation:sgIntroOut .62s cubic-bezier(.55,.02,.35,1) 2.82s forwards;
+}
+#sg-intro::before{
+  content:"";position:absolute;inset:-25%;opacity:.16;transform:perspective(600px) rotateX(67deg) translateY(22%);
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:42px 42px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,black 36%,black 72%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,black 36%,black 72%,transparent);
+}
+.sg-intro-stage{
+  position:relative;width:min(92vw,860px);display:flex;flex-direction:column;align-items:center;
+  transform:translateY(-1vh);isolation:isolate;
+}
+.sg-intro-logo{
+  width:min(88vw,760px);height:auto;display:block;position:relative;z-index:4;
+  opacity:0;clip-path:inset(0 100% 0 0);filter:blur(8px) drop-shadow(0 18px 28px rgba(0,0,0,.48));
+}
+.sg-intro-play .sg-intro-logo{
+  animation:sgLogoReveal .86s cubic-bezier(.16,.78,.22,1) .68s forwards;
+}
+.sg-intro-tagline{
+  position:relative;z-index:5;margin-top:clamp(12px,2.1vw,22px);padding-left:.34em;
+  font-weight:800;font-size:clamp(10px,1.65vw,15px);letter-spacing:.34em;color:rgba(238,245,255,.84);
+  white-space:nowrap;opacity:0;transform:translateY(8px);
+  text-shadow:0 2px 14px rgba(0,0,0,.65);
+}
+.sg-intro-play .sg-intro-tagline{animation:sgTagIn .52s ease 1.48s forwards}
+.sg-intro-line{
+  position:absolute;z-index:6;left:-35vw;top:50%;width:28vw;min-width:220px;height:4px;border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95) 35%,#ff8b21 62%,#fff 82%,transparent);
+  box-shadow:0 0 9px rgba(255,255,255,.95),0 0 28px rgba(255,112,0,.8),0 0 58px rgba(255,74,0,.35);
+  transform:skewX(-24deg);opacity:0;
+}
+.sg-intro-play .sg-intro-line{animation:sgRaceLine .72s cubic-bezier(.08,.7,.18,1) .24s forwards}
+.sg-intro-line::after{
+  content:"";position:absolute;right:7%;top:-7px;width:34%;height:18px;border-radius:50%;
+  background:rgba(255,125,20,.36);filter:blur(12px);
+}
+.sg-phoenix-flare,.sg-elephant-flare{
+  position:absolute;z-index:2;border-radius:50%;pointer-events:none;opacity:0;filter:blur(16px);
+}
+.sg-phoenix-flare{
+  left:17%;top:10%;width:38%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(255,148,31,.52) 0%,rgba(255,76,0,.2) 35%,transparent 70%);
+}
+.sg-elephant-flare{
+  right:12%;top:8%;width:36%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(157,200,231,.3) 0%,rgba(75,121,163,.11) 39%,transparent 72%);
+}
+.sg-intro-play .sg-phoenix-flare{animation:sgFlare 1.05s ease .57s forwards}
+.sg-intro-play .sg-elephant-flare{animation:sgFlare 1.05s ease .7s forwards}
+.sg-intro-track{
+  width:min(64vw,520px);height:2px;margin-top:clamp(12px,2vw,18px);position:relative;z-index:5;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),rgba(255,82,42,.64),rgba(255,255,255,.18),transparent);
+  transform:scaleX(0);opacity:0;
+}
+.sg-intro-play .sg-intro-track{animation:sgTrackIn .52s ease 1.66s forwards}
+@keyframes sgRaceLine{
+  0%{left:-38vw;opacity:0;transform:skewX(-24deg) scaleX(.4)}
+  12%{opacity:1}
+  100%{left:112vw;opacity:0;transform:skewX(-24deg) scaleX(1.25)}
+}
+@keyframes sgLogoReveal{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);transform:scale(.965);filter:blur(8px) drop-shadow(0 18px 28px rgba(0,0,0,.48))}
+  45%{opacity:1}
+  100%{opacity:1;clip-path:inset(0 0 0 0);transform:scale(1);filter:blur(0) drop-shadow(0 18px 28px rgba(0,0,0,.48))}
+}
+@keyframes sgTagIn{to{opacity:1;transform:translateY(0)}}
+@keyframes sgTrackIn{to{opacity:1;transform:scaleX(1)}}
+@keyframes sgFlare{
+  0%{opacity:0;transform:scale(.35)}
+  38%{opacity:1;transform:scale(1.03)}
+  100%{opacity:.18;transform:scale(1.3)}
+}
+@keyframes sgIntroOut{
+  0%{opacity:1;visibility:visible;transform:scale(1)}
+  100%{opacity:0;visibility:hidden;transform:scale(1.035)}
+}
+@media(max-width:520px){
+  .sg-intro-stage{width:96vw}.sg-intro-logo{width:94vw}.sg-intro-tagline{letter-spacing:.23em;padding-left:.23em}
+}
+@media(prefers-reduced-motion:reduce){
+  #sg-intro.sg-intro-play{animation:sgIntroOut .2s linear .75s forwards}
+  .sg-intro-play .sg-intro-logo{animation:sgSimpleIn .18s linear .06s forwards}
+  .sg-intro-play .sg-intro-tagline{animation:sgTagIn .15s linear .16s forwards}
+  .sg-intro-play .sg-intro-track{animation:sgTrackIn .15s linear .16s forwards}
+  .sg-intro-line,.sg-phoenix-flare,.sg-elephant-flare{display:none}
+  @keyframes sgSimpleIn{to{opacity:1;clip-path:inset(0);transform:none;filter:drop-shadow(0 14px 24px rgba(0,0,0,.42))}}
+}
+</style>
+
 </head>
 <body>
+
+<div id="sg-intro" aria-hidden="true">
+  <div class="sg-intro-line"></div>
+  <div class="sg-intro-stage">
+    <div class="sg-phoenix-flare"></div>
+    <div class="sg-elephant-flare"></div>
+    <img class="sg-intro-logo" src="assets/spencer-games-intro.png" alt="">
+    <div class="sg-intro-tagline">PLAY • CREATE • TOGETHER</div>
+    <div class="sg-intro-track"></div>
+  </div>
+</div>
+<script id="sg-intro-script">
+(function(){
+  var intro=document.getElementById('sg-intro');
+  if(!intro)return;
+  var played=false;
+  try{played=sessionStorage.getItem('spencerGamesIntroPlayed')==='1';}catch(e){}
+  if(played){intro.remove();return;}
+  try{sessionStorage.setItem('spencerGamesIntroPlayed','1');}catch(e){}
+  intro.classList.add('sg-intro-play');
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.setTimeout(function(){if(intro&&intro.parentNode)intro.remove();},reduced?1100:3700);
+})();
+</script>
+
 <div id="root"></div>
 <div id="boot-status">Opening Spencer Games…</div>
 <pre id="fatal-error"></pre>
