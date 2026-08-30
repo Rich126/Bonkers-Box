@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100729">
+<title>Spencer Live</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#080414;color:#fff}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#271052 0,#110727 38%,#080414 72%);color:#fff}button,input{font:inherit}button{touch-action:manipulation}.wrap{width:min(760px,100%);margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px max(30px,env(safe-area-inset-bottom))}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{font-size:22px;font-weight:1000;letter-spacing:-.5px}.brand span{color:#ffd740}.home{border:1px solid #ffffff22;background:#ffffff10;color:#fff;border-radius:14px;padding:10px 13px;text-decoration:none;font-weight:800}.hero{text-align:center;margin:10px 0 22px}.mark{font-size:54px}.hero h1{font-size:clamp(38px,10vw,64px);line-height:.95;margin:7px 0 8px;letter-spacing:-2px}.hero h1 span{color:#ffd740}.hero p{color:#c9bfda;line-height:1.45;margin:0 auto;max-width:520px}.status{margin:0 auto 16px;max-width:620px;border-radius:16px;padding:11px 13px;font-size:13px;line-height:1.35;border:1px solid #ffffff1c;background:#ffffff0b;color:#cfc6dd}.status.good{border-color:#23d57a55;background:#23d57a14;color:#caffdf}.status.warn{border-color:#ffd74055;background:#ffd74010;color:#fff0a3}.panel{background:#ffffff0b;border:1px solid #ffffff1c;border-radius:24px;padding:18px;margin:12px 0;box-shadow:0 18px 50px #0004}.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice{min-height:190px;border-radius:21px;border:1px solid #ffffff22;color:#fff;padding:18px;text-align:left;display:flex;flex-direction:column;align-items:flex-start}.choice.host{background:linear-gradient(145deg,#02c7ff22,#5468ff28)}.choice.join{background:linear-gradient(145deg,#ffd74022,#ff7b0022)}.choice .icon{font-size:43px}.choice strong{font-size:23px;margin:10px 0 5px}.choice small{color:#d1c8df;line-height:1.4;flex:1}.choice b{font-size:13px;letter-spacing:.5px;margin-top:12px}.form-row{display:grid;gap:8px;margin:12px 0}.form-row label{font-size:13px;color:#c8bed8;font-weight:800}.form-row input{width:100%;border:1px solid #ffffff20;background:#0b0618;color:#fff;border-radius:15px;padding:14px 15px;min-height:48px;font-size:17px;outline:none}.form-row input:focus{border-color:#ffd740aa;box-shadow:0 0 0 3px #ffd74016}.code-input{text-transform:uppercase;letter-spacing:5px;font-weight:1000;text-align:center;font-size:24px!important}.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.avatar{border:2px solid transparent;background:#ffffff0c;border-radius:15px;font-size:26px;min-height:50px}.avatar.selected{border-color:#ffd740;background:#ffd74018}.primary,.secondary{width:100%;border:0;border-radius:16px;padding:15px 16px;font-weight:1000;font-size:17px;min-height:50px}.primary{background:linear-gradient(135deg,#ffd740,#ff9000);color:#241300}.primary:disabled{opacity:.4}.secondary{background:#ffffff10;color:#fff;border:1px solid #ffffff18;margin-top:9px}.hidden{display:none!important}.room-code{text-align:center;margin:8px 0 16px}.room-code small{display:block;color:#bfb5cf;text-transform:uppercase;font-weight:900;letter-spacing:1px}.room-code strong{display:block;font-size:clamp(48px,14vw,78px);letter-spacing:8px;line-height:1;margin:8px 0;color:#ffd740}.join-link{font-size:13px;color:#c7bdd5;word-break:break-all}.players{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}.player{border:1px solid #ffffff14;border-radius:16px;background:#ffffff08;padding:11px;display:flex;align-items:center;gap:9px;min-width:0}.player .face{font-size:28px}.player .name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty{color:#9f95af;text-align:center;padding:22px 8px}.lobby-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.pill{font-size:11px;font-weight:1000;border-radius:999px;padding:6px 9px;background:#23d57a1d;color:#9fffc7;border:1px solid #23d57a35}.note{font-size:12px;color:#a99fba;line-height:1.45;margin-top:11px}.error{border:1px solid #ff616155;background:#ff616112;color:#ffcaca;border-radius:14px;padding:10px 12px;font-size:13px;margin:10px 0}.success{border:1px solid #27e88444;background:#27e88410;color:#c7ffdf;border-radius:14px;padding:10px 12px;font-size:13px;margin:10px 0}.tiny{font-size:12px;color:#9e94ad;text-align:center;margin-top:16px}@media(max-width:560px){.choice-grid{grid-template-columns:1fr}.choice{min-height:145px}.avatars{grid-template-columns:repeat(3,1fr)}.players{grid-template-columns:1fr}}@media(prefers-reduced-motion:no-preference){.panel{animation:rise .25s ease}@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app">
+  <div class="top"><div class="brand">SPENCER <span>LIVE</span></div><a class="home" href="../">← Spencer Games</a></div>
+  <section class="hero"><div class="mark">🌐</div><h1>SPENCER <span>LIVE</span></h1><p>Host on the big screen. Everyone else joins from their phone.</p></section>
+  <div id="service-status" class="status warn">Checking multiplayer connection…</div>
+
+  <section id="screen-choice" class="panel">
+    <div class="choice-grid">
+      <button id="choose-host" class="choice host" type="button"><span class="icon">📺</span><strong>Host a Game</strong><small>Create a room and show the lobby on the main screen.</small><b>CREATE ROOM →</b></button>
+      <button id="choose-join" class="choice join" type="button"><span class="icon">📱</span><strong>Join a Game</strong><small>Enter the code shown on the host screen and join the family.</small><b>JOIN ROOM →</b></button>
+    </div>
+  </section>
+
+  <section id="screen-host" class="panel hidden">
+    <h2>📺 Host Spencer Live</h2>
+    <div class="form-row"><label for="host-name">Host name</label><input id="host-name" maxlength="24" autocomplete="nickname" placeholder="e.g. Daddy"></div>
+    <button id="create-room" class="primary" type="button">Create Room</button>
+    <button class="secondary back-choice" type="button">← Back</button>
+    <div id="host-message"></div>
+  </section>
+
+  <section id="screen-join" class="panel hidden">
+    <h2>📱 Join Spencer Live</h2>
+    <div class="form-row"><label for="join-code">Room code</label><input id="join-code" class="code-input" maxlength="4" inputmode="text" autocomplete="off" placeholder="ABCD"></div>
+    <div class="form-row"><label for="player-name">Your name</label><input id="player-name" maxlength="24" autocomplete="nickname" placeholder="e.g. Jacob"></div>
+    <div class="form-row"><label>Pick an avatar</label><div class="avatars" id="avatars"></div></div>
+    <button id="join-room" class="primary" type="button">Join Room</button>
+    <button class="secondary back-choice" type="button">← Back</button>
+    <div id="join-message"></div>
+  </section>
+
+  <section id="screen-lobby" class="panel hidden">
+    <div class="lobby-head"><h2 id="lobby-title">Game Lobby</h2><span class="pill" id="live-pill">LIVE</span></div>
+    <div class="room-code"><small>Room code</small><strong id="room-code-display">----</strong><div class="join-link" id="join-url"></div></div>
+    <h3>Players <span id="player-count">0</span></h3>
+    <div id="players" class="players"><div class="empty">Waiting for players…</div></div>
+    <button id="start-game" class="primary" type="button" disabled>Start Game — round engine next</button>
+    <button id="leave-lobby" class="secondary" type="button">Leave Lobby</button>
+    <div class="note">Phase 1 is the room and lobby foundation. Quiz, voting, camera and microphone rounds plug into this room next.</div>
+  </section>
+  <p class="tiny">Spencer Games • Family. Fun. Compete Together.</p>
+</main>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
