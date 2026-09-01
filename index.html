@@ -384,13 +384,15 @@ function WinScreen({ players, winner, onPlayAgain, onMenu }) {
 const TREASURE_TYPES = [{ emoji: "🪙", name: "Gold Coin", points: 3, weight: 25 }, { emoji: "💎", name: "Diamond", points: 8, weight: 12 }, { emoji: "🦪", name: "Pearl", points: 5, weight: 18 }, { emoji: "👑", name: "Crown", points: 12, weight: 6 }, { emoji: "🗝️", name: "Magic Key", points: 6, weight: 15 }, { emoji: "⚓", name: "Anchor", points: 4, weight: 20 }, { emoji: "🔱", name: "Trident", points: 10, weight: 8 }, { emoji: "🧲", name: "Magnet", points: 2, effect: "double_next", weight: 10 }, { emoji: "🛡️", name: "Shield", points: 1, effect: "shield", weight: 8 }];
 const MONSTERS = [{ emoji: "🦑", name: "Giant Squid!" }, { emoji: "🦈", name: "Mega Shark!" }, { emoji: "🐉", name: "Sea Dragon!" }, { emoji: "👻", name: "Ghost Ship!" }, { emoji: "🌊", name: "Whirlpool!" }, { emoji: "🧟", name: "Zombie Pirate!" }, { emoji: "🐍", name: "Sea Serpent!" }];
 const FISH_EMOJIS = ["🐠", "🐟", "🐡", "🦐", "🪼", "🦀", "🐢", "🦞"];
-function getMonsterChance(d) { if (d <= 1)
-    return .05; if (d <= 2)
-    return .12; if (d <= 3)
-    return .2; if (d <= 4)
-    return .28; if (d <= 5)
-    return .36; if (d <= 6)
-    return .44; return Math.min(.5 + (d - 7) * .06, .75); }
+function getMonsterChance(d) {
+    const curve = [.04, .08, .13, .19, .27, .37, .48, .58, .67, .75];
+    return curve[Math.min(Math.max(d, 1), curve.length) - 1];
+}
+function getMonsterRollChance(d) {
+    const base = getMonsterChance(d);
+    const variation = (Math.random() * .06) - .03;
+    return Math.min(.75, Math.max(.01, base + variation));
+}
 function pickTreasure() { const tw = TREASURE_TYPES.reduce((s, t) => s + t.weight, 0); let r = Math.random() * tw; for (const t of TREASURE_TYPES) {
     r -= t.weight;
     if (r <= 0)
@@ -406,7 +408,7 @@ function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext }) {
     // Determine result once on mount, store in ref
     const resultRef = useRef(null);
     if (resultRef.current === null) {
-        const isM = Math.random() < getMonsterChance(depth);
+        const isM = Math.random() < getMonsterRollChance(depth);
         if (isM) {
             const m = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
             resultRef.current = hasShield ? { type: "shielded", monster: m } : { type: "monster", monster: m };
@@ -485,6 +487,7 @@ function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext }) {
             "Depth ",
             depth,
             " \u00B7 \u26A0\uFE0F ",
+            "≈",
             Math.round(getMonsterChance(depth) * 100),
             "%")));
 }
@@ -630,6 +633,7 @@ function TreasureDive({ players: initPlayers, onMenu }) {
                             "Depth ",
                             depth,
                             " \u00B7 \u26A0\uFE0F ",
+                            "≈",
                             Math.round(getMonsterChance(depth + 1) * 100),
                             "% next"),
                         React.createElement("div", { style: { display: "flex", gap: 10, marginTop: 16, justifyContent: "center" } },
@@ -3401,7 +3405,8 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
                     React.createElement("button", { onClick: () => { reset(); onMenu(); }, style: { background: "none", border: "none", color: "rgba(255,255,255,.2)", cursor: "pointer", fontSize: 10, fontFamily: "'Fredoka'" } }, "\uD83C\uDFE0 Menu")))))));
 }
 const GAMES = [
-    { id: "drawdash", name: "Draw Dash 1.0", desc: "Draw the whole race — finger speed is throttle. 12 circuits!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "2-4"] },
+    { id: "drawdash", name: "Draw Dash Gold", desc: "Draw the race — finger speed is throttle. 5 cinematic Grand Prix circuits!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "2-4"] },
+    { id: "speedway", name: "Speedway Slide", desc: "Three laps of shale, auto-throttle and two buttons: LEFT and RIGHT. Fastest rider wins!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "2-6"] },
     { id: "flash", name: "Flash Frenzy!", desc: "Hit every green light — fastest reactions win!", emoji: "💡", emoji2: "👆", color: "#67E8F9", bg: "linear-gradient(135deg,#071827,#12314a)", tags: ["Reaction", "2-6"] },
     { id: "dive", name: "Treasure Dive!", desc: "Dive deep for treasure — watch out for monsters!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "noodle", name: "Noodle Noggin", desc: "Watch the emoji sequence and tap it back!", emoji: "🧠", emoji2: "🍜", color: "#E040FB", bg: "linear-gradient(135deg,#1a0533,#0d0220)", tags: ["Memory", "2-6"] },
@@ -3455,7 +3460,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : id === "flash" ? "flash" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : id === "speedway" ? "speedway" : id === "flash" ? "flash" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3502,8 +3507,10 @@ function BonkersBox() {
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
             React.createElement("iframe", { src: "flash-frenzy/index.html", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#070b19" } })),
+        screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
+            React.createElement("iframe", { src: "speedway/index.html", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#130d08" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "draw-dash/index.html", title: "Draw Dash 1.0", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#07111f" } }))));
+            React.createElement("iframe", { src: "draw-dash/index.html", title: "Draw Dash Gold", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#07111f" } }))));
 }
 
 
@@ -3527,7 +3534,7 @@ try {
   <p class="bb-guide-sub">How are you playing today?</p>
   <div class="bb-mode-grid">
    <button id="bb-local-mode" class="bb-mode-card local" type="button">
-    <div><div class="bb-mode-icon">🎮</div><h2>Local Mode</h2><p>Everything Spencer Games has today. Play together on one device with Draw Dash, Flash Frenzy and the full family game collection.</p></div>
+    <div><div class="bb-mode-icon">🎮</div><h2>Local Mode</h2><p>Everything Spencer Games has today. Play together on one device with Draw Dash, Speedway Slide, Flash Frenzy and the full family game collection.</p></div>
     <span class="bb-mode-pill">PLAY NOW</span>
    </button>
    <button id="bb-multiplayer-mode" class="bb-mode-card live" type="button">
@@ -3576,7 +3583,8 @@ try {
   <div class="bb-guide-card">
    <h2>Games included</h2>
    <div class="bb-game-list">
-    <div class="bb-game-rule"><strong>🏁 Draw Dash 1.0</strong><small>Draw the entire selected race in one continuous stroke. Follow the direction arrows, move quickly on straights and slow your finger before corners. Includes 12 distinct circuits.</small></div>
+    <div class="bb-game-rule"><strong>🏁 Draw Dash Gold</strong><small>Draw the entire selected race in one continuous stroke. Finger speed becomes throttle, then watch your route race through one of 5 distinct cinematic Grand Prix circuits.</small></div>
+    <div class="bb-game-rule"><strong>🏍️ Speedway Slide</strong><small>Each rider takes one turn at a three-lap shale time trial. The bike accelerates automatically; hold LEFT to turn in and RIGHT to catch the slide. Grass and the safety fence scrub speed. Fastest total time wins.</small></div>
     <div class="bb-game-rule"><strong>💡 Flash Frenzy!</strong><small>Each player gets the same sequence of lights. Tap green as quickly as possible. In Frenzy mode, ignore red decoys — false starts and red taps add time penalties. Lowest total reaction time wins.</small></div>
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🧠 Noodle Noggin</strong><small>Watch an emoji sequence, remember it, then tap the same sequence back in the correct order.</small></div>
@@ -3666,11 +3674,20 @@ try {
 (function(){
  window.addEventListener('message',function(event){
    if(!event.data||event.data.type!=='BONKERS_DRAW_DASH_HOME')return;
-   var frame=document.querySelector('iframe[title="Draw Dash 1.0"]');
+   var frame=document.querySelector('iframe[title="Draw Dash Gold"]');
    if(frame){
      // React state is internal; a clean reload returns to the native Spencer Games home screen.
      window.location.reload();
    }
+ });
+})();
+</script>
+<script id="bb-speedway-message-bridge">
+(function(){
+ window.addEventListener('message',function(event){
+   if(!event.data||event.data.type!=='SPENCER_SPEEDWAY_HOME')return;
+   var frame=document.querySelector('iframe[title="Speedway Slide"]');
+   if(frame) window.location.reload();
  });
 })();
 </script>

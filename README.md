@@ -7,10 +7,11 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 - `index.html` — Spencer Games main application
 - `assets/spencer-games-logo.png` — Spencer Games homepage logo
 - `assets/spencer-games-intro.png` — transparent intro-ident artwork used on first load
-- `draw-dash/index.html` — Draw Race / Draw Dash 1.0
+- `draw-dash/index.html` — Draw Race / Draw Dash Gold Edition
+- `speedway/index.html` — Speedway Slide turn-based three-lap motorbike time trial
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
 
-Do not upload only `index.html`: Draw Dash and Flash Frenzy are loaded as embedded pages using those relative folder paths.
+Do not upload only `index.html`: Draw Dash, Speedway Slide and Flash Frenzy are loaded as embedded pages using those relative folder paths.
 
 ## Spencer Games startup intro
 
@@ -20,7 +21,7 @@ The intro plays once per browser tab/session using `sessionStorage` (`spencerGam
 
 ## Draw Race
 
-The game referred to during development as **Draw Race** appears in the Spencer Games menu as **Draw Dash 1.0**.
+The game referred to during development as **Draw Race** appears in the Spencer Games menu as **Draw Dash Gold**.
 
 ## Deployment
 
@@ -28,7 +29,7 @@ This folder is ready to use as the root of the GitHub `main` branch and as a sta
 
 The existing game names and internal compatibility identifiers are intentionally unchanged. Future multiplayer and creator sections should use **Spencer Live** and **Spencer Studio** respectively.
 
-Current recovered Draw Dash file: `draw-dash/index.html` (V7.2 Endurance Edition).
+Current Draw Dash file: `draw-dash/index.html` (V8 Gold Edition).
 
 ## Archive
 
@@ -56,3 +57,13 @@ Creative Party and Spencer Mix now include family-safe impression rounds. Celebr
 
 ## Build versioning (v3.7+)
 Every published build must update the single version constant in `/version.js`. A small fixed badge displays that version across every active Spencer Games screen.
+
+## Spencer Games v3.9 — Treasure Dive rebalance
+
+Treasure Dive now uses a smoother push-your-luck monster curve: 4%, 8%, 13%, 19%, 27%, 37%, 48%, 58%, 67%, then 75% from dive 10 onward. Each dive also gets a hidden ±3 percentage-point variation (capped at 1%–75%) so repeated games do not develop an obvious fixed danger point. The UI shows the base danger as an approximate percentage.
+
+## Spencer Games v4.0 — Draw Dash Gold Edition
+Draw Dash receives a full visual and race-feel overhaul: distinct Grand Prix circuits, themed venues, smoothed playback, look-ahead steering, dynamic camera framing, overtakes, upgraded cars/effects, five-light starts, chequered-flag celebration and podium results. No Supabase changes are required.
+
+## Spencer Games v4.1 — Speedway Slide
+A new standalone Local Mode game adds turn-based speedway motorbike time trials. Each rider gets one three-lap run on the shale oval with automatic throttle and only LEFT / RIGHT steering. The handling includes rear-wheel slide, speed scrub on grass/fence excursions, dust effects, lap timing, best-lap timing and a final fastest-total leaderboard. No Supabase changes are required.
