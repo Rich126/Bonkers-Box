@@ -68,7 +68,7 @@
     <h2>📱 Join Spencer Live</h2>
     <div class="form-row"><label for="join-code">Room code</label><input id="join-code" class="code-input" maxlength="4" inputmode="text" autocomplete="off" placeholder="ABCD"><div id="join-room-info"></div></div>
     <div class="form-row"><label for="player-name">Your name</label><input id="player-name" maxlength="24" autocomplete="nickname" placeholder="e.g. Jacob"></div>
-    <div class="form-row"><label>Your age group</label><div id="age-grid" class="age-grid"></div></div>
+    <div class="form-row"><label for="player-age">Your age</label><input id="player-age" type="number" inputmode="numeric" min="5" max="100" step="1" value="30" required><div class="note">Questions are matched to your exact age. Ages 5–17 get a close mix around their age; adults get normal varied quiz difficulty.</div></div>
     <div class="form-row"><label>Pick an avatar</label><div class="avatars" id="avatars"></div></div>
     <div id="team-row" class="form-row hidden"><label>Choose a team</label><div id="team-grid" class="team-grid"></div><div class="note">Team scores use the average score, so bigger teams do not get an advantage.</div></div>
     <button id="join-room" class="primary" type="button">Join Room</button>
@@ -183,11 +183,11 @@
   <p class="tiny">Spencer Games • Family. Fun. Compete Together.</p>
 </main>
 <script src="config.js"></script>
-<script src="questions.js?v=3.8"></script>
-<script src="creative.js?v=3.8"></script>
+<script src="questions.js?v=4.4"></script>
+<script src="creative.js?v=4.4"></script>
 <script src="supabase.min.js"></script>
 <script src="qr.js"></script>
-<script src="music.js?v=3.8"></script>
-<script src="app.js?v=3.8"></script>
+<script src="music.js?v=4.4"></script>
+<script src="app.js?v=4.4"></script>
 </body>
 </html>

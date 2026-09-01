@@ -78,3 +78,14 @@ The host screen never needs camera/microphone access unless the host also joins 
 - The exact quiz/creative sequence is saved in the existing room settings JSON so every device follows the same order.
 - “Play Again With Same Players” builds a fresh mixed sequence while retaining the host’s length/topic choices.
 - No additional Supabase migration is required beyond the existing Phase 3 setup.
+
+## v4.4 — Question Bank 2.0
+
+- Players enter an exact age from 5 to 100 instead of choosing a broad age band.
+- The bank contains 720 individual questions with overlapping minimum, target and maximum ages.
+- The resolver stays close to the entered age while allowing a small difficulty mixture.
+- Ages 5–6 have 210 dedicated easy questions across all eight topics, including enough variety for a 20-round single-topic game.
+- Science and Geography now include a broader spread of biology, physics, Earth science, maps, oceans, landforms, rivers and continents rather than leaning mainly on symbols and capitals.
+- The adaptive host view previews the actual questions sent to the ages currently playing.
+- Legacy age-band player records still resolve correctly.
+- No Supabase migration is required.

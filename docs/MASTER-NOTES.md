@@ -35,3 +35,8 @@ Standalone local speedway motorbike game at `speedway/index.html`. Riders take t
 v4.2 replaced browser-like steering buttons with captured press-and-hold touch controls for iOS and Android.
 
 v4.3 records each rider’s solo run telemetry and, after the last rider, replays all riders together on the same shale oval. The combined replay preserves actual ride timing/lines, shows live running order, and can be watched again from the final leaderboard.
+
+
+## Spencer Live Question Bank 2.0 — v4.4
+
+Spencer Live now stores a numeric player age in the existing `players.age_band` text column and resolves quiz facts from a 720-question age-rated bank. Each fact has overlapping minimum, target and maximum ages. The room question order remains topic-card based, so all players stay on the same topic while their phones receive age-appropriate facts. Legacy band labels remain supported. No Supabase migration is required.
