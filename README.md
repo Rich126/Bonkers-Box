@@ -67,3 +67,7 @@ Draw Dash receives a full visual and race-feel overhaul: distinct Grand Prix cir
 
 ## Spencer Games v4.1 — Speedway Slide
 A new standalone Local Mode game adds turn-based speedway motorbike time trials. Each rider gets one three-lap run on the shale oval with automatic throttle and only LEFT / RIGHT steering. The handling includes rear-wheel slide, speed scrub on grass/fence excursions, dust effects, lap timing, best-lap timing and a final fastest-total leaderboard. No Supabase changes are required.
+
+
+## v4.2 — Speedway touch steering
+Press-and-hold steering now uses captured touch/pointer input and blocks mobile text selection.
