@@ -51,9 +51,8 @@
   const MEDIA_BUCKET='spencer-live-media';
 
   const avatars=['🦊','🐙','🦁','🐸','🦄','🐼','🐯','🦖','🐵','🐧','🐨','🦈'];
-  const ages=[['standard','Standard'],['5-7','5–7'],['8-11','8–11'],['12-15','12–15'],['16+','16+']];
   const teams=[['Red','🔴 Red'],['Blue','🔵 Blue'],['Green','🟢 Green'],['Yellow','🟡 Yellow']];
-  let selectedAvatar=avatars[0], selectedAge='standard', selectedTeam='Red', selectedMode='individual', selectedGame='quiz';
+  let selectedAvatar=avatars[0], selectedAge=30, selectedTeam='Red', selectedMode='individual', selectedGame='quiz';
   let roomId=null, roomCode=null, role=null, playerId=null, channel=null;
   let pollingHandle=null,pollBusy=false,realtimeState='idle';
   const POLL_MS=3000,REQUEST_TIMEOUT_MS=8000;
@@ -92,14 +91,23 @@
     return {gameMode:s.gameMode==='teams'?'teams':'individual',adaptive:s.adaptive!==false,questionSeconds:clamp(Number(s.questionSeconds)||30,10,120),gameKey,questionCount:order.length?Math.min(requested,order.length):requested,roundCount,topics,questionOrder:order,mixOrder};
   }
   function gs(){return (currentRoom&&currentRoom.game_state)||{};}
-  function isJunior(age){return age==='5-7'||age==='8-11';}
+  function exactAge(value){
+    const legacy={'standard':30,'5-7':6,'8-11':9,'12-15':13,'16+':18};
+    const age=Object.prototype.hasOwnProperty.call(legacy,String(value))?legacy[String(value)]:Number(value);
+    return clamp(Number.isFinite(age)?age:30,5,100);
+  }
   function quizTotal(){const s=settingsOf();return s.questionOrder.length||Math.min(s.questionCount,quiz.questions.length);}
   function mixTotal(){const s=settingsOf();return s.mixOrder.length||s.roundCount||0;}
   function questionAt(i){const index=Number(i),s=settingsOf();const id=s.questionOrder[index];return (id&&questionById.get(id))||quiz.questions[index]||null;}
   function questionForState(state=gs()){if(settingsOf().gameKey==='mix'&&state.questionId)return questionById.get(String(state.questionId))||null;return questionAt(state.questionIndex);}
   function creativeAt(i){return creative.rounds[Number(i)]||null;}
   function creativeRoundForState(state=gs()){if(settingsOf().gameKey==='mix'&&state.creativeId)return mixCreativeById.get(String(state.creativeId))||null;return creativeAt(state.creativeIndex);}
-  function questionVariant(q,player){const s=settingsOf();return s.adaptive&&player&&isJunior(player.age_band)?'junior':'standard';}
+  function playerAge(player){return exactAge(player&&player.age_band);}
+  function resolvedQuestion(q,player,adaptive=settingsOf().adaptive){
+    const age=adaptive&&player?playerAge(player):30;
+    if(typeof quiz.resolve==='function')return quiz.resolve(q,age);
+    return adaptive&&player&&age<=11?q.junior:q.standard;
+  }
   function myPlayer(){return currentPlayers.find(p=>p.id===playerId)||null;}
   function saveSession(){const value=JSON.stringify({roomId,roomCode,role,playerId,savedAt:Date.now()});try{localStorage.setItem(SESSION_KEY,value);}catch(_){}try{sessionStorage.setItem(SESSION_KEY,value);}catch(_){}}
   function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem('spencer_live_room');}catch(_){}}
@@ -164,8 +172,8 @@
   function buildChoiceButtons(){
     const avatarBox=$('avatars');
     avatars.forEach((a,i)=>{const b=document.createElement('button');b.type='button';b.className='avatar'+(i===0?' selected':'');b.textContent=a;b.setAttribute('aria-label','Choose '+a+' avatar');b.addEventListener('click',()=>{selectedAvatar=a;avatarBox.querySelectorAll('.avatar').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});avatarBox.appendChild(b);});
-    const ageBox=$('age-grid');
-    ages.forEach(([value,label])=>{const b=document.createElement('button');b.type='button';b.className='age-btn'+(value==='standard'?' selected':'');b.textContent=label;b.addEventListener('click',()=>{selectedAge=value;ageBox.querySelectorAll('.age-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});ageBox.appendChild(b);});
+    const ageInput=$('player-age');
+    selectedAge=exactAge(ageInput.value);ageInput.addEventListener('input',()=>{selectedAge=exactAge(ageInput.value);});ageInput.addEventListener('change',()=>{selectedAge=exactAge(ageInput.value);ageInput.value=String(selectedAge);});
     const teamBox=$('team-grid');
     teams.forEach(([value,label],i)=>{const b=document.createElement('button');b.type='button';b.className='team-btn'+(i===0?' selected':'');b.textContent=label;b.addEventListener('click',()=>{selectedTeam=value;teamBox.querySelectorAll('.team-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});teamBox.appendChild(b);});
     document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{selectedMode=b.dataset.mode;document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('selected',x===b));}));
@@ -261,7 +269,7 @@
       // Use a client-generated UUID so a lost mobile response can be retried safely without
       // accidentally creating the same player twice.
       const joinId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():null;
-      const row={room_id:room.id,name,avatar:selectedAvatar,score:0,age_band:selectedAge,team:s.gameMode==='teams'?selectedTeam:null};
+      const row={room_id:room.id,name,avatar:selectedAvatar,score:0,age_band:String(selectedAge),team:s.gameMode==='teams'?selectedTeam:null};
       if(joinId)row.id=joinId;
       let player=null,lastInsertError=null;
       for(let attempt=0;attempt<2&&!player;attempt++){
@@ -352,7 +360,7 @@
   function renderPlayers(){
     $('player-count').textContent=currentPlayers.length;const box=$('players');box.innerHTML='';
     if(!currentPlayers.length){box.innerHTML='<div class="empty">Waiting for players…</div>';return;}
-    currentPlayers.forEach(p=>{const d=document.createElement('div');d.className='player';const meta=[p.age_band];if(p.team)meta.push(p.team+' team');d.innerHTML='<span class="face">'+escapeHtml(p.avatar||'🙂')+'</span><span><span class="name">'+escapeHtml(p.name)+'</span><small>'+escapeHtml(meta.join(' • '))+'</small></span>';box.appendChild(d);});
+    currentPlayers.forEach(p=>{const d=document.createElement('div');d.className='player';const meta=['Age '+playerAge(p)];if(p.team)meta.push(p.team+' team');d.innerHTML='<span class="face">'+escapeHtml(p.avatar||'🙂')+'</span><span><span class="name">'+escapeHtml(p.name)+'</span><small>'+escapeHtml(meta.join(' • '))+'</small></span>';box.appendChild(d);});
     if(role==='host')$('start-game').disabled=currentPlayers.length<1||currentPlayers.length>20;
   }
 
@@ -394,10 +402,14 @@
   function renderGame(){
     if(!currentRoom||currentRoom.status==='lobby')return;const state=gs(),q=questionForState(state);if(!q)return;
     const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.questionIndex),total=mixed?mixTotal():quizTotal();syncMusic(state.phase==='reveal'?'result':'quiz');show('game');$('round-category').textContent=(mixed?'🎲 QUIZ • ':'')+q.category.toUpperCase();$('round-title').textContent=mixed?'Round '+(current+1)+' of '+total+' • Quiz':'Question '+(current+1)+' of '+total;$('round-progress').style.width=((current+1)/total*100)+'%';
-    const s=settingsOf();const host=role==='host';const player=myPlayer();const variant=host?'standard':questionVariant(q,player);const v=q[variant];
+    const s=settingsOf();const host=role==='host';const player=myPlayer();const v=resolvedQuestion(q,player,s.adaptive);
     $('host-adaptive-view').classList.toggle('hidden',!(host&&s.adaptive));
-    if(host&&s.adaptive){$('host-adaptive-view').innerHTML='<div class="mini-q"><b>Junior • ages 5–11</b><span>'+escapeHtml(q.junior.question)+'</span></div><div class="mini-q"><b>Standard • ages 12+</b><span>'+escapeHtml(q.standard.question)+'</span></div>';$('question-level').textContent='Family Adaptive • players answer on their phones';$('question-text').textContent='Check your phones!';}
-    else{$('host-adaptive-view').innerHTML='';$('question-level').textContent=host?'Everyone gets the same question':(variant==='junior'?'Junior question':'Standard question');$('question-text').textContent=v.question;}
+    if(host&&s.adaptive){
+      const samples=[],seen=new Set();currentPlayers.slice().sort((a,b)=>playerAge(a)-playerAge(b)).forEach(p=>{const age=playerAge(p),pv=resolvedQuestion(q,p,true),key=age+'|'+pv.id;if(seen.has(key))return;seen.add(key);samples.push({age,question:pv.question});});
+      const visible=samples.slice(0,8);$('host-adaptive-view').innerHTML=visible.map(x=>'<div class="mini-q"><b>Age '+x.age+'</b><span>'+escapeHtml(x.question)+'</span></div>').join('')+(samples.length>visible.length?'<div class="mini-q"><b>+'+(samples.length-visible.length)+' more ages</b><span>Each is matched automatically on the player phone.</span></div>':'');
+      $('question-level').textContent='Exact-age adaptive • players answer on their phones';$('question-text').textContent='Check your phones!';
+    }
+    else{$('host-adaptive-view').innerHTML='';$('question-level').textContent=host?'Everyone gets the same age-30 question':'Matched to age '+playerAge(player);$('question-text').textContent=v.question;}
     renderAnswers(host&&s.adaptive?null:v,state,host);renderAnswerStatus(v,state,host);renderHostAnswerCount();
     $('host-tools').classList.toggle('hidden',!host||state.phase!=='question');$('reveal-tools').classList.toggle('hidden',!host||state.phase!=='reveal');$('pause-game').textContent=state.paused?'▶ Resume':'⏸ Pause';startQuizTimer();
   }
@@ -426,7 +438,7 @@
   }
 
   async function submitAnswer(index){
-    if(role!=='player'||!currentRoom||answerSubmitBusy)return;const state=gs();if(state.phase!=='question'||state.paused||remainingMs()<=0)return;const p=myPlayer(),q=questionForState(state);if(!p||!q)return;const variant=questionVariant(q,p),v=q[variant],isCorrect=index===v.correct;
+    if(role!=='player'||!currentRoom||answerSubmitBusy)return;const state=gs();if(state.phase!=='question'||state.paused||remainingMs()<=0)return;const p=myPlayer(),q=questionForState(state);if(!p||!q)return;const v=resolvedQuestion(q,p),variant=String(v.id||('age-'+playerAge(p))),isCorrect=index===v.correct;
     const existing=currentAnswers.find(a=>a.player_id===playerId)||null;if(existing&&Number(existing.answer_index)===Number(index))return;
     answerSubmitBusy=true;renderAnswers(v,state,false);
     try{
@@ -445,7 +457,7 @@
   function effectiveElapsedMs(){const state=gs();if(!state.startedAt)return 0;const start=new Date(state.startedAt).getTime();let end=Date.now();let pauses=Number(state.pauseMs)||0;if(state.paused&&state.pausedStartedAt)end=new Date(state.pausedStartedAt).getTime();return Math.max(0,end-start-pauses);}
   function remainingMs(){return Math.max(0,settingsOf().questionSeconds*1000-effectiveElapsedMs());}
   function startQuizTimer(){
-    stopTimers();const update=()=>{const state=gs(),ms=remainingMs();$('timer').textContent=state.paused?'⏸':String(Math.ceil(ms/1000));if(role==='player'&&state.phase==='question'){const q=questionForState(state);if(q)renderAnswers(q[questionVariant(q,myPlayer())],state,false);}if(role==='host'&&state.phase==='question'&&!state.paused&&ms<=0&&!autoRevealBusy){autoRevealBusy=true;revealRound().finally(()=>{autoRevealBusy=false;});}};update();timerHandle=setInterval(update,500);
+    stopTimers();const update=()=>{const state=gs(),ms=remainingMs();$('timer').textContent=state.paused?'⏸':String(Math.ceil(ms/1000));if(role==='player'&&state.phase==='question'){const q=questionForState(state);if(q)renderAnswers(resolvedQuestion(q,myPlayer()),state,false);}if(role==='host'&&state.phase==='question'&&!state.paused&&ms<=0&&!autoRevealBusy){autoRevealBusy=true;revealRound().finally(()=>{autoRevealBusy=false;});}};update();timerHandle=setInterval(update,500);
   }
   function renderHostAnswerCount(){const el=$('host-answer-count');if(!el)return;el.classList.toggle('hidden',role!=='host');if(role==='host')el.textContent='Answers: '+currentAnswers.length+' / '+currentPlayers.length;}
   async function togglePause(){const state={...gs()};if(state.phase!=='question')return;if(!state.paused){state.paused=true;state.pausedStartedAt=new Date().toISOString();}else{const pausedAt=new Date(state.pausedStartedAt).getTime();state.pauseMs=(Number(state.pauseMs)||0)+Math.max(0,Date.now()-pausedAt);state.paused=false;state.pausedStartedAt=null;}await updateGameState(state);}

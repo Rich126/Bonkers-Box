@@ -75,3 +75,6 @@ Press-and-hold steering now uses captured touch/pointer input and blocks mobile 
 
 ## v4.3 — Speedway Final Race Replay
 Speedway Slide now records every solo run and replays all riders together after the final rider, with live running order and a replay-again option.
+
+## v4.4 — Question Bank 2.0
+Spencer Live now asks every player for an exact age from 5 to 100 and resolves each quiz round from 720 individually age-rated questions. Overlapping age ranges keep the difficulty natural, ages 5–6 have a dedicated genuinely easy bank, and Science, Geography and Animals have wider subject variety. Old saved age-band players remain compatible. No Supabase changes are required.
