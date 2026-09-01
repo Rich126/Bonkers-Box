@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#130d08">
+<title>Speedway Slide</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%,#3a2315 0,#17100b 42%,#080706 82%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:max(10px,env(safe-area-inset-top)) 10px max(22px,env(safe-area-inset-bottom));overscroll-behavior:none}
+.app{max-width:720px;margin:auto}.hero{text-align:center;padding:4px 0 9px}.hero h1{margin:0;font-size:34px;font-weight:1000;letter-spacing:-1.5px;background:linear-gradient(90deg,#fff,#f7c66a,#e8792f,#fff);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}.tag{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:5px 10px;border-radius:999px;background:rgba(232,121,47,.13);border:1px solid rgba(247,198,106,.25);font-size:11px;font-weight:950;color:#f7c66a}.sub{margin:6px auto 10px;color:#d7c5b7;font-size:13px;max-width:560px;line-height:1.35}
+.panel{background:linear-gradient(180deg,rgba(37,26,18,.96),rgba(18,14,10,.97));border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:14px;margin-bottom:10px;box-shadow:0 18px 46px rgba(0,0,0,.32)}.hidden{display:none!important}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}label{display:block;font-size:12px;color:#d7c5b7;font-weight:900;margin-bottom:5px}select,input,button{font:inherit}select,input{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#17110d;color:#fff;padding:11px;outline:none;font-size:16px}.names{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.primary,.secondary,.next{border:0;border-radius:14px;padding:13px 14px;font-weight:1000;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 7px 18px rgba(0,0,0,.18)}.primary{background:linear-gradient(135deg,#ea7b31,#a63f16)}.secondary{background:#473326}.next{background:linear-gradient(135deg,#d8aa41,#8e6518);color:#17100b}.full{width:100%;margin-top:10px}.small{font-size:12px;color:#bfae9f;line-height:1.4}.how{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.how div{background:#17110d;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:8px 6px;text-align:center;font-size:10px;color:#d8cabf}.how b{display:block;font-size:22px;margin-bottom:3px}
+.riderTitle{text-align:center;font-size:22px;font-weight:1000;margin-bottom:5px}.riderSub{text-align:center;color:#cbb7a7;font-size:13px}.helmet{font-size:52px;text-align:center;margin:6px 0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0}.stat{background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:7px;text-align:center}.stat span{display:block;font-size:9px;color:#bda99a;font-weight:900;text-transform:uppercase;letter-spacing:.5px}.stat b{font-size:17px}
+.stage{position:relative}.canvasWrap{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 24px 68px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.1)}canvas{display:block;width:100%;height:auto;background:#17331b;touch-action:none}.raceHud{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.hudBox{background:rgba(10,8,6,.74);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(7px);border-radius:12px;padding:6px 9px;font-weight:950;font-size:12px;min-width:82px}.hudBox.right{text-align:right}.callout{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);font-size:48px;font-weight:1000;text-shadow:0 4px 18px #000;white-space:nowrap;pointer-events:none}.raceMessage{min-height:22px;text-align:center;font-weight:950;font-size:13px;color:#f5d28a;margin:7px 0 2px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.steer{height:82px;border:1px solid rgba(255,255,255,.13);border-radius:18px;font-size:25px;font-weight:1000;color:#fff;touch-action:none;user-select:none;background:linear-gradient(180deg,#3d2a20,#251b15);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(0,0,0,.25)}.steer.active{background:linear-gradient(180deg,#ed8138,#a84119);transform:translateY(1px);box-shadow:inset 0 3px 8px rgba(0,0,0,.25),0 3px 10px rgba(0,0,0,.2)}
+.resultHero{text-align:center;font-size:27px;font-weight:1000;color:#f6d076}.lapList,.leaderboard{display:grid;gap:7px;margin-top:9px}.lapRow,.boardRow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#17110d;border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:10px}.boardRow:first-child{border-color:rgba(247,198,106,.35);background:linear-gradient(135deg,rgba(216,170,65,.13),#17110d)}.boardRow .place{font-size:22px;width:35px}.boardRow .name{font-weight:1000;flex:1}.boardRow .time{text-align:right;font-weight:1000;color:#f6d076}.homeLink{display:block;margin:12px auto 0;background:none;border:0;color:rgba(255,255,255,.45);font-size:12px;font-weight:900;padding:9px}
+@keyframes shine{to{background-position:220% center}}@media(max-width:520px){.hero h1{font-size:29px}.names{grid-template-columns:1fr}.how{grid-template-columns:1fr 1fr 1fr}.stats{gap:5px}.stat b{font-size:15px}.steer{height:76px}.callout{font-size:38px}}
+</style>
+<script src="/version.js"></script>
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <h1>🏍️ SPEEDWAY SLIDE</h1>
+    <div class="tag">🔥 3 LAPS · LEFT / RIGHT ONLY</div>
+    <p class="sub">Auto-throttle around a shale oval. Hold the slide, stay off the grass and set the fastest three-lap time.</p>
+  </div>
+
+  <section id="setupPanel" class="panel">
+    <div class="grid2">
+      <div><label for="playerCount">Riders</label><select id="playerCount"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
+      <div><label>Format</label><input value="3-lap solo time trial" disabled></div>
+    </div>
+    <div id="nameFields" class="names"></div>
+    <div class="how"><div><b>⬅️</b>Hold LEFT to turn in</div><div><b>💨</b>Throttle is automatic</div><div><b>➡️</b>RIGHT to correct the slide</div></div>
+    <button id="setupStart" class="primary full" type="button">🏁 Start Speedway Night</button>
+  </section>
+
+  <section id="readyPanel" class="panel hidden">
+    <div id="readyHelmet" class="helmet">🏍️</div>
+    <div id="readyTitle" class="riderTitle"></div>
+    <div class="riderSub">Three laps. Fastest total time wins. The bike accelerates itself — you only steer.</div>
+    <button id="runBtn" class="primary full" type="button">Raise the tapes</button>
+  </section>
+
+  <section id="racePanel" class="panel hidden">
+    <div class="stats">
+      <div class="stat"><span>Lap</span><b id="lapHud">1 / 3</b></div>
+      <div class="stat"><span>Time</span><b id="timeHud">0.00</b></div>
+      <div class="stat"><span>Speed</span><b id="speedHud">0</b></div>
+      <div class="stat"><span>Best lap</span><b id="bestHud">—</b></div>
+    </div>
+    <div class="stage">
+      <div class="canvasWrap">
+        <canvas id="track" width="900" height="650"></canvas>
+        <div class="raceHud"><div id="riderHud" class="hudBox"></div><div id="lineHud" class="hudBox right">SHALE · GRIP</div></div>
+        <div id="callout" class="callout"></div>
+      </div>
+      <div id="raceMessage" class="raceMessage">Tapes ready</div>
+      <div class="controls">
+        <button id="leftBtn" class="steer" type="button">⬅️ LEFT</button>
+        <button id="rightBtn" class="steer" type="button">RIGHT ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultPanel" class="panel hidden">
+    <div id="resultHero" class="resultHero"></div>
+    <div id="resultSub" class="riderSub"></div>
+    <div id="lapList" class="lapList"></div>
+    <button id="nextBtn" class="next full" type="button">Next rider</button>
+  </section>
+
+  <section id="finalPanel" class="panel hidden">
+    <div class="resultHero">🏆 Speedway Night Results</div>
+    <div id="leaderboard" class="leaderboard"></div>
+    <button id="againBtn" class="primary full" type="button">Run another meeting</button>
+  </section>
+
+  <button id="homeBtn" class="homeLink" type="button">🏠 Spencer Games Home</button>
+</div>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var setupPanel=$('setupPanel'),readyPanel=$('readyPanel'),racePanel=$('racePanel'),resultPanel=$('resultPanel'),finalPanel=$('finalPanel');
+var playerCount=$('playerCount'),nameFields=$('nameFields'),setupStart=$('setupStart'),runBtn=$('runBtn'),nextBtn=$('nextBtn'),againBtn=$('againBtn'),homeBtn=$('homeBtn');
+var readyHelmet=$('readyHelmet'),readyTitle=$('readyTitle'),resultHero=$('resultHero'),resultSub=$('resultSub'),lapList=$('lapList'),leaderboard=$('leaderboard');
+var lapHud=$('lapHud'),timeHud=$('timeHud'),speedHud=$('speedHud'),bestHud=$('bestHud'),riderHud=$('riderHud'),lineHud=$('lineHud'),callout=$('callout'),raceMessage=$('raceMessage');
+var leftBtn=$('leftBtn'),rightBtn=$('rightBtn'),canvas=$('track'),ctx=canvas.getContext('2d');
+var COLORS=['#ef4444','#38bdf8','#facc15','#a78bfa','#22c55e','#fb7185'];
+var HELMETS=['🔴','🔵','🟡','🟣','🟢','🩷'];
+var players=[],current=0,results=[];
+var leftHeld=false,rightHeld=false,running=false,countdown=false,raf=0,lastTs=0,startTs=0,lapStartTs=0;
+var bike=null,particles=[],trackPts=[],TRACK_N=520,TRACK_HALF=91,lapTimes=[],offTrackEvents=0,lastSurface='shale',engine=null;
+
+function show(panel){[setupPanel,readyPanel,racePanel,resultPanel,finalPanel].forEach(function(p){p.classList.add('hidden')});panel.classList.remove('hidden')}
+function makeNames(){var n=Number(playerCount.value);nameFields.innerHTML='';for(var i=0;i<n;i++){var input=document.createElement('input');input.id='rider'+i;input.placeholder='Rider '+(i+1);input.value='Rider '+(i+1);input.maxLength=18;nameFields.appendChild(input)}}
+playerCount.addEventListener('change',makeNames);makeNames();
+
+function makeTrack(){trackPts=[];var cx=450,cy=323,halfStraight=195,r=135;var straightLen=halfStraight*2,arcLen=Math.PI*r,total=straightLen*2+arcLen*2;for(var i=0;i<TRACK_N;i++){var d=i/TRACK_N*total,x,y,a;if(d<straightLen){x=cx-halfStraight+d;y=cy+r;a=0}else if(d<straightLen+arcLen){var q=(d-straightLen)/r,ang=Math.PI/2-q;x=cx+halfStraight+r*Math.cos(ang);y=cy+r*Math.sin(ang);a=ang-Math.PI/2}else if(d<straightLen+arcLen+straightLen){var q2=d-straightLen-arcLen;x=cx+halfStraight-q2;y=cy-r;a=Math.PI}else{var q3=(d-straightLen-arcLen-straightLen)/r,ang2=-Math.PI/2-q3;x=cx-halfStraight+r*Math.cos(ang2);y=cy+r*Math.sin(ang2);a=ang2-Math.PI/2}trackPts.push({x:x,y:y,a:a})}}
+makeTrack();
+function nearest(x,y){var best=1e9,idx=0;for(var i=0;i<trackPts.length;i++){var p=trackPts[i],dx=x-p.x,dy=y-p.y,d=dx*dx+dy*dy;if(d<best){best=d;idx=i}}return{idx:idx,dist:Math.sqrt(best),p:trackPts[idx]}}
+function angleDiff(a,b){return((b-a+Math.PI*3)%(Math.PI*2))-Math.PI}
+
+function drawStadium(){ctx.clearRect(0,0,900,650);ctx.fillStyle='#193b1e';ctx.fillRect(0,0,900,650);
+  // crowd bands and floodlights
+  ctx.fillStyle='#20252a';ctx.fillRect(0,0,900,58);ctx.fillRect(0,592,900,58);for(var i=0;i<34;i++){ctx.fillStyle=i%3===0?'#e7d8b3':i%3===1?'#b5432d':'#436a8d';ctx.fillRect(12+i*27,17+(i%2)*13,9,9);ctx.fillRect(12+i*27,612-(i%2)*13,9,9)}
+  var path=new Path2D();path.moveTo(trackPts[0].x,trackPts[0].y);for(var j=1;j<trackPts.length;j++)path.lineTo(trackPts[j].x,trackPts[j].y);path.closePath();
+  ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#efe8dc';ctx.lineWidth=224;ctx.stroke(path);ctx.strokeStyle='#6f452a';ctx.lineWidth=216;ctx.stroke(path);ctx.strokeStyle='#a96d3f';ctx.lineWidth=190;ctx.stroke(path);
+  ctx.strokeStyle='rgba(76,38,18,.38)';ctx.lineWidth=5;ctx.setLineDash([19,25]);ctx.stroke(path);ctx.setLineDash([]);
+  // infield logo
+  ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.13)';ctx.font='1000 33px sans-serif';ctx.fillText('SPENCER SPEEDWAY',450,314);ctx.font='900 14px sans-serif';ctx.fillText('3 LAP TIME TRIAL',450,338);
+  // start/finish tapes line
+  var s=trackPts[0],nx=-Math.sin(s.a),ny=Math.cos(s.a);ctx.strokeStyle='#fff';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(s.x+nx*TRACK_HALF,s.y+ny*TRACK_HALF);ctx.lineTo(s.x-nx*TRACK_HALF,s.y-ny*TRACK_HALF);ctx.stroke();ctx.strokeStyle='#111';ctx.lineWidth=3;for(var k=-4;k<=4;k+=2){ctx.beginPath();ctx.moveTo(s.x+nx*k*10,s.y+ny*k*10);ctx.lineTo(s.x+nx*(k+1)*10,s.y+ny*(k+1)*10);ctx.stroke()}
+  // safety fence posts
+  ctx.fillStyle='#e8e0d5';for(var m=0;m<TRACK_N;m+=26){var p=trackPts[m],nrx=-Math.sin(p.a),nry=Math.cos(p.a);ctx.beginPath();ctx.arc(p.x+nrx*112,p.y+nry*112,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(p.x-nrx*112,p.y-nry*112,3,0,Math.PI*2);ctx.fill()}
+}
+function addDust(x,y,color,count){for(var i=0;i<(count||2);i++)particles.push({x:x+(Math.random()-.5)*10,y:y+(Math.random()-.5)*10,vx:(Math.random()-.5)*45,vy:(Math.random()-.5)*45-8,l:.65+Math.random()*.35,s:3+Math.random()*7,c:color||'#c9874c'})}
+function drawParticles(dt){for(var i=particles.length-1;i>=0;i--){var p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*.9;p.s+=dt*4;if(p.l<=0){particles.splice(i,1);continue}ctx.globalAlpha=Math.max(0,p.l)*.55;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
+function drawBike(){if(!bike)return;ctx.save();ctx.translate(bike.x,bike.y);ctx.rotate(bike.heading);var lean=Math.max(-.55,Math.min(.55,bike.steer*.42+angleDiff(bike.velAngle,bike.heading)*.7));ctx.rotate(lean*.22);ctx.shadowBlur=14;ctx.shadowColor=players[current].color;ctx.fillStyle='#151515';ctx.fillRect(-21,-7,42,14);ctx.fillStyle=players[current].color;ctx.fillRect(-9,-11,21,22);ctx.fillStyle='#d9d9d9';ctx.fillRect(-24,-4,8,8);ctx.fillRect(17,-4,8,8);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(1,-1,5.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.restore()}
+function render(dt){drawStadium();drawParticles(dt||0);drawBike()}
+render(0);
+
+function setupGame(){players=[];results=[];current=0;var n=Number(playerCount.value);for(var i=0;i<n;i++)players.push({name:($('rider'+i).value||('Rider '+(i+1))).trim(),color:COLORS[i],helmet:HELMETS[i]});prepareRider()}
+function prepareRider(){var p=players[current];readyHelmet.textContent=p.helmet+' 🏍️';readyTitle.textContent=p.name+' — you are up';runBtn.textContent=current===0?'Raise the tapes':'Start '+p.name+"'s run";show(readyPanel)}
+function initBike(){var s=trackPts[0];bike={x:s.x,y:s.y,heading:0,velAngle:0,speed:0,steer:0,nearestIdx:0,progressSteps:0,lap:0,lastIdx:0,off:false,farOffTime:0,finished:false};lapTimes=[];offTrackEvents=0;lastSurface='shale';particles=[];lapHud.textContent='1 / 3';timeHud.textContent='0.00';speedHud.textContent='0';bestHud.textContent='—';riderHud.textContent=players[current].helmet+' '+players[current].name;lineHud.textContent='SHALE · GRIP';raceMessage.textContent='Tapes ready';callout.textContent='';render(0)}
+function startRun(){if(running||countdown)return;show(racePanel);initBike();countdown=true;leftHeld=rightHeld=false;var sequence=['3','2','1','GO!'];var idx=0;callout.textContent=sequence[0];raceMessage.textContent='Hold steady...';var timer=setInterval(function(){idx++;if(idx<sequence.length){callout.textContent=sequence[idx];if(sequence[idx]==='GO!'){clearInterval(timer);countdown=false;running=true;lastTs=performance.now();startTs=lastTs;lapStartTs=lastTs;raceMessage.textContent='GO — throttle is automatic!';startEngine();raf=requestAnimationFrame(loop);setTimeout(function(){if(running)callout.textContent=''},500)}}},520)}
+function updateProgress(nr,now){var N=trackPts.length,idx=nr.idx,last=bike.lastIdx,forward=(idx-last+N)%N,back=(last-idx+N)%N;if(nr.dist<126){if(forward>0&&forward<28){bike.progressSteps+=forward;bike.lastIdx=idx}else if(back<8){bike.lastIdx=idx}}
+  var newLap=Math.floor(bike.progressSteps/N);if(newLap>bike.lap){bike.lap=newLap;var lt=now-lapStartTs;lapStartTs=now;lapTimes.push(lt);if(newLap<3){callout.textContent='LAP '+(newLap+1);setTimeout(function(){if(running)callout.textContent=''},550);raceMessage.textContent='Lap '+newLap+' · '+formatMs(lt)}else finishRun(now)} }
+function physics(dt,now){var steer=(leftHeld?-1:0)+(rightHeld?1:0);bike.steer+=(steer-bike.steer)*Math.min(1,dt*10);var nr=nearest(bike.x,bike.y);var onShale=nr.dist<=TRACK_HALF,veryOff=nr.dist>128;var target=onShale?286:veryOff?103:158;if(Math.abs(bike.steer)>.75)target-=10;bike.speed+=(target-bike.speed)*Math.min(1,dt*(onShale?1.55:3.2));var steerRate=2.08*(.45+.55*Math.min(1,bike.speed/210));bike.heading+=bike.steer*steerRate*dt;
+  var grip=onShale?1.72:2.5;var vd=angleDiff(bike.velAngle,bike.heading);bike.velAngle+=vd*Math.min(1,grip*dt);bike.x+=Math.cos(bike.velAngle)*bike.speed*dt;bike.y+=Math.sin(bike.velAngle)*bike.speed*dt;
+  if(Math.abs(vd)>.18&&onShale&&Math.random()<.42)addDust(bike.x-20*Math.cos(bike.velAngle),bike.y-20*Math.sin(bike.velAngle),'#c98246',2);if(!onShale&&Math.random()<.5)addDust(bike.x,bike.y,veryOff?'#7ba15c':'#b67a49',2);
+  if(!onShale&&!bike.off){bike.off=true;offTrackEvents++;raceMessage.textContent=nr.dist>TRACK_HALF?'OFF LINE — speed scrubbed':'Wide'}if(onShale&&bike.off){bike.off=false;raceMessage.textContent='Back on the shale'}
+  if(veryOff){bike.farOffTime+=dt;lineHud.textContent=nr.dist>TRACK_HALF?'GRASS / FENCE':'SHALE';if(bike.farOffTime>.45){bike.x+=(nr.p.x-bike.x)*Math.min(1,dt*2.6);bike.y+=(nr.p.y-bike.y)*Math.min(1,dt*2.6);bike.speed*=.985}}else bike.farOffTime=0;
+  lineHud.textContent=onShale?'SHALE · '+(Math.abs(vd)>.26?'SLIDING':'GRIP'):(veryOff?'GRASS / FENCE':'EDGE · SLOW');updateProgress(nr,now);if(engine){engine.osc.frequency.setTargetAtTime(55+bike.speed*.42,engine.ctx.currentTime,.05);engine.gain.gain.setTargetAtTime(running?.025:0,engine.ctx.currentTime,.08)}}
+function loop(ts){if(!running)return;var dt=Math.min(.032,(ts-lastTs)/1000);lastTs=ts;physics(dt,ts);var elapsed=ts-startTs;timeHud.textContent=(elapsed/1000).toFixed(2);lapHud.textContent=Math.min(3,bike.lap+1)+' / 3';speedHud.textContent=Math.round(bike.speed*.62);bestHud.textContent=lapTimes.length?formatMs(Math.min.apply(null,lapTimes)):'—';render(dt);raf=requestAnimationFrame(loop)}
+function finishRun(now){if(!running||bike.finished)return;bike.finished=true;running=false;cancelAnimationFrame(raf);stopEngine();var total=now-startTs,best=Math.min.apply(null,lapTimes);results.push({name:players[current].name,color:players[current].color,helmet:players[current].helmet,total:total,laps:lapTimes.slice(),best:best,off:offTrackEvents});callout.textContent='🏁 FINISH!';raceMessage.textContent='Three laps complete';setTimeout(showRiderResult,700)}
+function formatMs(ms){return(ms/1000).toFixed(2)+'s'}
+function showRiderResult(){var r=results[results.length-1];resultHero.textContent='🏁 '+r.name+' · '+formatMs(r.total);resultSub.textContent='Best lap '+formatMs(r.best)+' · '+r.off+' off-line moment'+(r.off===1?'':'s');lapList.innerHTML='';r.laps.forEach(function(t,i){var row=document.createElement('div');row.className='lapRow';row.innerHTML='<b>Lap '+(i+1)+'</b><span>'+formatMs(t)+(t===r.best?' ⚡ FASTEST':'')+'</span>';lapList.appendChild(row)});nextBtn.textContent=current+1<players.length?'Next rider →':'See final results 🏆';show(resultPanel)}
+function nextRider(){current++;if(current<players.length)prepareRider();else showFinal()}
+function showFinal(){var order=results.slice().sort(function(a,b){return a.total-b.total});leaderboard.innerHTML='';var medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'];order.forEach(function(r,i){var row=document.createElement('div');row.className='boardRow';row.innerHTML='<div class="place">'+medals[i]+'</div><div class="name"><span style="color:'+r.color+'">'+r.helmet+'</span> '+r.name+'<div class="small">Best lap '+formatMs(r.best)+' · '+r.off+' off-line</div></div><div class="time">'+formatMs(r.total)+'</div>';leaderboard.appendChild(row)});show(finalPanel)}
+function resetAll(){stopEngine();running=false;countdown=false;if(raf)cancelAnimationFrame(raf);players=[];results=[];current=0;show(setupPanel);render(0)}
+
+function press(which,on){if(which==='left'){leftHeld=on;leftBtn.classList.toggle('active',on)}else{rightHeld=on;rightBtn.classList.toggle('active',on)}}
+[['pointerdown',true],['pointerup',false],['pointercancel',false],['pointerleave',false]].forEach(function(x){leftBtn.addEventListener(x[0],function(e){e.preventDefault();press('left',x[1])},{passive:false});rightBtn.addEventListener(x[0],function(e){e.preventDefault();press('right',x[1])},{passive:false})});
+window.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'){e.preventDefault();press('left',true)}if(e.key==='ArrowRight'){e.preventDefault();press('right',true)}});window.addEventListener('keyup',function(e){if(e.key==='ArrowLeft')press('left',false);if(e.key==='ArrowRight')press('right',false)});
+function startEngine(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!engine){var ac=new AC(),osc=ac.createOscillator(),gain=ac.createGain(),filter=ac.createBiquadFilter();osc.type='sawtooth';filter.type='lowpass';filter.frequency.value=520;gain.gain.value=0;osc.connect(filter);filter.connect(gain);gain.connect(ac.destination);osc.start();engine={ctx:ac,osc:osc,gain:gain}}if(engine.ctx.state==='suspended')engine.ctx.resume()}catch(e){}}
+function stopEngine(){if(engine)try{engine.gain.gain.setTargetAtTime(0,engine.ctx.currentTime,.06)}catch(e){}}
+setupStart.addEventListener('click',setupGame);runBtn.addEventListener('click',startRun);nextBtn.addEventListener('click',nextRider);againBtn.addEventListener('click',resetAll);homeBtn.addEventListener('click',function(){stopEngine();try{window.parent.postMessage({type:'SPENCER_SPEEDWAY_HOME'},'*')}catch(e){}setTimeout(function(){if(window.parent===window)location.href='../'},80)});
+document.addEventListener('visibilitychange',function(){if(document.hidden&&running){leftHeld=rightHeld=false;press('left',false);press('right',false)}});
+})();
+</script>
+</body>
+</html>
