@@ -28,3 +28,10 @@ This upgrade uses the existing JSON room settings and needs no Supabase schema c
 ## Speedway Slide — v4.1
 
 Standalone local speedway motorbike game at `speedway/index.html`. Riders take turns completing three anti-clockwise laps with automatic throttle and LEFT/RIGHT steering only. Physics include momentum, drift, surface speed scrub and lap timing. The fastest three-lap total wins.
+
+
+## Speedway Slide — v4.2 / v4.3
+
+v4.2 replaced browser-like steering buttons with captured press-and-hold touch controls for iOS and Android.
+
+v4.3 records each rider’s solo run telemetry and, after the last rider, replays all riders together on the same shale oval. The combined replay preserves actual ride timing/lines, shows live running order, and can be watched again from the final leaderboard.

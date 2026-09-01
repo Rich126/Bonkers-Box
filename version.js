@@ -1,6 +1,6 @@
 /* Spencer Games release marker. Update VERSION for every published build. */
 (() => {
-  const VERSION = 'v4.2';
+  const VERSION = 'v4.3';
   window.SPENCER_GAMES_VERSION = VERSION;
 
   function mountVersionBadge() {

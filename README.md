@@ -71,3 +71,7 @@ A new standalone Local Mode game adds turn-based speedway motorbike time trials.
 
 ## v4.2 — Speedway touch steering
 Press-and-hold steering now uses captured touch/pointer input and blocks mobile text selection.
+
+
+## v4.3 — Speedway Final Race Replay
+Speedway Slide now records every solo run and replays all riders together after the final rider, with live running order and a replay-again option.
