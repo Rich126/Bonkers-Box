@@ -52,3 +52,12 @@ Speedway Slide stores one best lap per normalized rider name in local browser st
 ## Speedway corporate visual refresh — v4.7
 
 Speedway Slide uses the established Spencer Games phoenix/elephant/family crest and a unified corporate motorsport system: deep navy, graphite, silver and controlled orange accents. Setup, timing HUD, controls, results and persistent lap records share the same sharper layout language. Stadium artwork now carries Spencer Speedway and Coventry night-meeting branding. The game signals its active state so the parent shell does not duplicate Help/version overlays over the experience. No Supabase migration is required.
+## Spencer Games v4.8 — unified Speedway corporate theme
+
+- Added `assets/spencer-theme.css` as the shared visual system for the Spencer Games shell, Local games and Spencer Live.
+- Applied the v4.7 Speedway navy, graphite, silver and orange identity to the home menu, setup surfaces, controls and branded headers.
+- Added matching Spencer Motorsport headers to Draw Dash and Flash Frenzy and a Spencer Games Network header to Spencer Live.
+- Kept functional colours for gameplay feedback, players, targets and drawing tools.
+- Suppressed redundant parent Help/version overlays while Flash Frenzy is active, matching Draw Dash and Speedway behaviour.
+- Updated all visible build markers and standalone iframe cache keys to v4.8.
+- No gameplay mechanics, saved fastest-lap data or multiplayer schemas changed.

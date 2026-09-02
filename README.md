@@ -7,6 +7,7 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 - `index.html` — Spencer Games main application
 - `assets/spencer-games-logo.png` — Spencer Games homepage logo
 - `assets/spencer-games-intro.png` — transparent intro-ident artwork used on first load
+- `assets/spencer-theme.css` — shared Speedway-derived Spencer Games corporate theme
 - `draw-dash/index.html` — Draw Race / Draw Dash Gold Edition
 - `speedway/index.html` — Speedway Slide turn-based three-lap motorbike time trial
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
@@ -87,3 +88,6 @@ Speedway Slide now maintains a persistent fastest-lap leaderboard by rider name.
 
 ## v4.7 — Speedway corporate visual refresh
 Speedway Slide now follows the Spencer Games corporate motorsport identity with the real brand crest, navy and graphite surfaces, restrained orange and silver accents, cleaner typography, sharper timing panels, refined controls and professional leaderboard styling. The stadium has matching Spencer Speedway/Coventry night-meeting branding, and redundant parent overlays are suppressed while the game is active. Gameplay, handling and saved lap records are unchanged. No Supabase changes are required.
+
+## v4.8 — Unified Speedway corporate theme
+The v4.7 Speedway visual identity now runs across the full Spencer Games experience: the home menu and Local game shell, Draw Dash, Flash Frenzy and Spencer Live. A shared theme supplies the same navy, graphite, silver and orange palette, corporate typography, sharper panels and controls, and consistent Spencer-branded headers. Functional gameplay colours remain available for correct/wrong feedback, player identity, targets and drawing. Embedded-game overlays are tidied to avoid duplicate mobile controls. No game mechanics, Speedway handling, lap records or multiplayer data structures are changed.
