@@ -81,3 +81,6 @@ Spencer Live now asks every player for an exact age from 5 to 100 and resolves e
 
 ## v4.5 — Draw Dash circuit and mobile repair
 All five Draw Dash circuits have been rebuilt with clearance-safe centre-lines so wide road strokes no longer collide into false junctions. The drawing surface is shorter and state-aware on phones, setup uses a compact preview, kerbs and start gates are clearer, boost pads prefer straights, and parent Home/Help/version overlays no longer cover the in-game instructions. No Supabase changes are required.
+
+## v4.6 — Speedway fastest-lap records
+Speedway Slide now maintains a persistent fastest-lap leaderboard by rider name. Each name keeps its single best lap, records are ranked automatically and saved on the current device, and riders receive new personal-best or outright track-record callouts. The records appear before a meeting and alongside the final results, with a guarded reset option. No Supabase changes are required.
