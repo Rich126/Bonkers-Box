@@ -44,3 +44,7 @@ Spencer Live now stores a numeric player age in the existing `players.age_band` 
 ## Draw Dash circuit and mobile repair — v4.5
 
 Draw Dash V9 replaces all five centre-lines with clearance-safe layouts, shortens the canvas to a 9:10 phone-friendly surface, improves kerbs and start gates, and selects boost pads from straights. Draw Dash also signals its active state to the parent shell so duplicate fixed Help/version controls do not obscure instructions. No Supabase migration is required.
+
+## Speedway fastest-lap records — v4.6
+
+Speedway Slide stores one best lap per normalized rider name in local browser storage, ranks the fastest records and displays them on setup and final-result screens. A completed run can trigger personal-best or outright track-record feedback. Records remain on that device until the guarded reset action is confirmed. No Supabase migration is required.
