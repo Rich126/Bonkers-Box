@@ -48,3 +48,7 @@ Draw Dash V9 replaces all five centre-lines with clearance-safe layouts, shorten
 ## Speedway fastest-lap records — v4.6
 
 Speedway Slide stores one best lap per normalized rider name in local browser storage, ranks the fastest records and displays them on setup and final-result screens. A completed run can trigger personal-best or outright track-record feedback. Records remain on that device until the guarded reset action is confirmed. No Supabase migration is required.
+
+## Speedway corporate visual refresh — v4.7
+
+Speedway Slide uses the established Spencer Games phoenix/elephant/family crest and a unified corporate motorsport system: deep navy, graphite, silver and controlled orange accents. Setup, timing HUD, controls, results and persistent lap records share the same sharper layout language. Stadium artwork now carries Spencer Speedway and Coventry night-meeting branding. The game signals its active state so the parent shell does not duplicate Help/version overlays over the experience. No Supabase migration is required.

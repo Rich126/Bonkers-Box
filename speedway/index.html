@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#130d08">
-<title>Speedway Slide</title>
+<meta name="theme-color" content="#06182a">
+<title>Spencer Games | Speedway Slide</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%,#3a2315 0,#17100b 42%,#080706 82%);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -18,16 +18,56 @@ input,select{-webkit-user-select:text;user-select:text}
 .stage{position:relative}.canvasWrap{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 24px 68px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.1)}canvas{display:block;width:100%;height:auto;background:#17331b;touch-action:none}.raceHud{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.hudBox{background:rgba(10,8,6,.74);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(7px);border-radius:12px;padding:6px 9px;font-weight:950;font-size:12px;min-width:82px}.hudBox.right{text-align:right}.callout{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);font-size:48px;font-weight:1000;text-shadow:0 4px 18px #000;white-space:nowrap;pointer-events:none}.raceMessage{min-height:22px;text-align:center;font-weight:950;font-size:13px;color:#f5d28a;margin:7px 0 2px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;touch-action:none}.controls.replayHidden{display:none}.replayStrip{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:7px 0 2px}.replayChip{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:950}.replayChip.leader{border-color:rgba(247,198,106,.5);background:rgba(216,170,65,.15)}.steer{height:82px;border:1px solid rgba(255,255,255,.13);border-radius:18px;font-size:25px;font-weight:1000;color:#fff;touch-action:none;-ms-touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:pointer;background:linear-gradient(180deg,#3d2a20,#251b15);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(0,0,0,.25)}.steer.active{background:linear-gradient(180deg,#ed8138,#a84119);transform:translateY(1px);box-shadow:inset 0 3px 8px rgba(0,0,0,.25),0 3px 10px rgba(0,0,0,.2)}
 .resultHero{text-align:center;font-size:27px;font-weight:1000;color:#f6d076}.lapList,.leaderboard{display:grid;gap:7px;margin-top:9px}.lapRow,.boardRow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#17110d;border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:10px}.boardRow:first-child{border-color:rgba(247,198,106,.35);background:linear-gradient(135deg,rgba(216,170,65,.13),#17110d)}.boardRow .place{font-size:22px;width:35px}.boardRow .name{font-weight:1000;flex:1}.boardRow .time{text-align:right;font-weight:1000;color:#f6d076}.homeLink{display:block;margin:12px auto 0;background:none;border:0;color:rgba(255,255,255,.45);font-size:12px;font-weight:900;padding:9px}
 .recordCard{margin-top:10px;padding:11px;background:rgba(8,6,5,.33);border:1px solid rgba(247,198,106,.16);border-radius:15px}.recordHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.recordHead b{color:#f6d076}.recordHead span{display:block;color:#a99687;font-size:10px;margin-top:2px}.recordReset{border:1px solid rgba(255,255,255,.1);border-radius:9px;background:rgba(255,255,255,.06);color:#c9b9ac;font-size:10px;font-weight:900;padding:7px 8px}.lapRecords{display:grid;gap:5px;margin-top:8px}.recordRow{display:grid;grid-template-columns:29px 1fr auto;align-items:center;gap:7px;background:#17110d;border-radius:10px;padding:7px 9px;font-size:12px}.recordRow:first-child{box-shadow:inset 3px 0 #f6d076}.recordPlace{color:#a99687;font-weight:1000}.recordName{font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.recordTime{color:#f6d076;font-weight:1000}.recordEmpty{text-align:center;color:#a99687;font-size:11px;padding:7px}.sectionTitle{margin:17px 0 2px;text-align:center;font-weight:1000;color:#f6d076}
-@keyframes shine{to{background-position:220% center}}@media(max-width:520px){.hero h1{font-size:29px}.names{grid-template-columns:1fr}.how{grid-template-columns:1fr 1fr 1fr}.stats{gap:5px}.stat b{font-size:15px}.steer{height:76px}.callout{font-size:38px}}
+
+/* Spencer Games corporate motorsport visual system */
+:root{--sg-navy:#06182a;--sg-navy-2:#0b243b;--sg-panel:#0c1d2e;--sg-panel-2:#081522;--sg-line:#294158;--sg-silver:#aebdca;--sg-white:#f7fafc;--sg-orange:#ff6b1a;--sg-red:#c91f28;--sg-gold:#f4c65d}
+html,body{background:radial-gradient(circle at 50% -12%,#173c5a 0,var(--sg-navy) 39%,#030a12 88%);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:max(12px,env(safe-area-inset-top)) 12px max(82px,env(safe-area-inset-bottom))}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(116deg,transparent 0 66%,rgba(255,107,26,.055) 66% 67%,transparent 67% 72%,rgba(174,189,202,.035) 72% 73%,transparent 73%);z-index:0}
+.app{position:relative;z-index:1;max-width:760px}
+.hero{text-align:left;padding:0 0 12px}
+.brandHeader{display:flex;align-items:center;gap:16px;min-height:94px;padding:10px 15px;background:linear-gradient(135deg,rgba(13,38,60,.96),rgba(5,18,31,.96));border:1px solid var(--sg-line);border-radius:16px 16px 7px 7px;box-shadow:0 18px 48px rgba(0,0,0,.34);position:relative;overflow:hidden}
+.brandHeader:after{content:"";position:absolute;right:-35px;bottom:-48px;width:190px;height:100px;border:14px solid rgba(255,107,26,.11);border-left:0;transform:skewX(-25deg)}
+.brandLogo{display:block;width:145px;height:82px;object-fit:contain;background:#f7fafc;border:1px solid rgba(255,255,255,.55);border-radius:8px;padding:5px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));position:relative;z-index:1}
+.brandDivider{width:1px;height:56px;background:linear-gradient(transparent,var(--sg-silver),transparent);opacity:.48}
+.modeIdentity{min-width:0;position:relative;z-index:1}.modeIdentity>span{display:block;color:var(--sg-silver);font-size:11px;font-weight:850;letter-spacing:.19em;margin-bottom:4px}.modeIdentity h1{margin:0!important;color:var(--sg-white)!important;background:none!important;-webkit-text-fill-color:initial;font-size:32px!important;line-height:1;letter-spacing:-.045em!important;animation:none!important}.modeIdentity h1 em{font-style:normal;color:var(--sg-orange)}
+.tag{margin-top:7px;border-radius:5px;padding:5px 8px;background:rgba(255,107,26,.1);border:1px solid rgba(255,107,26,.34);color:#ffd0b5;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.sub{margin:9px 5px 0;color:#b9c7d3;font-size:13px;max-width:none;line-height:1.45}
+.panel{background:linear-gradient(160deg,rgba(13,32,49,.98),rgba(6,18,30,.98));border:1px solid var(--sg-line);border-radius:15px;padding:16px;margin-bottom:10px;box-shadow:0 16px 42px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.035)}
+label{color:#b9c7d3;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+select,input{border-color:#314a60;border-radius:8px;background:#061522;color:var(--sg-white);padding:12px;font-size:16px;box-shadow:inset 0 1px 3px rgba(0,0,0,.28)}
+select:focus,input:focus{border-color:var(--sg-orange);box-shadow:0 0 0 3px rgba(255,107,26,.13)}
+.primary,.secondary,.next{border-radius:8px;padding:14px;letter-spacing:.055em;text-transform:uppercase;font-size:13px;box-shadow:0 8px 20px rgba(0,0,0,.24)}
+.primary{background:linear-gradient(135deg,var(--sg-orange),#d74715);color:#fff}.next{background:linear-gradient(135deg,#dce4eb,#8fa2b2);color:#071522}.secondary{background:#173149;border:1px solid #36536d}
+.how{gap:8px}.how div{background:#081927;border-color:#294158;border-radius:8px;padding:10px 7px;color:#c4d0d9;font-size:11px;line-height:1.25}.how b{color:var(--sg-orange);font-size:18px;letter-spacing:.06em}
+.recordCard{padding:12px;background:#071725;border-color:#294158;border-radius:10px}.recordHead b,.sectionTitle{color:var(--sg-white);letter-spacing:.04em;text-transform:uppercase;font-size:13px}.recordHead b:before,.sectionTitle:before{content:"";display:inline-block;width:4px;height:12px;background:var(--sg-orange);margin-right:7px;vertical-align:-1px}.recordHead span{color:#90a3b3;font-size:11px}.recordReset{border-color:#334b61;border-radius:6px;background:#10283d;color:#b9c7d3;font-size:11px;text-transform:uppercase}
+.recordRow{background:#0b2033;border:1px solid rgba(255,255,255,.045);border-radius:6px;padding:9px 10px;font-size:13px}.recordRow:first-child{box-shadow:inset 3px 0 var(--sg-orange);background:linear-gradient(90deg,rgba(255,107,26,.1),#0b2033 22%)}.recordPlace{color:#8297a9}.recordTime{color:var(--sg-gold);font-variant-numeric:tabular-nums}.recordEmpty{color:#90a3b3;font-size:12px}
+.riderTitle{color:var(--sg-white);letter-spacing:-.02em}.riderSub{color:#aebdca;line-height:1.45}.helmet{margin:2px 0 7px}
+.stats{gap:8px}.stat{background:#071725;border-color:#294158;border-radius:8px;padding:9px 6px}.stat span{color:#8499aa;font-size:10px;letter-spacing:.11em}.stat b{color:var(--sg-white);font-size:18px;font-variant-numeric:tabular-nums}.stat:nth-child(2) b,.stat:nth-child(4) b{color:var(--sg-gold)}
+.canvasWrap{border-radius:12px;border:1px solid #3b5265;box-shadow:0 22px 56px rgba(0,0,0,.47)}
+.hudBox{background:rgba(5,18,30,.85);border-color:rgba(174,189,202,.25);border-radius:6px;padding:7px 10px;letter-spacing:.04em;font-size:11px}.callout{color:#fff;text-shadow:0 4px 18px #000,0 0 30px rgba(255,107,26,.6);letter-spacing:-.04em}.raceMessage{color:#ffd0b5;font-size:13px;letter-spacing:.03em}
+.steer{height:82px;border-color:#36536d;border-radius:10px;background:linear-gradient(180deg,#173149,#0c2133);font-size:20px;letter-spacing:.08em;box-shadow:inset 0 1px rgba(255,255,255,.07),0 8px 20px rgba(0,0,0,.28)}.steer.active{background:linear-gradient(180deg,var(--sg-orange),#c73f13);border-color:#ff9a61;box-shadow:0 0 0 3px rgba(255,107,26,.16)}
+.replayChip{background:#081927;border-color:#294158;border-radius:5px;font-size:11px}.replayChip.leader{border-color:var(--sg-orange);background:rgba(255,107,26,.12)}
+.resultHero{color:var(--sg-white);letter-spacing:-.03em}.lapRow,.boardRow{background:#081927;border-color:#294158;border-radius:8px;padding:11px}.boardRow:first-child{border-color:rgba(255,107,26,.55);background:linear-gradient(90deg,rgba(255,107,26,.12),#081927 35%)}.boardRow .time{color:var(--sg-gold);font-variant-numeric:tabular-nums}.small{color:#90a3b3}.homeLink{color:#91a4b4;letter-spacing:.04em;text-transform:uppercase}
+body #sg-build-version{position:static!important;display:table!important;margin:10px auto 0!important;transform:none!important;background:rgba(5,18,30,.84)!important;border-color:#294158!important;color:#aebdca!important}
+@keyframes shine{to{background-position:220% center}}
+@media(max-width:520px){body{padding-left:8px;padding-right:8px}.brandHeader{min-height:78px;padding:8px 10px;gap:9px}.brandLogo{width:105px;height:63px}.brandDivider{height:45px}.modeIdentity>span{font-size:9px;letter-spacing:.12em}.modeIdentity h1{font-size:24px!important}.tag{font-size:8px;padding:4px 6px}.sub{font-size:12px}.names{grid-template-columns:1fr}.how{grid-template-columns:1fr 1fr 1fr}.panel{padding:12px}.stats{gap:5px}.stat{padding:7px 3px}.stat b{font-size:15px}.steer{height:76px;font-size:17px}.callout{font-size:38px}.recordHead span{font-size:10px}}
 </style>
-<script src="/version.js?v=4.6"></script>
+<script src="/version.js?v=4.7"></script>
 </head>
 <body>
 <div class="app">
   <div class="hero">
-    <h1>🏍️ SPEEDWAY SLIDE</h1>
-    <div class="tag">🔥 3 LAPS · LEFT / RIGHT ONLY</div>
-    <p class="sub">Auto-throttle around a shale oval. Set your three-lap time, then watch every rider race together in the final replay.</p>
+    <div class="brandHeader">
+      <img class="brandLogo" src="../assets/spencer-games-intro.png" alt="Spencer Games">
+      <div class="brandDivider"></div>
+      <div class="modeIdentity">
+        <span>SPENCER MOTORSPORT</span>
+        <h1>SPEEDWAY <em>SLIDE</em></h1>
+        <div class="tag">Local mode · 3-lap time trial</div>
+      </div>
+    </div>
+    <p class="sub">Auto-throttle around the shale oval. Set your time, then watch every recorded run come together in the final race replay.</p>
   </div>
 
   <section id="setupPanel" class="panel">
@@ -36,19 +76,19 @@ input,select{-webkit-user-select:text;user-select:text}
       <div><label>Format</label><input value="3 laps + final replay" disabled></div>
     </div>
     <div id="nameFields" class="names"></div>
-    <div class="how"><div><b>⬅️</b>Hold LEFT to turn in</div><div><b>💨</b>Throttle is automatic</div><div><b>➡️</b>RIGHT to correct the slide</div></div>
+    <div class="how"><div><b>← LEFT</b>Hold to turn in</div><div><b>AUTO</b>Throttle controlled</div><div><b>RIGHT →</b>Correct the slide</div></div>
     <div class="recordCard">
-      <div class="recordHead"><div><b>⚡ Fastest Lap Records</b><span>Best lap for each rider name · saved on this device</span></div><button id="clearLapBoard" class="recordReset" type="button">Reset</button></div>
+      <div class="recordHead"><div><b>Fastest Lap Records</b><span>Best lap for each rider · saved on this device</span></div><button id="clearLapBoard" class="recordReset" type="button">Reset</button></div>
       <div id="setupLapBoard" class="lapRecords"></div>
     </div>
-    <button id="setupStart" class="primary full" type="button">🏁 Start Speedway Night</button>
+    <button id="setupStart" class="primary full" type="button">Start Speedway Night</button>
   </section>
 
   <section id="readyPanel" class="panel hidden">
     <div id="readyHelmet" class="helmet">🏍️</div>
     <div id="readyTitle" class="riderTitle"></div>
     <div class="riderSub">Three laps. Fastest total time wins. The bike accelerates itself — you only steer.</div>
-    <button id="runBtn" class="primary full" type="button">Raise the tapes</button>
+    <button id="runBtn" class="primary full" type="button">Raise the Tapes</button>
   </section>
 
   <section id="racePanel" class="panel hidden">
@@ -67,8 +107,8 @@ input,select{-webkit-user-select:text;user-select:text}
       <div id="raceMessage" class="raceMessage">Tapes ready</div>
       <div id="replayStrip" class="replayStrip hidden"></div>
       <div id="steerControls" class="controls">
-        <button id="leftBtn" class="steer" type="button">⬅️ LEFT</button>
-        <button id="rightBtn" class="steer" type="button">RIGHT ➡️</button>
+        <button id="leftBtn" class="steer" type="button">← LEFT</button>
+        <button id="rightBtn" class="steer" type="button">RIGHT →</button>
       </div>
     </div>
   </section>
@@ -81,15 +121,15 @@ input,select{-webkit-user-select:text;user-select:text}
   </section>
 
   <section id="finalPanel" class="panel hidden">
-    <div class="resultHero">🏆 Speedway Night Results</div>
+    <div class="resultHero">Speedway Night Results</div>
     <div id="leaderboard" class="leaderboard"></div>
-    <div class="sectionTitle">⚡ Fastest Lap Records</div>
+    <div class="sectionTitle">Fastest Lap Records</div>
     <div id="finalLapBoard" class="lapRecords"></div>
-    <button id="replayAgainBtn" class="next full" type="button">🏍️ Watch the race again</button>
+    <button id="replayAgainBtn" class="next full" type="button">Watch the Final Race Again</button>
     <button id="againBtn" class="primary full" type="button">Run another meeting</button>
   </section>
 
-  <button id="homeBtn" class="homeLink" type="button">🏠 Spencer Games Home</button>
+  <button id="homeBtn" class="homeLink" type="button">← Spencer Games Home</button>
 </div>
 <script>
 (function(){
@@ -124,18 +164,18 @@ makeTrack();
 function nearest(x,y){var best=1e9,idx=0;for(var i=0;i<trackPts.length;i++){var p=trackPts[i],dx=x-p.x,dy=y-p.y,d=dx*dx+dy*dy;if(d<best){best=d;idx=i}}return{idx:idx,dist:Math.sqrt(best),p:trackPts[idx]}}
 function angleDiff(a,b){return((b-a+Math.PI*3)%(Math.PI*2))-Math.PI}
 
-function drawStadium(){ctx.clearRect(0,0,900,650);ctx.fillStyle='#193b1e';ctx.fillRect(0,0,900,650);
+function drawStadium(){ctx.clearRect(0,0,900,650);ctx.fillStyle='#123527';ctx.fillRect(0,0,900,650);
   // crowd bands and floodlights
-  ctx.fillStyle='#20252a';ctx.fillRect(0,0,900,58);ctx.fillRect(0,592,900,58);for(var i=0;i<34;i++){ctx.fillStyle=i%3===0?'#e7d8b3':i%3===1?'#b5432d':'#436a8d';ctx.fillRect(12+i*27,17+(i%2)*13,9,9);ctx.fillRect(12+i*27,612-(i%2)*13,9,9)}
+  ctx.fillStyle='#071521';ctx.fillRect(0,0,900,58);ctx.fillRect(0,592,900,58);ctx.fillStyle='#ff6b1a';ctx.fillRect(0,55,900,3);ctx.fillRect(0,592,900,3);for(var i=0;i<34;i++){ctx.fillStyle=i%3===0?'#d7e0e7':i%3===1?'#e85b20':'#476984';ctx.fillRect(12+i*27,17+(i%2)*13,9,9);ctx.fillRect(12+i*27,612-(i%2)*13,9,9)}
   var path=new Path2D();path.moveTo(trackPts[0].x,trackPts[0].y);for(var j=1;j<trackPts.length;j++)path.lineTo(trackPts[j].x,trackPts[j].y);path.closePath();
-  ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#efe8dc';ctx.lineWidth=224;ctx.stroke(path);ctx.strokeStyle='#6f452a';ctx.lineWidth=216;ctx.stroke(path);ctx.strokeStyle='#a96d3f';ctx.lineWidth=190;ctx.stroke(path);
-  ctx.strokeStyle='rgba(76,38,18,.38)';ctx.lineWidth=5;ctx.setLineDash([19,25]);ctx.stroke(path);ctx.setLineDash([]);
+  ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#dce4e9';ctx.lineWidth=224;ctx.stroke(path);ctx.strokeStyle='#4d2e20';ctx.lineWidth=216;ctx.stroke(path);ctx.strokeStyle='#9d6038';ctx.lineWidth=190;ctx.stroke(path);
+  ctx.strokeStyle='rgba(53,28,18,.42)';ctx.lineWidth=5;ctx.setLineDash([19,25]);ctx.stroke(path);ctx.setLineDash([]);ctx.strokeStyle='rgba(255,255,255,.09)';ctx.lineWidth=2;ctx.stroke(path);
   // infield logo
-  ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.13)';ctx.font='1000 33px sans-serif';ctx.fillText('SPENCER SPEEDWAY',450,314);ctx.font='900 14px sans-serif';ctx.fillText('3 LAP TIME TRIAL',450,338);
+  ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.84)';ctx.font='1000 31px sans-serif';ctx.fillText('SPENCER',450,304);ctx.fillStyle='#ff6b1a';ctx.font='1000 22px sans-serif';ctx.fillText('SPEEDWAY',450,331);ctx.fillStyle='rgba(220,228,233,.58)';ctx.font='800 11px sans-serif';ctx.fillText('COVENTRY · NIGHT MEETING',450,351);ctx.fillStyle='#ff6b1a';ctx.fillRect(371,363,158,3);
   // start/finish tapes line
   var s=trackPts[0],nx=-Math.sin(s.a),ny=Math.cos(s.a);ctx.strokeStyle='#fff';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(s.x+nx*TRACK_HALF,s.y+ny*TRACK_HALF);ctx.lineTo(s.x-nx*TRACK_HALF,s.y-ny*TRACK_HALF);ctx.stroke();ctx.strokeStyle='#111';ctx.lineWidth=3;for(var k=-4;k<=4;k+=2){ctx.beginPath();ctx.moveTo(s.x+nx*k*10,s.y+ny*k*10);ctx.lineTo(s.x+nx*(k+1)*10,s.y+ny*(k+1)*10);ctx.stroke()}
   // safety fence posts
-  ctx.fillStyle='#e8e0d5';for(var m=0;m<TRACK_N;m+=26){var p=trackPts[m],nrx=-Math.sin(p.a),nry=Math.cos(p.a);ctx.beginPath();ctx.arc(p.x+nrx*112,p.y+nry*112,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(p.x-nrx*112,p.y-nry*112,3,0,Math.PI*2);ctx.fill()}
+  ctx.fillStyle='#dce4e9';for(var m=0;m<TRACK_N;m+=26){var p=trackPts[m],nrx=-Math.sin(p.a),nry=Math.cos(p.a);ctx.beginPath();ctx.arc(p.x+nrx*112,p.y+nry*112,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(p.x-nrx*112,p.y-nry*112,3,0,Math.PI*2);ctx.fill()}
 }
 function addDust(x,y,color,count){for(var i=0;i<(count||2);i++)particles.push({x:x+(Math.random()-.5)*10,y:y+(Math.random()-.5)*10,vx:(Math.random()-.5)*45,vy:(Math.random()-.5)*45-8,l:.65+Math.random()*.35,s:3+Math.random()*7,c:color||'#c9874c'})}
 function drawParticles(dt){for(var i=particles.length-1;i>=0;i--){var p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*.9;p.s+=dt*4;if(p.l<=0){particles.splice(i,1);continue}ctx.globalAlpha=Math.max(0,p.l)*.55;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
@@ -199,6 +239,7 @@ setupStart.addEventListener('click',setupGame);runBtn.addEventListener('click',s
 clearLapBoard.addEventListener('click',function(){if(confirm('Reset every saved Speedway fastest-lap record on this device?')){lapBoard=[];saveLapBoard();refreshLapBoards()}});
 document.addEventListener('visibilitychange',function(){if(document.hidden&&running){leftHeld=rightHeld=false;press('left',false);press('right',false)}if(document.hidden&&replayMode){replayMode=false;if(raf)cancelAnimationFrame(raf);stopEngine();showFinal()}});
 loadLapBoard();refreshLapBoards();
+try{window.parent.postMessage({type:'SPENCER_SPEEDWAY_STATE',active:true},'*');setTimeout(function(){window.parent.postMessage({type:'SPENCER_SPEEDWAY_STATE',active:true},'*')},250)}catch(e){}
 })();
 </script>
 </body>
