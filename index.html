@@ -163,7 +163,7 @@
 }
 </style>
 
-<script src="/version.js?v=4.6"></script>
+<script src="/version.js?v=4.7"></script>
 </head>
 <body>
 
@@ -3508,7 +3508,7 @@ function BonkersBox() {
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
             React.createElement("iframe", { src: "flash-frenzy/index.html", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#070b19" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.6", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#130d08" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.7", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
             React.createElement("iframe", { src: "draw-dash/index.html?v=4.5", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#07111f" } }))));
 }
@@ -3631,6 +3631,9 @@ try {
 .bb-drawdash-active #bb-help-button{display:none!important}
 .bb-drawdash-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
 .bb-drawdash-active #sg-build-version{display:none!important}
+.bb-speedway-active #bb-help-button{display:none!important}
+.bb-speedway-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
+.bb-speedway-active #sg-build-version{display:none!important}
 #bb-pause-modal{display:none;position:fixed;inset:0;z-index:100010;background:rgba(5,3,18,.94);overflow:auto;padding:max(24px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}
 #bb-pause-card{max-width:480px;margin:7vh auto 0;background:linear-gradient(180deg,#22143e,#120b25);border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center}
 #bb-pause-card h2{font-size:30px;margin:4px 0 8px}#bb-pause-card p{opacity:.76;line-height:1.5;margin:8px 0 18px}
@@ -3693,7 +3696,12 @@ try {
 <script id="bb-speedway-message-bridge">
 (function(){
  window.addEventListener('message',function(event){
-   if(!event.data||event.data.type!=='SPENCER_SPEEDWAY_HOME')return;
+   if(!event.data)return;
+   if(event.data.type==='SPENCER_SPEEDWAY_STATE'){
+     document.body.classList.toggle('bb-speedway-active',event.data.active!==false);
+     return;
+   }
+   if(event.data.type!=='SPENCER_SPEEDWAY_HOME')return;
    var frame=document.querySelector('iframe[title="Speedway Slide"]');
    if(frame) window.location.reload();
  });
