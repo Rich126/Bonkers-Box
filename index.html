@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#08051a">
+<meta name="theme-color" content="#06182a">
 <title>Spencer Games</title>
 <style>
   html, body, #root { min-height: 100%; margin: 0; }
@@ -163,9 +163,10 @@
 }
 </style>
 
-<script src="/version.js?v=4.7"></script>
+<link rel="stylesheet" href="assets/spencer-theme.css?v=4.8">
+<script src="/version.js?v=4.8"></script>
 </head>
-<body>
+<body class="sg-corporate">
 
 <div id="sg-intro" aria-hidden="true">
   <div class="sg-intro-line"></div>
@@ -3430,26 +3431,26 @@ function MainMenu({ onSelectGame }) {
         React.createElement("div", { style: { maxWidth: 520, margin: "0 auto", position: "relative", zIndex: 1 } },
             React.createElement("div", { style: { textAlign: "center", marginBottom: 28 } },
                 React.createElement("img", {
-                    src: "assets/spencer-games-logo.png",
+                    src: "assets/spencer-games-intro.png",
                     alt: "Spencer Games — Family. Fun. Compete Together.",
                     style: {
                         display: "block", width: "min(100%, 420px)", height: "auto", margin: "0 auto",
-                        borderRadius: 18, boxShadow: "0 8px 30px rgba(0,0,0,.38)"
+                        borderRadius: 10, boxShadow: "0 12px 32px rgba(0,0,0,.34)", background: "#f7fafc", border: "1px solid #294158", padding: 8
                     }
                 })),
-            React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, GAMES.map(game => (React.createElement("button", { key: game.id, onClick: () => onSelectGame(game.id), style: {
-                    background: game.bg, border: `2px solid ${game.color}33`, borderRadius: 20,
+            React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, GAMES.map(game => (React.createElement("button", { className: "sg-game-card", key: game.id, onClick: () => onSelectGame(game.id), style: {
+                    background: "linear-gradient(150deg,#0d263c,#081522)", border: "1px solid #294158", borderLeft: "4px solid #ff6b1a", borderRadius: 12,
                     padding: "20px 18px", cursor: "pointer", textAlign: "left",
                     transition: "all .2s ease", position: "relative", overflow: "hidden",
                     boxShadow: "0 4px 20px rgba(0,0,0,.3)",
                 } },
-                React.createElement("div", { style: { position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: `radial-gradient(circle,${game.color}22,transparent)`, pointerEvents: "none" } }),
+                React.createElement("div", { style: { position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "radial-gradient(circle,rgba(255,107,26,.14),transparent)", pointerEvents: "none" } }),
                 React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 14, position: "relative", zIndex: 1 } },
                     React.createElement("div", { style: { fontSize: 44, animation: "float 3s infinite ease-in-out" } }, game.emoji),
                     React.createElement("div", { style: { flex: 1 } },
-                        React.createElement("div", { style: { fontFamily: "'Lilita One'", fontSize: 22, color: game.color, marginBottom: 3 } }, game.name),
+                        React.createElement("div", { className: "sg-game-card-title", style: { fontFamily: "'Lilita One'", fontSize: 22, color: "#ff6b1a", marginBottom: 3 } }, game.name),
                         React.createElement("div", { style: { fontSize: 12, opacity: .7, lineHeight: 1.4, color: "#fff" } }, game.desc),
-                        React.createElement("div", { style: { display: "flex", gap: 6, marginTop: 6 } }, game.tags.map(t => React.createElement("span", { key: t, style: { background: "rgba(255,255,255,.1)", borderRadius: 8, padding: "2px 8px", fontSize: 9, color: "rgba(255,255,255,.6)" } }, t)))),
+                        React.createElement("div", { style: { display: "flex", gap: 6, marginTop: 6 } }, game.tags.map(t => React.createElement("span", { className: "sg-game-tag", key: t, style: { background: "#173149", borderRadius: 5, padding: "2px 8px", fontSize: 9, color: "#cbd7e0" } }, t)))),
                     React.createElement("div", { style: { fontSize: 28, opacity: .4 } }, game.emoji2)))))),
             React.createElement("div", { style: { textAlign: "center", marginTop: 24, opacity: .3 } },
                 React.createElement("div", { style: { fontSize: 12, letterSpacing: 1 } }, "MORE GAMES COMING SOON..."),
@@ -3506,11 +3507,11 @@ function BonkersBox() {
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
-            React.createElement("iframe", { src: "flash-frenzy/index.html", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#070b19" } })),
+            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.8", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.7", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.8", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "draw-dash/index.html?v=4.5", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#07111f" } }))));
+            React.createElement("iframe", { src: "draw-dash/index.html?v=4.8", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
 }
 
 
@@ -3634,6 +3635,9 @@ try {
 .bb-speedway-active #bb-help-button{display:none!important}
 .bb-speedway-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
 .bb-speedway-active #sg-build-version{display:none!important}
+.bb-flash-active #bb-help-button{display:none!important}
+.bb-flash-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
+.bb-flash-active #sg-build-version{display:none!important}
 #bb-pause-modal{display:none;position:fixed;inset:0;z-index:100010;background:rgba(5,3,18,.94);overflow:auto;padding:max(24px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff}
 #bb-pause-card{max-width:480px;margin:7vh auto 0;background:linear-gradient(180deg,#22143e,#120b25);border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center}
 #bb-pause-card h2{font-size:30px;margin:4px 0 8px}#bb-pause-card p{opacity:.76;line-height:1.5;margin:8px 0 18px}
@@ -3713,7 +3717,12 @@ try {
 <script id="bb-flash-frenzy-message-bridge">
 (function(){
  window.addEventListener('message',function(event){
-   if(!event.data||event.data.type!=='BONKERS_FLASH_FRENZY_HOME')return;
+   if(!event.data)return;
+   if(event.data.type==='SPENCER_FLASH_STATE'){
+     document.body.classList.toggle('bb-flash-active',event.data.active!==false);
+     return;
+   }
+   if(event.data.type!=='BONKERS_FLASH_FRENZY_HOME')return;
    var frame=document.querySelector('iframe[title="Flash Frenzy!"]');
    if(frame)window.location.reload();
  });

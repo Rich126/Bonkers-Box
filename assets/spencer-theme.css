@@ -1,0 +1,103 @@
+:root{
+  --sg-navy:#06182a;
+  --sg-navy-2:#0b243b;
+  --sg-panel:#0c1d2e;
+  --sg-panel-2:#081522;
+  --sg-line:#294158;
+  --sg-line-strong:#3b5870;
+  --sg-silver:#aebdca;
+  --sg-white:#f7fafc;
+  --sg-orange:#ff6b1a;
+  --sg-orange-dark:#d74715;
+  --sg-gold:#f4c65d;
+  --sg-danger:#d83a45;
+  --sg-success:#22b875;
+}
+
+html,body.sg-corporate{
+  background:radial-gradient(circle at 50% -12%,#173c5a 0,var(--sg-navy) 39%,#030a12 88%)!important;
+  color:var(--sg-white)!important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+}
+body.sg-corporate{position:relative;overflow-x:hidden}
+body.sg-corporate:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(116deg,transparent 0 66%,rgba(255,107,26,.045) 66% 67%,transparent 67% 72%,rgba(174,189,202,.028) 72% 73%,transparent 73%);
+}
+body.sg-corporate>*{position:relative;z-index:1}
+
+.sg-brandbar{
+  display:flex;align-items:center;gap:15px;min-height:88px;padding:10px 14px;margin-bottom:10px;
+  background:linear-gradient(135deg,rgba(13,38,60,.97),rgba(5,18,31,.98));
+  border:1px solid var(--sg-line);border-radius:16px 16px 7px 7px;
+  box-shadow:0 18px 48px rgba(0,0,0,.34);position:relative;overflow:hidden;text-align:left;
+}
+.sg-brandbar:after{content:"";position:absolute;right:-38px;bottom:-52px;width:190px;height:100px;border:14px solid rgba(255,107,26,.1);border-left:0;transform:skewX(-25deg)}
+.sg-brand-logo{display:block;width:132px;height:75px;object-fit:contain;background:#f7fafc;border:1px solid rgba(255,255,255,.55);border-radius:8px;padding:5px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));position:relative;z-index:1;flex:0 0 auto}
+.sg-brand-copy{min-width:0;position:relative;z-index:1;flex:1}.sg-brand-copy>span{display:block;color:var(--sg-silver);font-size:10px;font-weight:850;letter-spacing:.18em;margin-bottom:4px}.sg-brand-copy h1{margin:0!important;color:var(--sg-white)!important;background:none!important;-webkit-text-fill-color:initial!important;font-size:30px!important;line-height:1!important;letter-spacing:-.045em!important;animation:none!important;text-align:left!important}.sg-brand-copy h1 em{font-style:normal;color:var(--sg-orange)}.sg-brand-copy small{display:block;margin-top:6px;color:#b8c7d2;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+
+body.sg-corporate .panel{background:linear-gradient(160deg,rgba(13,32,49,.98),rgba(6,18,30,.98))!important;border:1px solid var(--sg-line)!important;border-radius:15px!important;box-shadow:0 16px 42px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.035)!important}
+body.sg-corporate label{color:#b9c7d3!important;letter-spacing:.065em;text-transform:uppercase}
+body.sg-corporate input:not([type="checkbox"]),body.sg-corporate select,body.sg-corporate textarea{background:#061522!important;border:1px solid #314a60!important;border-radius:8px!important;color:var(--sg-white)!important;box-shadow:inset 0 1px 3px rgba(0,0,0,.28)}
+body.sg-corporate input:focus,body.sg-corporate select:focus,body.sg-corporate textarea:focus{border-color:var(--sg-orange)!important;box-shadow:0 0 0 3px rgba(255,107,26,.13)!important;outline:none}
+body.sg-corporate button{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body.sg-corporate .primary,body.sg-corporate .game-btn{background:linear-gradient(135deg,var(--sg-orange),var(--sg-orange-dark))!important;color:#fff!important;border-color:rgba(255,154,97,.45)!important;border-radius:8px!important;text-shadow:none!important;letter-spacing:.045em;box-shadow:0 8px 20px rgba(0,0,0,.24)!important}
+body.sg-corporate .secondary{background:#173149!important;color:#fff!important;border:1px solid #36536d!important;border-radius:8px!important}
+body.sg-corporate .danger{background:linear-gradient(135deg,#d83a45,#9e2430)!important;color:#fff!important;border-radius:8px!important}
+body.sg-corporate .good{background:linear-gradient(135deg,#27b97b,#137a52)!important;color:#fff!important;border-radius:8px!important}
+body.sg-corporate .badge,body.sg-corporate .chip,body.sg-corporate .pill{background:#10283d!important;border-color:#36536d!important;color:#dbe4eb!important;border-radius:5px!important}
+body.sg-corporate .small,body.sg-corporate .note,body.sg-corporate .tiny{color:#91a4b4}
+body.sg-corporate #sg-build-version{background:rgba(5,18,30,.84)!important;border-color:var(--sg-line)!important;color:var(--sg-silver)!important}
+body.sg-corporate.sg-standalone #sg-build-version{position:static!important;display:table!important;margin:10px auto 0!important;transform:none!important}
+body.sg-corporate.sg-standalone .sub{color:#aebdca!important}
+
+/* Standalone Local game surfaces */
+body.sg-corporate.sg-standalone #scores .score,body.sg-corporate.sg-standalone #results .result,body.sg-corporate.sg-standalone .trackHelp,body.sg-corporate.sg-standalone .feature,body.sg-corporate.sg-standalone .stat,body.sg-corporate.sg-standalone .result,body.sg-corporate.sg-standalone .tip{background:#0b2033!important;border-color:var(--sg-line)!important;border-radius:8px!important}
+body.sg-corporate.sg-standalone #arena{background:radial-gradient(circle at 50% 45%,rgba(255,107,26,.075),transparent 48%),linear-gradient(180deg,#0b243b,#030a12)!important;border-color:var(--sg-line)!important;border-radius:14px!important}
+body.sg-corporate.sg-standalone #homeBtn{background:rgba(5,18,30,.9)!important;border:1px solid var(--sg-line)!important;border-radius:8px!important;color:#fff!important}
+body.sg-corporate.sg-standalone .recordCard,body.sg-corporate.sg-standalone .lapRow,body.sg-corporate.sg-standalone .boardRow,body.sg-corporate.sg-standalone .recordRow{background:#081927!important;border-color:var(--sg-line)!important}
+
+.sg-game-card{background:linear-gradient(150deg,#0d263c,#081522)!important;border:1px solid var(--sg-line)!important;border-left:4px solid var(--sg-orange)!important;border-radius:12px!important;box-shadow:0 14px 34px rgba(0,0,0,.28)!important}
+.sg-game-card:hover,.sg-game-card:focus-visible{border-color:#4b657b!important;border-left-color:var(--sg-orange)!important;transform:translateY(-2px)}
+.sg-game-card-title{color:var(--sg-orange)!important;font-weight:950!important;letter-spacing:-.025em}
+.sg-game-tag{background:#173149!important;border:1px solid #36536d!important;border-radius:5px!important;color:#cbd7e0!important;text-transform:uppercase;font-weight:800;letter-spacing:.045em}
+
+/* Main Spencer Games shell and Local games */
+body.sg-corporate #root>div{background:radial-gradient(circle at 50% -12%,#173c5a 0,var(--sg-navy) 39%,#030a12 88%)!important;color:var(--sg-white)!important;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+body.sg-corporate #root *{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+body.sg-corporate #root h1{background:linear-gradient(90deg,var(--sg-white),var(--sg-silver),var(--sg-orange))!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;letter-spacing:-.035em!important}
+body.sg-corporate #root .game-btn{border-radius:8px!important;text-transform:uppercase!important;font-weight:900!important}
+body.sg-corporate #root button{border-radius:8px!important}
+body.sg-corporate #root input,body.sg-corporate #root select{border-radius:8px!important;background:#061522!important;border-color:#314a60!important}
+
+/* Entry, guide and pause surfaces */
+body.sg-corporate #bb-welcome,body.sg-corporate #bb-help-modal,body.sg-corporate #bb-live-shell,body.sg-corporate #bb-pause-modal{background:radial-gradient(circle at 50% -12%,#173c5a 0,var(--sg-navy) 42%,#030a12 90%)!important;color:var(--sg-white)!important}
+body.sg-corporate .bb-welcome-logo{border-radius:10px!important;border:1px solid var(--sg-line);box-shadow:0 18px 48px rgba(0,0,0,.34)!important}
+body.sg-corporate .bb-mode-card,body.sg-corporate .bb-live-launch,body.sg-corporate .bb-guide-card,body.sg-corporate .bb-live-action,body.sg-corporate #bb-pause-card{background:linear-gradient(150deg,#0d263c,#081522)!important;border:1px solid var(--sg-line)!important;border-radius:12px!important;box-shadow:0 14px 34px rgba(0,0,0,.28)!important}
+body.sg-corporate .bb-mode-card.local,body.sg-corporate .bb-mode-card.live{border-left:4px solid var(--sg-orange)!important}
+body.sg-corporate .bb-mode-pill,body.sg-corporate .bb-soon{background:#173149!important;color:#dbe4eb!important;border-radius:5px!important}
+body.sg-corporate .bb-guide-logo span,body.sg-corporate .bb-live-title span{color:var(--sg-orange)!important}
+body.sg-corporate .bb-guide-primary,body.sg-corporate .bb-resume,body.sg-corporate .bb-home-end{background:linear-gradient(135deg,var(--sg-orange),var(--sg-orange-dark))!important;color:#fff!important;border-radius:8px!important}
+body.sg-corporate .bb-guide-secondary,body.sg-corporate .bb-cancel{background:#173149!important;border:1px solid #36536d!important;border-radius:8px!important}
+body.sg-corporate #bb-home-button{background:linear-gradient(135deg,var(--sg-orange),var(--sg-orange-dark))!important;border-radius:12px!important}
+body.sg-corporate #bb-help-button{background:#173149!important;border:1px solid #49667e!important;color:#fff!important}
+
+/* Spencer Live */
+body.sg-corporate .wrap{width:min(880px,100%)}
+body.sg-corporate .top{margin-bottom:10px}
+body.sg-corporate .home,body.sg-corporate .music-toggle{background:#173149!important;border:1px solid #36536d!important;border-radius:8px!important;color:#e4ebf0!important}
+body.sg-corporate .status,body.sg-corporate .diag,body.sg-corporate .quiz-card,body.sg-corporate .creative-stage,body.sg-corporate .waiting,body.sg-corporate .switch-row,body.sg-corporate .qr-join{background:#081927!important;border-color:var(--sg-line)!important;border-radius:10px!important}
+body.sg-corporate .choice,body.sg-corporate .game-grid .game-btn{background:linear-gradient(150deg,#102d45,#081522)!important;border:1px solid var(--sg-line)!important;border-radius:10px!important}
+body.sg-corporate .choice.host,body.sg-corporate .choice.join{border-left:4px solid var(--sg-orange)!important}
+body.sg-corporate .choice b,body.sg-corporate .brand span,body.sg-corporate .room-code strong,body.sg-corporate .timer,body.sg-corporate .leader-row .rank,body.sg-corporate .mini-q b,body.sg-corporate .media-card .media-label,body.sg-corporate .host-media-count,body.sg-corporate .creative-result-title span{color:var(--sg-orange)!important}
+body.sg-corporate .mode-btn.selected,body.sg-corporate .age-btn.selected,body.sg-corporate .team-btn.selected,body.sg-corporate .avatar.selected,body.sg-corporate .topic-option:has(input:checked),body.sg-corporate .game-grid .game-btn.selected{border-color:var(--sg-orange)!important;background:rgba(255,107,26,.12)!important}
+body.sg-corporate .progress>span{background:linear-gradient(90deg,var(--sg-orange),var(--sg-gold))!important}
+body.sg-corporate .leader-row,body.sg-corporate .media-card,body.sg-corporate .mini-q{background:#0b2033!important;border-color:var(--sg-line)!important;border-radius:8px!important}
+body.sg-corporate .answer{border-radius:8px!important}
+.sg-livebar{overflow:visible}.sg-livebar .top-actions{position:relative;z-index:2;display:flex;gap:8px;align-items:center;flex:0 0 auto}.sg-live-note{text-align:center;color:#aebdca;font-size:13px;line-height:1.45;margin:0 8px 12px}
+
+@media(max-width:520px){
+  .sg-brandbar{min-height:74px;padding:7px 9px;gap:9px}.sg-brand-logo{width:98px;height:59px}.sg-brand-copy>span{font-size:8px;letter-spacing:.12em}.sg-brand-copy h1{font-size:22px!important}.sg-brand-copy small{font-size:8px;letter-spacing:.055em}
+  body.sg-corporate .panel{border-radius:11px!important}
+  .sg-livebar{flex-wrap:wrap}.sg-livebar .top-actions{width:100%;justify-content:flex-end;border-top:1px solid var(--sg-line);padding-top:7px}.sg-live-note{font-size:12px}
+}
