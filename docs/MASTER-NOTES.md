@@ -40,3 +40,7 @@ v4.3 records each rider’s solo run telemetry and, after the last rider, replay
 ## Spencer Live Question Bank 2.0 — v4.4
 
 Spencer Live now stores a numeric player age in the existing `players.age_band` text column and resolves quiz facts from a 720-question age-rated bank. Each fact has overlapping minimum, target and maximum ages. The room question order remains topic-card based, so all players stay on the same topic while their phones receive age-appropriate facts. Legacy band labels remain supported. No Supabase migration is required.
+
+## Draw Dash circuit and mobile repair — v4.5
+
+Draw Dash V9 replaces all five centre-lines with clearance-safe layouts, shortens the canvas to a 9:10 phone-friendly surface, improves kerbs and start gates, and selects boost pads from straights. Draw Dash also signals its active state to the parent shell so duplicate fixed Help/version controls do not obscure instructions. No Supabase migration is required.
