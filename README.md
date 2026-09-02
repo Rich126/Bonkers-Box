@@ -29,7 +29,7 @@ This folder is ready to use as the root of the GitHub `main` branch and as a sta
 
 The existing game names and internal compatibility identifiers are intentionally unchanged. Future multiplayer and creator sections should use **Spencer Live** and **Spencer Studio** respectively.
 
-Current Draw Dash file: `draw-dash/index.html` (V8 Gold Edition).
+Current Draw Dash file: `draw-dash/index.html` (V9 Gold Edition).
 
 ## Archive
 
@@ -78,3 +78,6 @@ Speedway Slide now records every solo run and replays all riders together after 
 
 ## v4.4 — Question Bank 2.0
 Spencer Live now asks every player for an exact age from 5 to 100 and resolves each quiz round from 720 individually age-rated questions. Overlapping age ranges keep the difficulty natural, ages 5–6 have a dedicated genuinely easy bank, and Science, Geography and Animals have wider subject variety. Old saved age-band players remain compatible. No Supabase changes are required.
+
+## v4.5 — Draw Dash circuit and mobile repair
+All five Draw Dash circuits have been rebuilt with clearance-safe centre-lines so wide road strokes no longer collide into false junctions. The drawing surface is shorter and state-aware on phones, setup uses a compact preview, kerbs and start gates are clearer, boost pads prefer straights, and parent Home/Help/version overlays no longer cover the in-game instructions. No Supabase changes are required.
