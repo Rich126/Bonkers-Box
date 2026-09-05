@@ -61,3 +61,13 @@ Speedway Slide uses the established Spencer Games phoenix/elephant/family crest 
 - Suppressed redundant parent Help/version overlays while Flash Frenzy is active, matching Draw Dash and Speedway behaviour.
 - Updated all visible build markers and standalone iframe cache keys to v4.8.
 - No gameplay mechanics, saved fastest-lap data or multiplayer schemas changed.
+
+## Spencer Games v4.9 — Speedway online
+
+- Speedway now opens in Solo Time Trial mode by default, with a 1–50 lap selector and 1/3/5/10 quick choices.
+- Local Grand Prix remains available as the existing 2–6 player, three-lap pass-and-play meeting with final replay.
+- Added Supabase-backed persistent Speedway results and all-time fastest-lap / lap-count time-trial leaderboards.
+- Added `speedway/live.html` + `speedway/live.js` for 2–4 rider simultaneous Speedway Live heats.
+- Added Speedway Live to the Multiplayer shell and Spencer Live host game list.
+- Added `supabase/phase4-speedway.sql`; this must be run once before the new online Speedway features are used.
+- Updated visible build version and active cache keys to v4.9.

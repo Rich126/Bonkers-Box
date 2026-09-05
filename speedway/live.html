@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#06182a">
+<title>Spencer Live Speedway</title>
+<link rel="stylesheet" href="../assets/spencer-theme.css?v=4.9">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -12%,#173c5a 0,#06182a 39%,#030a12 88%);color:#f7fafc;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{padding:max(12px,env(safe-area-inset-top)) 10px max(78px,env(safe-area-inset-bottom));overscroll-behavior:none}.wrap{max-width:820px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.home{border:1px solid #294158;background:#0c1d2e;color:#d7e0e7;border-radius:9px;padding:10px 12px;text-decoration:none;font-weight:900}.hero{display:flex;gap:13px;align-items:center;background:linear-gradient(135deg,rgba(13,38,60,.96),rgba(5,18,31,.96));border:1px solid #294158;border-radius:16px;padding:11px 13px;margin-bottom:10px}.logo{width:116px;height:70px;object-fit:contain;background:#fff;border-radius:8px;padding:4px}.hero small{display:block;color:#aebdca;font-weight:900;letter-spacing:.16em}.hero h1{margin:3px 0 5px;font-size:clamp(26px,7vw,42px);line-height:.95}.hero h1 span{color:#ff6b1a}.hero p{margin:0;color:#b9c7d3;font-size:12px;line-height:1.4}.panel{background:linear-gradient(160deg,rgba(13,32,49,.98),rgba(6,18,30,.98));border:1px solid #294158;border-radius:15px;padding:15px;margin:10px 0;box-shadow:0 16px 42px rgba(0,0,0,.3)}.hidden{display:none!important}.choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{border:1px solid #34526c;background:#0b2033;color:#fff;border-radius:12px;padding:17px;text-align:left;min-height:150px}.choice strong{display:block;font-size:22px;margin:8px 0}.choice small{color:#aebdca;line-height:1.4}.choice .icon{font-size:35px}.formRow{display:grid;gap:6px;margin:11px 0}.formRow label{font-size:11px;color:#aebdca;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.formRow input,.formRow select{width:100%;border:1px solid #314a60;border-radius:8px;background:#061522;color:#fff;padding:12px;font-size:16px;outline:none}.code{text-transform:uppercase;letter-spacing:5px;text-align:center;font-size:25px!important;font-weight:1000}.primary,.secondary,.danger{width:100%;border:0;border-radius:9px;padding:13px 14px;font-weight:1000;font-size:16px;margin-top:8px}.primary{background:linear-gradient(135deg,#ff7b24,#d94c12);color:#fff}.secondary{background:#10283d;color:#fff;border:1px solid #334b61}.danger{background:#76232b;color:#fff}.roomCode{text-align:center}.roomCode small{display:block;color:#aebdca;text-transform:uppercase;letter-spacing:.14em;font-weight:900}.roomCode strong{font-size:clamp(50px,15vw,82px);letter-spacing:8px;color:#f4c65d}.riders{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.rider{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #294158;border-radius:9px;background:#081927}.dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}.rider b{display:block}.rider small{color:#8fa3b4}.status{padding:10px 12px;border-radius:9px;border:1px solid #294158;background:#081927;color:#b9c7d3;font-size:13px;margin:9px 0}.status.good{border-color:#1c7c4f;color:#caffdf}.status.warn{border-color:#8d6e20;color:#ffe8a0}.raceStats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}.stat{background:#081927;border:1px solid #294158;border-radius:8px;padding:7px;text-align:center}.stat span{display:block;color:#8fa3b4;font-size:9px;text-transform:uppercase;font-weight:900;letter-spacing:.06em}.stat b{font-size:16px}.canvasWrap{position:relative;overflow:hidden;border-radius:12px;border:1px solid #34526c;box-shadow:0 18px 45px #0007}canvas{display:block;width:100%;height:auto;background:#123527}.callout{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);font-size:48px;font-weight:1000;text-shadow:0 4px 18px #000;pointer-events:none}.raceMsg{text-align:center;min-height:22px;margin:7px 0;color:#ffd0b5;font-weight:900}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px}.steer{height:86px;border:1px solid #3e5e78;border-radius:12px;background:linear-gradient(180deg,#17324a,#0b2033);color:#fff;font-size:23px;font-weight:1000;touch-action:none;user-select:none}.steer.active{background:linear-gradient(180deg,#ff7b24,#c84612);transform:translateY(1px)}.standings{display:grid;gap:7px;margin-top:10px}.standing{display:grid;grid-template-columns:38px 1fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #294158;border-radius:8px;background:#081927}.standing:first-child{border-color:#ff6b1a;background:linear-gradient(90deg,rgba(255,107,26,.12),#081927 35%)}.place{font-weight:1000;color:#f4c65d}.time{font-weight:1000;font-variant-numeric:tabular-nums}.note{font-size:12px;color:#8fa3b4;line-height:1.45}.onlineBoard{display:grid;gap:6px;margin-top:9px}.boardRow{display:grid;grid-template-columns:34px 1fr auto;gap:8px;padding:9px;border-radius:8px;background:#081927;border:1px solid #294158}.boardRow .rank{color:#f4c65d;font-weight:1000}.boardRow .name{font-weight:900}.boardRow .score{font-weight:1000;color:#f4c65d}.joinLink{font-size:12px;word-break:break-all;color:#91a4b4;text-align:center}.hostTools{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hostTools button{margin-top:0}@media(max-width:560px){.choiceGrid,.riders{grid-template-columns:1fr}.hero{align-items:flex-start}.logo{width:92px;height:58px}.raceStats{grid-template-columns:repeat(2,1fr)}.steer{height:80px;font-size:18px}.hostTools{grid-template-columns:1fr}}
+</style>
+<script src="/version.js?v=4.9"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a class="home" href="../">← Spencer Games</a><span class="status good" id="serviceStatus">Connecting…</span></div>
+  <div class="hero"><img class="logo" src="../assets/spencer-games-intro.png" alt="Spencer Games"><div><small>SPENCER LIVE · MOTORSPORT</small><h1>SPEEDWAY <span>LIVE</span></h1><p>Two to four riders race the same shale oval at the same time, each from their own phone.</p></div></div>
+
+  <section id="choice" class="panel">
+    <div class="choiceGrid">
+      <button id="chooseHost" class="choice" type="button"><span class="icon">📺</span><strong>Host Speedway</strong><small>Create the room on the main screen. The host watches the race and controls the tapes.</small></button>
+      <button id="chooseJoin" class="choice" type="button"><span class="icon">🏍️</span><strong>Join as Rider</strong><small>Enter the four-character code on your phone, choose your name and race live.</small></button>
+    </div>
+  </section>
+
+  <section id="hostSetup" class="panel hidden">
+    <h2>Host a Speedway heat</h2>
+    <div class="formRow"><label for="hostName">Host name</label><input id="hostName" maxlength="24" placeholder="e.g. Rich"></div>
+    <div class="formRow"><label for="hostLaps">Laps</label><select id="hostLaps"><option value="1">1 lap</option><option value="3" selected>3 laps</option><option value="4">4 laps</option><option value="5">5 laps</option><option value="10">10 laps</option></select></div>
+    <button id="createRoom" class="primary" type="button">Create Speedway Room</button>
+    <button class="secondary backChoice" type="button">← Back</button>
+    <div id="hostMessage"></div>
+  </section>
+
+  <section id="joinSetup" class="panel hidden">
+    <h2>Join Speedway Live</h2>
+    <div class="formRow"><label for="joinCode">Room code</label><input id="joinCode" class="code" maxlength="4" autocomplete="off" placeholder="ABCD"></div>
+    <div class="formRow"><label for="riderName">Rider name</label><input id="riderName" maxlength="24" autocomplete="nickname" placeholder="e.g. Jacob"></div>
+    <button id="joinRoom" class="primary" type="button">Join the Pits</button>
+    <button class="secondary backChoice" type="button">← Back</button>
+    <div id="joinMessage"></div>
+  </section>
+
+  <section id="lobby" class="panel hidden">
+    <div class="roomCode"><small>Speedway room</small><strong id="roomCode">----</strong><div id="joinLink" class="joinLink"></div></div>
+    <div id="lobbyStatus" class="status">Waiting for riders…</div>
+    <div id="riders" class="riders"></div>
+    <div id="hostLobbyTools" class="hostTools hidden"><button id="startRace" class="primary" type="button" disabled>Raise the Tapes</button><button id="closeRoom" class="danger" type="button">Close Room</button></div>
+    <button id="leaveRoom" class="secondary" type="button">Leave Speedway</button>
+    <div class="note">For a normal family setup, host this on the TV/tablet and join as riders from 2–4 separate phones.</div>
+  </section>
+
+  <section id="race" class="panel hidden">
+    <div class="raceStats"><div class="stat"><span>Lap</span><b id="lapHud">—</b></div><div class="stat"><span>Time</span><b id="timeHud">0.00</b></div><div class="stat"><span>Position</span><b id="positionHud">—</b></div><div class="stat"><span>Best lap</span><b id="bestHud">—</b></div></div>
+    <div class="canvasWrap"><canvas id="track" width="900" height="650"></canvas><div id="callout" class="callout"></div></div>
+    <div id="raceMsg" class="raceMsg">Waiting for the tapes…</div>
+    <div id="controls" class="controls hidden"><button id="leftBtn" class="steer" type="button">← LEFT</button><button id="rightBtn" class="steer" type="button">RIGHT →</button></div>
+    <div id="liveStandings" class="standings"></div>
+    <div id="hostRaceTools" class="hostTools hidden"><button id="endRace" class="danger" type="button">End Heat</button><button id="raceAgain" class="secondary hidden" type="button">Race Again</button></div>
+  </section>
+
+  <section id="results" class="panel hidden">
+    <h2>🏁 Heat Result</h2>
+    <div id="finalStandings" class="standings"></div>
+    <div id="resultHostTools" class="hostTools hidden"><button id="resultRaceAgain" class="primary" type="button">Another Heat</button><button id="resultClose" class="danger" type="button">Close Room</button></div>
+    <button id="resultLeave" class="secondary" type="button">Leave Speedway</button>
+    <h3>🌐 All-time fastest laps</h3><div id="allTimeBoard" class="onlineBoard"></div>
+  </section>
+</div>
+<script src="../live/config.js?v=4.9"></script>
+<script src="../live/supabase.min.js"></script>
+<script src="live.js?v=4.9"></script>
+</body>
+</html>

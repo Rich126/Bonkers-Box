@@ -17,8 +17,8 @@
 <style>
 .topic-actions{display:flex;gap:8px;margin:0 0 9px}.topic-actions .secondary{width:auto;min-height:42px;padding:9px 12px;margin:0}.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.topic-option{display:flex;align-items:center;gap:9px;border:1px solid #ffffff18;background:#ffffff08;border-radius:14px;padding:10px 11px;min-height:48px;font-weight:850;color:#eee7f7}.topic-option:has(input:checked){border-color:#ffd740;background:#ffd74012;color:#fff4ba}.topic-option input{width:20px;height:20px;accent-color:#ffd740;flex:0 0 auto}.qr-join{display:flex;align-items:center;justify-content:center;gap:16px;border:1px solid #ffffff18;background:#ffffff08;border-radius:18px;padding:14px;margin:10px auto 16px;max-width:520px}.qr-join>div:last-child{min-width:0}.qr-join strong{display:block;font-size:19px}.qr-join small{display:block;color:#bfb5cf;line-height:1.4;margin-top:3px}.room-qr{width:156px;height:156px;padding:8px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.room-qr img,.room-qr canvas,.room-qr svg{display:block!important;width:140px!important;height:140px!important;image-rendering:pixelated}.room-qr-fallback{color:#241300;background:#ffd740;border-radius:8px;padding:10px;font-weight:1000;text-align:center;line-height:1.15}@media(max-width:520px){.topic-grid{grid-template-columns:1fr}.qr-join{flex-direction:column;text-align:center}.room-qr{width:172px;height:172px}.room-qr img,.room-qr canvas,.room-qr svg{width:156px!important;height:156px!important}}
 </style>
-<link rel="stylesheet" href="../assets/spencer-theme.css?v=4.8">
-<script src="/version.js?v=4.8"></script>
+<link rel="stylesheet" href="../assets/spencer-theme.css?v=4.9">
+<script src="/version.js?v=4.9"></script>
 </head>
 <body class="sg-corporate">
 <main class="wrap" id="app">
@@ -56,6 +56,7 @@
       <button type="button" class="game-btn selected" data-game="quiz"><strong>🧠 Family Mega Quiz</strong><small>Choose the length and topics, then play a fresh family-adaptive question set.</small></button>
       <button type="button" class="game-btn" data-game="creative"><strong>📸🎙️ Creative Party</strong><small>Picture, sound and impression challenges, including people in the room and celebrities.</small></button>
       <button type="button" class="game-btn" data-game="mix"><strong>🎲 Spencer Mix</strong><small>A shuffled blend of quiz questions, picture/sound challenges and impressions.</small></button>
+      <button type="button" class="game-btn" data-game="speedway"><strong>🏍️ Speedway Live</strong><small>2–4 riders race simultaneously on their own phones. Opens the dedicated motorsport lobby.</small></button>
     </div></div>
     <div id="quiz-settings">
       <div class="switch-row"><div><strong>Family Adaptive</strong><div class="note">Younger players can receive a simpler version of the same topic.</div></div><input id="adaptive" type="checkbox" checked aria-label="Family Adaptive"></div>
@@ -188,11 +189,11 @@
   <p class="tiny">Spencer Games • Family. Fun. Compete Together.</p>
 </main>
 <script src="config.js"></script>
-<script src="questions.js?v=4.8"></script>
-<script src="creative.js?v=4.8"></script>
+<script src="questions.js?v=4.9"></script>
+<script src="creative.js?v=4.9"></script>
 <script src="supabase.min.js"></script>
 <script src="qr.js"></script>
-<script src="music.js?v=4.8"></script>
-<script src="app.js?v=4.8"></script>
+<script src="music.js?v=4.9"></script>
+<script src="app.js?v=4.9"></script>
 </body>
 </html>

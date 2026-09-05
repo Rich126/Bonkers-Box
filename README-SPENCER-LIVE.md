@@ -89,3 +89,7 @@ The host screen never needs camera/microphone access unless the host also joins 
 - The adaptive host view previews the actual questions sent to the ages currently playing.
 - Legacy age-band player records still resolve correctly.
 - No Supabase migration is required.
+
+## v4.9 — Speedway Live
+
+Speedway now has its own real-time multiplayer route at `speedway/live.html`. Before first use, run `supabase/phase4-speedway.sql` once in the Supabase SQL Editor. The standard Spencer Live join screen can detect a Speedway room code and redirect the rider to the Speedway lobby.
