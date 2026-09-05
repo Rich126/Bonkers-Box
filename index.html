@@ -51,7 +51,7 @@
  .bb-guide-note{font-size:13px;text-align:center;color:#9e94af;margin-top:12px}
 .bb-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 12px}.bb-mode-card{border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:20px 16px;background:rgba(255,255,255,.07);color:#fff;text-align:left;cursor:pointer;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 36px rgba(0,0,0,.24)}.bb-mode-card:active{transform:scale(.985)}.bb-mode-icon{font-size:46px;line-height:1}.bb-mode-card h2{font-size:25px;margin:12px 0 6px}.bb-mode-card p{font-size:14px;line-height:1.45;color:#d2c9df;margin:0}.bb-mode-card.local{background:linear-gradient(145deg,rgba(0,212,255,.17),rgba(84,104,255,.16));border-color:rgba(71,196,255,.35)}.bb-mode-card.live{background:linear-gradient(145deg,rgba(255,215,64,.17),rgba(255,107,0,.15));border-color:rgba(255,190,64,.35)}.bb-mode-pill{display:inline-block;align-self:flex-start;margin-top:14px;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900;letter-spacing:.25px;background:rgba(255,255,255,.1)}
 #bb-live-shell{display:none;position:fixed;inset:0;z-index:210000;background:linear-gradient(180deg,#13072c,#08051a 58%,#05030f);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:auto;padding:max(20px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}#bb-live-shell *{box-sizing:border-box}.bb-live-hero{text-align:center;padding:8px 0 6px}.bb-live-mark{font-size:64px}.bb-live-title{font-size:clamp(36px,9vw,58px);font-weight:1000;letter-spacing:-1.5px;margin:8px 0 4px}.bb-live-title span{color:#FFD740}.bb-live-sub{color:#c7bddc;line-height:1.45;max-width:520px;margin:0 auto 18px}.bb-live-actions{display:grid;gap:10px}.bb-live-action{border-radius:18px;padding:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.bb-live-action strong{display:block;font-size:18px;margin-bottom:4px}.bb-live-action small{color:#bfb5d0;line-height:1.4}.bb-soon{display:inline-block;background:#FFD740;color:#211300;font-weight:1000;border-radius:999px;padding:6px 10px;font-size:12px;margin-bottom:8px}
-.bb-live-launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.bb-live-launch{min-height:180px;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:18px;color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer}.bb-live-launch.host{background:linear-gradient(145deg,rgba(0,212,255,.2),rgba(84,104,255,.2))}.bb-live-launch.join{background:linear-gradient(145deg,rgba(255,215,64,.2),rgba(255,107,0,.18))}.bb-live-launch-icon{font-size:38px}.bb-live-launch strong{font-size:21px;margin:9px 0 5px}.bb-live-launch small{color:#d2c9df;line-height:1.4;flex:1}.bb-live-launch b{margin-top:12px;font-size:13px;letter-spacing:.6px}
+.bb-live-launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.bb-live-launch{min-height:180px;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:18px;color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer}.bb-live-launch.host{background:linear-gradient(145deg,rgba(0,212,255,.2),rgba(84,104,255,.2))}.bb-live-launch.join{background:linear-gradient(145deg,rgba(255,215,64,.2),rgba(255,107,0,.18))}.bb-live-launch.speedway{grid-column:1/-1;min-height:132px;background:linear-gradient(145deg,rgba(255,107,26,.18),rgba(10,42,68,.55));border-color:rgba(255,107,26,.32)}.bb-live-launch-icon{font-size:38px}.bb-live-launch strong{font-size:21px;margin:9px 0 5px}.bb-live-launch small{color:#d2c9df;line-height:1.4;flex:1}.bb-live-launch b{margin-top:12px;font-size:13px;letter-spacing:.6px}
 @media(max-width:560px){.bb-mode-grid,.bb-live-launch-grid{grid-template-columns:1fr}.bb-mode-card{min-height:155px}.bb-live-launch{min-height:145px}}
 @media(max-width:430px){.bb-how-grid{grid-template-columns:1fr}.bb-how{display:grid;grid-template-columns:38px 90px 1fr;text-align:left;align-items:center}.bb-how b{margin:0}}
 </style>
@@ -163,8 +163,8 @@
 }
 </style>
 
-<link rel="stylesheet" href="assets/spencer-theme.css?v=4.8">
-<script src="/version.js?v=4.8"></script>
+<link rel="stylesheet" href="assets/spencer-theme.css?v=4.9">
+<script src="/version.js?v=4.9"></script>
 </head>
 <body class="sg-corporate">
 
@@ -3407,7 +3407,7 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
 }
 const GAMES = [
     { id: "drawdash", name: "Draw Dash Gold", desc: "Draw the race — finger speed is throttle. 5 cinematic Grand Prix circuits!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "2-4"] },
-    { id: "speedway", name: "Speedway Slide", desc: "Set a three-lap shale time, then watch every rider race together in the final replay!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "2-6"] },
+    { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1-6"] },
     { id: "flash", name: "Flash Frenzy!", desc: "Hit every green light — fastest reactions win!", emoji: "💡", emoji2: "👆", color: "#67E8F9", bg: "linear-gradient(135deg,#071827,#12314a)", tags: ["Reaction", "2-6"] },
     { id: "dive", name: "Treasure Dive!", desc: "Dive deep for treasure — watch out for monsters!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "noodle", name: "Noodle Noggin", desc: "Watch the emoji sequence and tap it back!", emoji: "🧠", emoji2: "🍜", color: "#E040FB", bg: "linear-gradient(135deg,#1a0533,#0d0220)", tags: ["Memory", "2-6"] },
@@ -3507,11 +3507,11 @@ function BonkersBox() {
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
-            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.8", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.9", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.8", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.9", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "draw-dash/index.html?v=4.8", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
+            React.createElement("iframe", { src: "draw-dash/index.html?v=4.9", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
 }
 
 
@@ -3539,7 +3539,7 @@ try {
     <span class="bb-mode-pill">PLAY NOW</span>
    </button>
    <button id="bb-multiplayer-mode" class="bb-mode-card live" type="button">
-    <div><div class="bb-mode-icon">🌐</div><h2>Multiplayer Mode</h2><p>Spencer Live. Everyone joins on their own phone for online quizzes, voting, picture challenges, sound challenges and more.</p></div>
+    <div><div class="bb-mode-icon">🌐</div><h2>Multiplayer Mode</h2><p>Spencer Live. Everyone joins on their own phone for online quizzes, creative rounds and simultaneous Speedway racing.</p></div>
     <span class="bb-mode-pill">SPENCER LIVE</span>
    </button>
   </div>
@@ -3560,8 +3560,9 @@ try {
    <h2>How are you playing?</h2>
    <p>Use the main screen to host. Everyone else joins from their own phone.</p>
    <div class="bb-live-launch-grid">
-    <button id="bb-live-host" class="bb-live-launch host" type="button"><span class="bb-live-launch-icon">📺</span><strong>Host a Game</strong><small>Create a room code and show the lobby on the big screen.</small><b>HOST →</b></button>
-    <button id="bb-live-join" class="bb-live-launch join" type="button"><span class="bb-live-launch-icon">📱</span><strong>Join a Game</strong><small>Enter the room code, pick your name and join from this device.</small><b>JOIN →</b></button>
+    <button id="bb-live-host" class="bb-live-launch host" type="button"><span class="bb-live-launch-icon">📺</span><strong>Host Party Games</strong><small>Create a room for the quiz, Creative Party or Spencer Mix.</small><b>HOST →</b></button>
+    <button id="bb-live-join" class="bb-live-launch join" type="button"><span class="bb-live-launch-icon">📱</span><strong>Join Party Games</strong><small>Enter the room code, pick your name and join from this device.</small><b>JOIN →</b></button>
+    <button id="bb-live-speedway" class="bb-live-launch speedway" type="button"><span class="bb-live-launch-icon">🏍️</span><strong>Speedway Live</strong><small>2–4 riders race simultaneously. Host on the main screen and join from each rider's phone.</small><b>OPEN SPEEDWAY LIVE →</b></button>
    </div>
   </div>
   <div class="bb-guide-card">
@@ -3570,6 +3571,7 @@ try {
     <div class="bb-live-action"><strong>🧠 Quiz rounds</strong><small>Right/wrong, speed, closest wins and wagers.</small></div>
     <div class="bb-live-action"><strong>📸 Picture rounds</strong><small>Camera submissions followed by anonymous player voting.</small></div>
     <div class="bb-live-action"><strong>🎙️ Sound rounds</strong><small>Microphone recordings, playback and voting.</small></div>
+    <div class="bb-live-action"><strong>🏍️ Speedway Live</strong><small>Real-time 2–4 rider racing with shared room codes and online records.</small></div>
    </div>
   </div>
   <button id="bb-live-back" class="bb-guide-btn bb-guide-secondary" type="button">← Back to Local / Multiplayer</button>
@@ -3618,6 +3620,7 @@ try {
  document.getElementById('bb-live-back').onclick=function(){live.style.display='none';welcome.style.display='block';document.body.style.overflow='hidden';};
  document.getElementById('bb-live-host').onclick=function(){window.location.href='live/?mode=host';};
  document.getElementById('bb-live-join').onclick=function(){window.location.href='live/?mode=join';};
+ document.getElementById('bb-live-speedway').onclick=function(){window.location.href='speedway/live.html';};
  document.getElementById('bb-rules-first').onclick=openHelp;
  document.getElementById('bb-help-button').onclick=openHelp;
  document.getElementById('bb-close-help').onclick=closeHelp;

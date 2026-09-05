@@ -1,3 +1,7 @@
+# Spencer Games v4.9
+
+Current build: online Speedway, persistent Speedway leaderboards and selectable-lap solo time trials. Run `supabase/phase4-speedway.sql` once before using the new online features.
+
 # Spencer Games — Deployable Master
 
 This folder is based on the latest recovered complete GitHub Pages build from 29 August 2026.
