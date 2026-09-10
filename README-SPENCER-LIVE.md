@@ -93,3 +93,7 @@ The host screen never needs camera/microphone access unless the host also joins 
 ## v4.9 — Speedway Live
 
 Speedway now has its own real-time multiplayer route at `speedway/live.html`. Before first use, run `supabase/phase4-speedway.sql` once in the Supabase SQL Editor. The standard Spencer Live join screen can detect a Speedway room code and redirect the rider to the Speedway lobby.
+
+## v4.10 — Speedway timing precision
+
+Speedway Live clocks, completed times, best laps, standings and the all-time online leaderboard now display three decimal places. Existing Supabase millisecond values are unchanged and no additional migration is required.
