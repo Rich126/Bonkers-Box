@@ -1,3 +1,7 @@
+# Spencer Games v4.10
+
+Current build: online Speedway, persistent Speedway leaderboards, selectable-lap solo time trials and three-decimal Speedway timing. Run `supabase/phase4-speedway.sql` once before using the online features.
+
 # Spencer Games — Deployable Master
 
 This folder is based on the latest recovered complete GitHub Pages build from 29 August 2026.
@@ -92,5 +96,8 @@ Speedway Slide now follows the Spencer Games corporate motorsport identity with 
 ## v4.8 — Unified Speedway corporate theme
 The v4.7 Speedway visual identity now runs across the full Spencer Games experience: the home menu and Local game shell, Draw Dash, Flash Frenzy and Spencer Live. A shared theme supplies the same navy, graphite, silver and orange palette, corporate typography, sharper panels and controls, and consistent Spencer-branded headers. Functional gameplay colours remain available for correct/wrong feedback, player identity, targets and drawing. Embedded-game overlays are tidied to avoid duplicate mobile controls. No game mechanics, Speedway handling, lap records or multiplayer data structures are changed.
 
-## v4.9 — Speedway millisecond timing
-Speedway Slide now displays live, replay, individual-lap, total and fastest-lap leaderboard times to three decimal places. Existing records remain compatible because Speedway continues to store the original raw millisecond values under the unchanged `spencerSpeedwayFastestLapsV1` device-storage key. No records are reset or rounded, and no Supabase changes are required.
+## v4.9 — Online Speedway and persistent records
+Speedway includes Solo Time Trial with selectable laps, Local Grand Prix, Speedway Live, permanent Supabase fastest-lap records and separate solo total-time boards by lap count. Run `supabase/phase4-speedway.sql` once before using the online features.
+
+## v4.10 — Three-decimal Speedway timing
+All Speedway timing displays now show thousandths of a second across Solo, Local, Speedway Live, replays, results and online leaderboards. Existing Supabase results and local fallback records are retained unchanged; this update changes presentation only and requires no new SQL migration.
