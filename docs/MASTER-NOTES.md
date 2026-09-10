@@ -77,6 +77,15 @@ Speedway Slide uses the established Spencer Games phoenix/elephant/family crest 
 - Retains Solo Time Trial, selectable 1–50 lap counts, Local Grand Prix and Speedway Live.
 - Retains the Supabase-backed all-time fastest-lap and lap-count total-time leaderboards.
 - Speedway clocks, lap times, totals, replay timing and online boards now display three decimal places.
+
+## Spencer Games v4.11 — required Speedway identity
+
+- Removed automatic Rider 1 / Rider 2 placeholder submissions from Solo and Local modes.
+- A valid rider name and explicit bike-colour choice are required before a run can start.
+- Local riders must choose distinct colours from the six-bike palette.
+- Speedway Live requires the host's name and lets each rider choose an available gate colour.
+- Solo and Live remember the last valid rider name and colour on the current device.
+- Existing leaderboard storage keys, Supabase tables, modes, lap settings and millisecond result data are retained unchanged.
 - Existing integer millisecond Supabase results and local fallback records are read unchanged.
 - No storage keys, database tables, views, queries, physics or record comparison logic changed.
 - No new Supabase migration is required; the existing `phase4-speedway.sql` remains current.
