@@ -97,3 +97,7 @@ Speedway now has its own real-time multiplayer route at `speedway/live.html`. Be
 ## v4.10 — Speedway timing precision
 
 Speedway Live clocks, completed times, best laps, standings and the all-time online leaderboard now display three decimal places. Existing Supabase millisecond values are unchanged and no additional migration is required.
+
+## v4.11 — Speedway rider identity
+
+Speedway Live now requires a host name when a room is created and requires every rider to enter a name and choose one of the currently available bike colours before joining. The rider's last name and colour are remembered on that device. Existing room, result and leaderboard tables are unchanged, so no additional migration is required.

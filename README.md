@@ -1,6 +1,6 @@
-# Spencer Games v4.10
+# Spencer Games v4.11
 
-Current build: online Speedway, persistent Speedway leaderboards, selectable-lap solo time trials and three-decimal Speedway timing. Run `supabase/phase4-speedway.sql` once before using the online features.
+Current build: online Speedway, persistent Speedway leaderboards, selectable-lap solo time trials, three-decimal timing, required rider names and rider-selected bike colours. Run `supabase/phase4-speedway.sql` once before using the online features.
 
 # Spencer Games — Deployable Master
 
@@ -101,3 +101,6 @@ Speedway includes Solo Time Trial with selectable laps, Local Grand Prix, Speedw
 
 ## v4.10 — Three-decimal Speedway timing
 All Speedway timing displays now show thousandths of a second across Solo, Local, Speedway Live, replays, results and online leaderboards. Existing Supabase results and local fallback records are retained unchanged; this update changes presentation only and requires no new SQL migration.
+
+## v4.11 — Required names and bike colours
+Speedway no longer invents placeholder rider names. Solo and every Local Grand Prix rider must enter a name and choose a bike colour before racing; local riders use distinct colours. Speedway Live riders choose an available colour before joining, while Live hosts must also enter a host name. Solo and Live remember the rider's last valid name and colour on that device. Existing local and Supabase leaderboard data, lap options, game modes and timing remain unchanged; no SQL migration is required.
