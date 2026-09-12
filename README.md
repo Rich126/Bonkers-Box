@@ -108,5 +108,17 @@ Speedway no longer invents placeholder rider names. Solo and every Local Grand P
 ## v4.12 — Full Speedway leaderboard
 The Speedway setup and results screens now include a **View Full Leaderboard** box. It opens a mobile-friendly, scrollable all-time fastest-lap table while retaining the compact top-five and top-ten summaries. Up to 100 unique riders are shown, each with their single fastest lap. Existing local and Supabase results are unchanged and no SQL migration is required.
 
+## v4.15 — Holeshot branding and Speedway Live fixes
+
+- Replaced the Holeshot King header's SG tile with a dirt-bike mark.
+- Restored the Speedway Live host-lobby QR code.
+- Fixed realtime lobby refresh so **Raise the Tapes** enables when 2–4 riders are waiting.
+
+## v4.14 — Speedway leaderboard scrolling fix
+
+- Fixed the Speedway all-time leaderboard modal on Windows Firefox when its content is taller than the viewport.
+- Added a viewport-safe dialog height and a dedicated vertically scrollable records area.
+- Removed the modal's body-scroll lock while preserving its existing appearance and behavior.
+
 ## v4.13 — Holeshot King
 Holeshot King is now available from Local Mode as a one-player motocross gate-drop reaction challenge. Riders must enter a name and choose a bike colour, then wait for the 15-second board to rotate clockwise before the gate can drop. Best valid reactions are retained locally and submitted to a new permanent online leaderboard. Run `supabase/phase5-holeshot-king.sql` once; it creates only Holeshot King database objects and does not alter Speedway tables, views or existing lap records.
