@@ -101,3 +101,7 @@ Speedway Live clocks, completed times, best laps, standings and the all-time onl
 ## v4.11 — Speedway rider identity
 
 Speedway Live now requires a host name when a room is created and requires every rider to enter a name and choose one of the currently available bike colours before joining. The rider's last name and colour are remembered on that device. Existing room, result and leaderboard tables are unchanged, so no additional migration is required.
+
+## v4.12 — Full Speedway leaderboard viewer
+
+The main Speedway setup and results screens now open the complete all-time fastest-lap table from a dedicated **View Full Leaderboard** box. The data continues to come from the existing `speedway_fastest_laps` view; no additional migration is required.

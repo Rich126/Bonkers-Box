@@ -1,6 +1,6 @@
-# Spencer Games v4.11
+# Spencer Games v4.12
 
-Current build: online Speedway, persistent Speedway leaderboards, selectable-lap solo time trials, three-decimal timing, required rider names and rider-selected bike colours. Run `supabase/phase4-speedway.sql` once before using the online features.
+Current build: Holeshot King joins Spencer Games with an online reaction-time leaderboard, alongside online Speedway, persistent Speedway leaderboards with a full-table viewer, selectable-lap solo time trials, three-decimal timing, required rider names and rider-selected bike colours. Existing Speedway records are unchanged. Run `supabase/phase5-holeshot-king.sql` once to enable Holeshot King online scores.
 
 # Spencer Games — Deployable Master
 
@@ -104,3 +104,9 @@ All Speedway timing displays now show thousandths of a second across Solo, Local
 
 ## v4.11 — Required names and bike colours
 Speedway no longer invents placeholder rider names. Solo and every Local Grand Prix rider must enter a name and choose a bike colour before racing; local riders use distinct colours. Speedway Live riders choose an available colour before joining, while Live hosts must also enter a host name. Solo and Live remember the rider's last valid name and colour on that device. Existing local and Supabase leaderboard data, lap options, game modes and timing remain unchanged; no SQL migration is required.
+
+## v4.12 — Full Speedway leaderboard
+The Speedway setup and results screens now include a **View Full Leaderboard** box. It opens a mobile-friendly, scrollable all-time fastest-lap table while retaining the compact top-five and top-ten summaries. Up to 100 unique riders are shown, each with their single fastest lap. Existing local and Supabase results are unchanged and no SQL migration is required.
+
+## v4.13 — Holeshot King
+Holeshot King is now available from Local Mode as a one-player motocross gate-drop reaction challenge. Riders must enter a name and choose a bike colour, then wait for the 15-second board to rotate clockwise before the gate can drop. Best valid reactions are retained locally and submitted to a new permanent online leaderboard. Run `supabase/phase5-holeshot-king.sql` once; it creates only Holeshot King database objects and does not alter Speedway tables, views or existing lap records.
