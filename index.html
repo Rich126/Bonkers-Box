@@ -163,8 +163,8 @@
 }
 </style>
 
-<link rel="stylesheet" href="assets/spencer-theme.css?v=4.11">
-<script src="/version.js?v=4.11"></script>
+<link rel="stylesheet" href="assets/spencer-theme.css?v=4.13">
+<script src="/version.js?v=4.13"></script>
 </head>
 <body class="sg-corporate">
 
@@ -3408,6 +3408,7 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
 const GAMES = [
     { id: "drawdash", name: "Draw Dash Gold", desc: "Draw the race — finger speed is throttle. 5 cinematic Grand Prix circuits!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "2-4"] },
     { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1-6"] },
+    { id: "holeshot", name: "Holeshot King", desc: "Stage at the motocross gate, wait for the board to turn, then react when the gate drops!", emoji: "🏁", emoji2: "👑", color: "#FF6B1A", bg: "linear-gradient(135deg,#071827,#4a1d0b)", tags: ["Reaction", "1 Player"] },
     { id: "flash", name: "Flash Frenzy!", desc: "Hit every green light — fastest reactions win!", emoji: "💡", emoji2: "👆", color: "#67E8F9", bg: "linear-gradient(135deg,#071827,#12314a)", tags: ["Reaction", "2-6"] },
     { id: "dive", name: "Treasure Dive!", desc: "Dive deep for treasure — watch out for monsters!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "noodle", name: "Noodle Noggin", desc: "Watch the emoji sequence and tap it back!", emoji: "🧠", emoji2: "🍜", color: "#E040FB", bg: "linear-gradient(135deg,#1a0533,#0d0220)", tags: ["Memory", "2-6"] },
@@ -3461,7 +3462,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : id === "speedway" ? "speedway" : id === "flash" ? "flash" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "drawdash" ? "drawdash" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3507,11 +3508,13 @@ function BonkersBox() {
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
-            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.11", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.13", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.11", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.13", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+        screen === "holeshot" && React.createElement("div", { style: { minHeight: "100vh", background: "#06182a", position: "relative" } },
+            React.createElement("iframe", { src: "holeshot/index.html?v=4.13", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
         screen === "drawdash" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "draw-dash/index.html?v=4.11", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
+            React.createElement("iframe", { src: "draw-dash/index.html?v=4.13", title: "Draw Dash Gold", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
 }
 
 
@@ -3535,7 +3538,7 @@ try {
   <p class="bb-guide-sub">How are you playing today?</p>
   <div class="bb-mode-grid">
    <button id="bb-local-mode" class="bb-mode-card local" type="button">
-    <div><div class="bb-mode-icon">🎮</div><h2>Local Mode</h2><p>Everything Spencer Games has today. Play together on one device with Draw Dash, Speedway Slide, Flash Frenzy and the full family game collection.</p></div>
+    <div><div class="bb-mode-icon">🎮</div><h2>Local Mode</h2><p>Everything Spencer Games has today. Play together with Draw Dash, Speedway Slide, Holeshot King, Flash Frenzy and the full family game collection.</p></div>
     <span class="bb-mode-pill">PLAY NOW</span>
    </button>
    <button id="bb-multiplayer-mode" class="bb-mode-card live" type="button">
@@ -3588,6 +3591,7 @@ try {
    <div class="bb-game-list">
     <div class="bb-game-rule"><strong>🏁 Draw Dash Gold</strong><small>Draw the entire selected race in one continuous stroke. Finger speed becomes throttle, then watch your route race through one of 5 distinct cinematic Grand Prix circuits.</small></div>
     <div class="bb-game-rule"><strong>🏍️ Speedway Slide</strong><small>Each rider takes one turn at a three-lap shale time trial. The bike accelerates automatically; hold LEFT to turn in and RIGHT to catch the slide. Grass and the safety fence scrub speed. After the last run, every recorded ride is replayed together as one final race before the results.</small></div>
+    <div class="bb-game-rule"><strong>🏁 Holeshot King</strong><small>Choose a rider name and bike colour, go to the gate, then wait. When the 15-second board turns from 12 o’clock to 3 o’clock, the gate can drop at any moment. React as quickly as possible without making a jump start.</small></div>
     <div class="bb-game-rule"><strong>💡 Flash Frenzy!</strong><small>Each player gets the same sequence of lights. Tap green as quickly as possible. In Frenzy mode, ignore red decoys — false starts and red taps add time penalties. Lowest total reaction time wins.</small></div>
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🧠 Noodle Noggin</strong><small>Watch an emoji sequence, remember it, then tap the same sequence back in the correct order.</small></div>
@@ -3638,6 +3642,9 @@ try {
 .bb-speedway-active #bb-help-button{display:none!important}
 .bb-speedway-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
 .bb-speedway-active #sg-build-version{display:none!important}
+.bb-holeshot-active #bb-help-button{display:none!important}
+.bb-holeshot-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
+.bb-holeshot-active #sg-build-version{display:none!important}
 .bb-flash-active #bb-help-button{display:none!important}
 .bb-flash-active #bb-home-button{width:46px;height:46px;border-radius:15px;font-size:22px}
 .bb-flash-active #sg-build-version{display:none!important}
@@ -3697,6 +3704,14 @@ try {
      // React state is internal; a clean reload returns to the native Spencer Games home screen.
      window.location.reload();
    }
+ });
+})();
+</script>
+<script id="bb-holeshot-message-bridge">
+(function(){
+ window.addEventListener('message',function(event){
+   if(!event.data||event.data.type!=='SPENCER_HOLESHOT_STATE')return;
+   document.body.classList.toggle('bb-holeshot-active',event.data.active!==false);
  });
 })();
 </script>

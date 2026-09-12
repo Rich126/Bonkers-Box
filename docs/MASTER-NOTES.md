@@ -86,6 +86,13 @@ Speedway Slide uses the established Spencer Games phoenix/elephant/family crest 
 - Speedway Live requires the host's name and lets each rider choose an available gate colour.
 - Solo and Live remember the last valid rider name and colour on the current device.
 - Existing leaderboard storage keys, Supabase tables, modes, lap settings and millisecond result data are retained unchanged.
+
+## Spencer Games v4.12 — full Speedway leaderboard
+
+- Added a prominent **View Full Leaderboard** control beneath the compact fastest-lap summary on Speedway setup and results screens.
+- The full leaderboard opens in a mobile-safe, scrollable overlay and supports outside-click, close-button and Escape-key dismissal.
+- Displays up to 100 unique rider names, ranked by each rider's single best lap, while retaining the existing compact lists.
+- Existing local storage keys, Supabase views/results and three-decimal timing remain unchanged.
 - Existing integer millisecond Supabase results and local fallback records are read unchanged.
 - No storage keys, database tables, views, queries, physics or record comparison logic changed.
 - No new Supabase migration is required; the existing `phase4-speedway.sql` remains current.
