@@ -1,6 +1,6 @@
-# Spencer Games v4.17
+# Spencer Games v4.18
 
-Current build: Treasure Dive 2.0 adds Party Mode (Pirate Shop, shields, sonar, Kraken Curse, Lucky Chest, catch-up scoring, ocean events, and endgame awards), with the original gameplay preserved as Classic Mode. Rally Cross X continues to replace Draw Dash. Speedway and Holeshot King leaderboards and Supabase schema remain unchanged.
+Current build: Treasure Dive Party Mode now uses quiet round balancing from the second round, with no onscreen balancing notices. Shop, special events, and Classic Mode remain available. Rally Cross X continues to replace Draw Dash. Speedway and Holeshot King leaderboards and Supabase schema remain unchanged.
 
 # Spencer Games — Deployable Master
 
