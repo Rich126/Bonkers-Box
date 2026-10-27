@@ -1,4 +1,4 @@
-# Spencer Games v4.12
+# Spencer Games v4.16
 
 Current build: Holeshot King joins Spencer Games with an online reaction-time leaderboard, alongside online Speedway, persistent Speedway leaderboards with a full-table viewer, selectable-lap solo time trials, three-decimal timing, required rider names and rider-selected bike colours. Existing Speedway records are unchanged. Run `supabase/phase5-holeshot-king.sql` once to enable Holeshot King online scores.
 
@@ -12,7 +12,7 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 - `assets/spencer-games-logo.png` — Spencer Games homepage logo
 - `assets/spencer-games-intro.png` — transparent intro-ident artwork used on first load
 - `assets/spencer-theme.css` — shared Speedway-derived Spencer Games corporate theme
-- `draw-dash/index.html` — Draw Race / Draw Dash Gold Edition
+- `rally-cross-x/index.html` — Rally Cross X v0.6.3 (replaces Draw Dash on the home screen; the legacy draw-dash path redirects here)
 - `speedway/index.html` — Speedway Slide turn-based three-lap motorbike time trial
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
 
