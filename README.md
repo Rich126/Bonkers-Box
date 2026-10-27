@@ -1,6 +1,6 @@
-# Spencer Games v4.16
+# Spencer Games v4.17
 
-Current build: Holeshot King joins Spencer Games with an online reaction-time leaderboard, alongside online Speedway, persistent Speedway leaderboards with a full-table viewer, selectable-lap solo time trials, three-decimal timing, required rider names and rider-selected bike colours. Existing Speedway records are unchanged. Run `supabase/phase5-holeshot-king.sql` once to enable Holeshot King online scores.
+Current build: Treasure Dive 2.0 adds Party Mode (Pirate Shop, shields, sonar, Kraken Curse, Lucky Chest, catch-up scoring, ocean events, and endgame awards), with the original gameplay preserved as Classic Mode. Rally Cross X continues to replace Draw Dash. Speedway and Holeshot King leaderboards and Supabase schema remain unchanged.
 
 # Spencer Games — Deployable Master
 
@@ -16,7 +16,7 @@ This folder is based on the latest recovered complete GitHub Pages build from 29
 - `speedway/index.html` — Speedway Slide turn-based three-lap motorbike time trial
 - `flash-frenzy/index.html` — Flash Frenzy reaction game
 
-Do not upload only `index.html`: Draw Dash, Speedway Slide and Flash Frenzy are loaded as embedded pages using those relative folder paths.
+Do not upload only `index.html`: Rally Cross X, Speedway Slide and Flash Frenzy are loaded as embedded pages using those relative folder paths.
 
 ## Spencer Games startup intro
 
@@ -24,9 +24,9 @@ The main `index.html` now includes a lightweight studio-style Spencer Games star
 
 The intro plays once per browser tab/session using `sessionStorage` (`spencerGamesIntroPlayed`) so normal navigation and reloads do not repeatedly interrupt play. Users with reduced-motion enabled receive a shortened version. The application continues loading underneath the intro.
 
-## Draw Race
+## Rally Cross X
 
-The game referred to during development as **Draw Race** appears in the Spencer Games menu as **Draw Dash Gold**.
+The former Draw Dash racing-line game is now **Rally Cross X**. The legacy draw-dash URL is a compatibility redirect.
 
 ## Deployment
 

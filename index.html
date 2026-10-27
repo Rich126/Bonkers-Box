@@ -163,8 +163,15 @@
 }
 </style>
 
-<link rel="stylesheet" href="assets/spencer-theme.css?v=4.16">
-<script src="/version.js?v=4.16"></script>
+<style id="td-party-styles">
+
+/* Treasure Dive v4.17 party experience. All styles deliberately scoped. */
+.tdp-shell{min-height:100dvh;background:radial-gradient(circle at 50% -10%,#155978,#062942 50%,#041525);color:white;font-family:'Fredoka',system-ui,sans-serif;padding:clamp(12px,3vw,22px);padding-bottom:max(32px,env(safe-area-inset-bottom))}
+.tdp-wrap{max-width:650px;margin:auto}.tdp-shell *{box-sizing:border-box}.tdp-header{text-align:center;margin:4px 0 14px}.tdp-header h1,.tdp-modes h1{font-family:'Lilita One',system-ui;font-size:clamp(25px,5vw,35px);color:#ffd447;margin:0}.tdp-header h1 span{color:#93f5ff}.tdp-header small{font-size:12px;color:#a8d6e4;font-weight:800}.tdp-muted{color:#b0c9d4;font-size:13px;line-height:1.5}.tdp-scoreboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}.tdp-score{border:2px solid transparent;border-radius:12px;padding:10px;min-width:0;transition:background .2s}.tdp-score-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:4px}.tdp-score-top span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tdp-score-top b{font-size:21px;color:#fff}.tdp-progress{background:#17364d;height:6px;border-radius:10px;overflow:hidden;margin-top:8px}.tdp-progress>div{height:100%;border-radius:10px;transition:width .3s}.tdp-tide,.tdp-event-banner,.tdp-comeback,.tdp-peek,.tdp-toast{border-radius:13px;padding:10px 12px;font-size:13px;font-weight:700;margin:9px 0;text-align:center}.tdp-tide{background:#346c8a;color:#fff}.tdp-event-banner{background:#50366e}.tdp-comeback{background:#264b4a;color:#a5fff0}.tdp-peek{background:#5c3274;color:white}.tdp-toast{background:#314963;color:#ffe9ad}.tdp-main{text-align:center;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);padding:16px;border-radius:20px}.tdp-avatar{font-size:55px;line-height:1.1}.tdp-turn h2{font-family:'Lilita One';font-size:25px;margin:6px 0}.tdp-powers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0}.tdp-powers span{border-radius:999px;background:rgba(255,255,255,.14);padding:5px 10px;font-size:12px}.tdp-button{border:none;border-radius:14px;padding:13px 14px;min-height:47px;font-weight:850;cursor:pointer;touch-action:manipulation}.tdp-button:disabled{opacity:.35;cursor:not-allowed}.tdp-button:not(:disabled):active{transform:scale(.98)}.tdp-actions{display:flex;gap:9px;margin-top:17px}.tdp-actions .tdp-button{flex:1;min-width:0}.tdp-bag{background:rgba(255,215,0,.09);border:1px solid rgba(255,215,0,.21);padding:12px;border-radius:14px;margin:12px 0;text-align:left}.tdp-bag>div:first-child{display:flex;justify-content:space-between}.tdp-bag strong{font-size:20px;color:#ffd447}.tdp-treasure{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;font-size:23px}.tdp-last{margin:14px auto 6px;display:flex;flex-direction:column;align-items:center;gap:6px}.tdp-last .tdp-button{font-size:12px}.tdp-footnote{color:#a6c5d3;font-size:12px;line-height:1.4;margin-bottom:0}.tdp-shop-wrap{margin:16px 0}.tdp-shop{border-radius:16px;padding:12px;margin-top:9px;background:#0c324c;text-align:left}.tdp-shop h3{margin:0}.tdp-shop-item{display:flex;gap:11px;align-items:center;border-top:1px solid rgba(255,255,255,.11);padding:12px 0}.tdp-shop-icon{font-size:27px;min-width:36px}.tdp-shop-details{min-width:0;flex:1}.tdp-shop-details b{display:block;font-size:14px}.tdp-shop-details small{display:block;color:#bfd0dd;line-height:1.35;font-size:12px;margin-top:2px}.tdp-shop-item>.tdp-button{white-space:nowrap;font-size:12px;min-width:80px}.tdp-targets{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tdp-targets button{font-size:12px;border-radius:12px;border:1px solid #63869b;background:#123b54;color:white;padding:5px 7px}.tdp-targets button.selected{background:#a45ce6;border-color:#dcaeff}.tdp-special{text-align:center;background:linear-gradient(170deg,#1d5b75,#0d304e);border:1px solid #387894;padding:23px 17px;border-radius:20px;margin:12px 0;box-shadow:0 15px 30px rgba(0,0,0,.25)}.tdp-special h2{font-family:'Lilita One';font-size:clamp(22px,5vw,30px);color:#ffd447}.tdp-big-icon{font-size:60px;margin:8px}.tdp-award-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:10px;background:rgba(255,255,255,.08);padding:10px 12px;margin:6px 0;text-align:left;font-size:13px}.tdp-award-row span{color:#ffd447}.tdp-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:15px 0;color:#91bfd3;font-size:11px}.tdp-footer button{background:none;border:none;color:#9cc4d7;padding:8px}.tdp-modes{text-align:center;display:flex;justify-content:center;align-items:flex-start}.tdp-modes .tdp-wrap{width:100%}.tdp-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.tdp-mode{border:2px solid rgba(255,255,255,.2);color:white;background:linear-gradient(155deg,#1a7595,#09364e);border-radius:18px;padding:19px 15px;min-height:188px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:12px;cursor:pointer}.tdp-mode strong{font-family:'Lilita One';font-size:23px;color:#ffd447}.tdp-mode span{font-size:14px;line-height:1.4}.tdp-mode em{font-size:10px;font-weight:800;color:#b2f1f8;font-style:normal;margin-top:auto}@media(max-width:480px){.tdp-shell{padding:11px}.tdp-mode-grid{grid-template-columns:1fr}.tdp-mode{min-height:135px;padding:16px}.tdp-actions .tdp-button{font-size:13px;padding:12px 7px}.tdp-score-top{font-size:11px}.tdp-score{padding:7px}.tdp-shop-item{gap:7px}.tdp-shop-item>.tdp-button{min-width:65px;padding:9px 5px}}
+
+</style>
+<link rel="stylesheet" href="assets/spencer-theme.css?v=4.17">
+<script src="/version.js?v=4.17"></script>
 </head>
 <body class="sg-corporate">
 
@@ -399,7 +406,7 @@ function pickTreasure() { const tw = TREASURE_TYPES.reduce((s, t) => s + t.weigh
     if (r <= 0)
         return Object.assign({}, t);
 } return Object.assign({}, TREASURE_TYPES[0]); }
-function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext }) {
+function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext, forcedMonster, dangerMod = 0, scoreMultiplier = 1, extraPoints = 0 }) {
     const [stage, setStage] = useState("diving");
     const [shakeChest, setShakeChest] = useState(false);
     const [diverY, setDiverY] = useState(0);
@@ -409,13 +416,14 @@ function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext }) {
     // Determine result once on mount, store in ref
     const resultRef = useRef(null);
     if (resultRef.current === null) {
-        const isM = Math.random() < getMonsterRollChance(depth);
+        const isM = typeof forcedMonster === "boolean" ? forcedMonster : Math.random() < Math.max(.01, Math.min(.9, getMonsterRollChance(depth) + dangerMod));
         if (isM) {
             const m = MONSTERS[Math.floor(Math.random() * MONSTERS.length)];
             resultRef.current = hasShield ? { type: "shielded", monster: m } : { type: "monster", monster: m };
         }
         else {
             let t = pickTreasure();
+            t.points = Math.round((t.points + extraPoints) * scoreMultiplier);
             if (doubleNext) {
                 t.points *= 2;
                 t.name = "DOUBLE " + t.name;
@@ -492,7 +500,7 @@ function DiveScene({ depth, playerEmoji, onComplete, hasShield, doubleNext }) {
             Math.round(getMonsterChance(depth) * 100),
             "%")));
 }
-function TreasureDive({ players: initPlayers, onMenu }) {
+function TreasureDiveClassic({ players: initPlayers, onMenu }) {
     const [players, setPlayers] = useState(initPlayers.map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const [phase, setPhase] = useState("playing");
     const [cur, setCur] = useState(0);
@@ -643,6 +651,277 @@ function TreasureDive({ players: initPlayers, onMenu }) {
                 React.createElement("div", { style: { textAlign: "center" } },
                     React.createElement("button", { onClick: onMenu, style: { background: "none", border: "none", color: "rgba(255,255,255,.2)", cursor: "pointer", fontSize: 10, fontFamily: "'Fredoka'" } }, "\uD83C\uDFE0 Back to Menu")))))));
 }
+// Treasure Dive 2.0 — v4.17. Party and Classic never share mutable scores.
+const TD_SHOP = [
+    {id:"shield",icon:"🛡️",name:"Shield",cost:12,desc:"Block one monster and keep your treasure."},
+    {id:"sonar",icon:"🔮",name:"Sonar",cost:8,desc:"Peek at your next dive's real outcome."},
+    {id:"magnet",icon:"🧲",name:"Treasure Magnet",cost:15,desc:"Double the next treasure you find."},
+    {id:"curse",icon:"🐙",name:"Kraken Curse",cost:10,desc:"Raise a rival's danger on their next dive."},
+    {id:"chest",icon:"💰",name:"Lucky Chest",cost:10,desc:"38% chance to win 25 points; otherwise lose your 10."}
+];
+const TD_EVENTS = [
+    {id:"gold", icon:"💎", name:"GOLD RUSH!", desc:"Every treasure earns 50% more this round!"},
+    {id:"storm", icon:"🌪️", name:"OCEAN STORM!", desc:"+8% monster risk, but each treasure gets +5 points this round."},
+    {id:"sharks", icon:"🦈", name:"SHARK FRENZY!", desc:"+12% monster risk, but each treasure gets +6 points this round."},
+    {id:"raid", icon:"🏴‍☠️", name:"PIRATE RAID!", desc:"Bank treasure to steal up to 5 points from the leader this round."}
+];
+const tdH = React.createElement;
+function tdButton(text, click, color, disabled=false, extra={}) {
+    return tdH("button", {type:"button",className:"tdp-button",onClick:click,disabled,style:{background:color||"#0d7da6",color:color==="#ffd447"?"#102438":"#fff",...extra}},text);
+}
+function TreasureDive({players, onMenu}) {
+    const [mode,setMode] = useState(null);
+    if (mode==="classic") return tdH(TreasureDiveClassic,{players,onMenu});
+    if (mode==="party") return tdH(TreasureDiveParty,{players,onMenu});
+    return tdH("div",{className:"tdp-shell tdp-modes"},
+        tdH("div",{className:"tdp-wrap"},
+            tdH("div",{className:"tdp-big-icon"},"🌊🏴‍☠️"),
+            tdH("h1",null,"TREASURE DIVE 2.0"),
+            tdH("p",{className:"tdp-muted"},"Choose your adventure. Every player gets an equal chance to dive!"),
+            tdH("div",{className:"tdp-mode-grid"},
+                tdH("button",{className:"tdp-mode",onClick:()=>setMode("party")},
+                    tdH("strong",null,"🎉 PARTY MODE"),tdH("span",null,"Pirate shop, power-ups, comeback bonuses, ocean events and final awards."),tdH("em",null,"RECOMMENDED • 2–6 PLAYERS")),
+                tdH("button",{className:"tdp-mode",onClick:()=>setMode("classic")},
+                    tdH("strong",null,"🤿 CLASSIC MODE"),tdH("span",null,"The original Treasure Dive: collect treasure, dodge monsters and bank 100 points."),tdH("em",null,"ORIGINAL RULES"))),
+            tdButton("🏠 Back to games",onMenu,"#31516b"),
+            tdH("small",{className:"tdp-muted"},"Spencer Games v4.17")));
+}
+function TreasureDiveParty({players:initPlayers,onMenu}) {
+    const makePlayers=()=>initPlayers.map((p,i)=>({...p,id:i,score:0,shield:false,magnet:false,sonar:0,curse:0,finds:0,saves:0,deepest:0,lastChanceUsed:false}));
+    const [players,setPlayers]=useState(makePlayers);
+    const [cur,setCur]=useState(0);
+    const [round,setRound]=useState(1);
+    const [phase,setPhase]=useState("turn");
+    const [pts,setPts]=useState(0);
+    const [depth,setDepth]=useState(0);
+    const [bag,setBag]=useState([]);
+    const [shopOpen,setShopOpen]=useState(false);
+    const [bought,setBought]=useState(false);
+    const [curseTarget,setCurseTarget]=useState(null);
+    const [peek,setPeek]=useState(null);
+    const [lastChance,setLastChance]=useState(false);
+    const [diveKey,setDiveKey]=useState(0);
+    const [activeEvent,setActiveEvent]=useState(null);
+    const [upcomingEvent,setUpcomingEvent]=useState(null);
+    const [finalRound,setFinalRound]=useState(false);
+    const [awards,setAwards]=useState([]);
+    const [toast,setToast]=useState("");
+    const [bankMessage,setBankMessage]=useState("");
+    const timerRef=useRef(null);
+    useEffect(()=>()=>{if(timerRef.current)clearTimeout(timerRef.current);},[]);
+    const cp=players[cur];
+    const active=activeEvent&&activeEvent.round===round?activeEvent:null;
+    const maxScore=Math.max(...players.map(p=>p.score));
+    const gap=maxScore-cp.score;
+    const catchup=gap>=25;
+    const finalTide=maxScore>=80;
+    const dangerMod=(active&&active.id==="storm"?.08:active&&active.id==="sharks"?.12:0)+(cp.curse?.13:0);
+    const nextDanger=Math.min(.9,Math.max(.01,getMonsterChance(depth+1)+(lastChance?getMonsterChance(depth+1):0)+dangerMod));
+    const nextPlayer=()=>{
+        setPts(0);setDepth(0);setBag([]);setPeek(null);setLastChance(false);
+        setShopOpen(false);setBought(false);setCurseTarget(null);setToast("");setBankMessage("");
+    };
+    const giveAwards=(currentPlayers)=>{
+        const categories=[
+            {label:"🤿 Deepest Diver",prop:"deepest"},
+            {label:"🛡️ Monster Survivor",prop:"saves"},
+            {label:"💎 Treasure Hunter",prop:"finds"}
+        ];
+        const result=[];
+        const updated=currentPlayers.map(p=>({...p}));
+        categories.forEach(cat=>{
+            const max=Math.max(...updated.map(p=>p[cat.prop]));
+            if(max<=0){result.push({...cat,players:[],points:0});return;}
+            const names=[];
+            updated.forEach(p=>{if(p[cat.prop]===max){p.score+=8;names.push(p.name);}});
+            result.push({...cat,players:names,points:8});
+        });
+        setPlayers(updated);setAwards(result);setPhase("awards");
+    };
+    const finishTurn=(updatedPlayers,triggered=false)=>{
+        const isFinal=finalRound||triggered;
+        if(triggered)setFinalRound(true);
+        setPlayers(updatedPlayers);
+        if(timerRef.current)clearTimeout(timerRef.current);
+        timerRef.current=setTimeout(()=>{
+            nextPlayer();
+            if(cur===updatedPlayers.length-1){
+                if(isFinal){giveAwards(updatedPlayers);return;}
+                const newRound=round+1;
+                setRound(newRound);setCur(0);
+                if(round%3===0){
+                    const event=TD_EVENTS[Math.floor(Math.random()*TD_EVENTS.length)];
+                    setUpcomingEvent({...event,round:newRound});
+                    setPhase("event");return;
+                }
+            } else setCur(cur+1);
+            setPhase("turn");
+        },phase==="banked"?1350:1650);
+    };
+    const dive=()=>{
+        if(phase!=="turn")return;
+        setShopOpen(false);
+        setDepth(d=>d+1);
+        setDiveKey(d=>d+1);
+        setPhase("diving");
+    };
+    const onDiveComplete=(result)=>{
+        const copy=players.map(x=>({...x}));
+        const u=copy[cur];
+        u.curse=0;
+        if(result.type==="treasure"){
+            const t=result.treasure;
+            if(t.effect==="shield")u.shield=true;
+            if(t.effect==="double_next")u.magnet=true;
+            if(t.doubled)u.magnet=false;
+            u.finds++;
+            u.deepest=Math.max(u.deepest,depth);
+            setBag(b=>[...b,t]);setPts(p=>p+t.points);
+            setPlayers(copy);setPeek(null);setLastChance(false);setToast("");
+            setPhase("turn");
+        }else if(result.type==="shielded"){
+            u.shield=false;u.saves++;u.deepest=Math.max(u.deepest,depth);
+            setPlayers(copy);setPeek(null);setLastChance(false);
+            setToast("🛡️ Shield saved your treasure! Dive or bank.");
+            setPhase("turn");
+        }else{
+            u.deepest=Math.max(u.deepest,depth);
+            setPeek(null);setLastChance(false);
+            setBankMessage("💀 Monster caught you! Unbanked treasure lost.");
+            setPhase("banked");
+            finishTurn(copy,false);
+        }
+    };
+    const bank=()=>{
+        if(phase!=="turn"||depth<1)return;
+        const copy=players.map(p=>({...p}));
+        const p=copy[cur];
+        const bonus=catchup?Math.min(10,Math.round(pts*.25)):0;
+        let raid=0;
+        if(active&&active.id==="raid"){
+            const highest=Math.max(...copy.map(x=>x.score));
+            const leader=copy.find(x=>x.id!==cur&&x.score===highest&&x.score>0);
+            if(leader){raid=Math.min(5,leader.score);leader.score-=raid;}
+        }
+        p.score+=pts+bonus+raid;
+        const triggered=p.score>=100;
+        const note=`💰 +${pts} banked${bonus?` • +${bonus} comeback bonus`:""}${raid?` • +${raid} raided`:""}!`;
+        setBankMessage(note);setToast("");setPhase("banked");
+        finishTurn(copy,triggered);
+    };
+    const buy=(item)=>{
+        if(bought||phase!=="turn"||depth!==0||cp.score<item.cost)return;
+        if(item.id==="shield"&&cp.shield)return;
+        if(item.id==="magnet"&&cp.magnet)return;
+        if(item.id==="sonar"&&cp.sonar)return;
+        if(item.id==="curse"&&curseTarget===null)return;
+        const copy=players.map(p=>({...p}));
+        const p=copy[cur];p.score-=item.cost;
+        let message=`${item.icon} ${item.name} bought for ${item.cost} points!`;
+        if(item.id==="shield")p.shield=true;
+        if(item.id==="magnet")p.magnet=true;
+        if(item.id==="sonar")p.sonar=1;
+        if(item.id==="curse"){
+            copy[curseTarget].curse=1;
+            message=`🐙 ${copy[curseTarget].name} has been cursed for their next dive!`;
+        }
+        if(item.id==="chest"){
+            if(Math.random()<.38){p.score+=25;message="🎰 JACKPOT! You won 25 points (net +15)!";}
+            else message="💔 Empty chest. You lost 10 points.";
+        }
+        setPlayers(copy);setBought(true);setShopOpen(false);setToast(message);
+    };
+    const useSonar=()=>{
+        if(phase!=="turn"||!cp.sonar||peek!==null||depth<1||lastChance)return;
+        const copy=players.map(p=>({...p}));copy[cur].sonar=0;
+        // Roll only once, before the next dive; this is a genuine preview, not a random hint.
+        setPeek(Math.random()<Math.max(.01,Math.min(.9,getMonsterRollChance(depth+1)+dangerMod)));
+        setPlayers(copy);
+    };
+    const triggerLastChance=()=>{
+        if(phase!=="turn"||cp.lastChanceUsed||peek!==null)return;
+        const copy=players.map(p=>({...p}));copy[cur].lastChanceUsed=true;
+        setPlayers(copy);setLastChance(true);setToast("🔥 LAST CHANCE activated: double treasure AND double monster danger!");
+    };
+    const restart=()=>{
+        if(timerRef.current)clearTimeout(timerRef.current);
+        setPlayers(makePlayers());setCur(0);setRound(1);setPhase("turn");
+        nextPlayer();setActiveEvent(null);setUpcomingEvent(null);setFinalRound(false);setAwards([]);setToast("");
+    };
+    const progress=players.map(p=>tdH("div",{className:"tdp-score",key:p.id,style:{borderColor:p.id===cur?p.color:"transparent",background:p.id===cur?`${p.color}25`:"rgba(255,255,255,.065)"}},
+        tdH("div",{className:"tdp-score-top"},tdH("span",null,p.emoji," ",p.name),tdH("b",null,p.score)),
+        tdH("div",{className:"tdp-progress"},tdH("div",{style:{width:`${Math.max(0,Math.min(100,p.score))}%`,background:p.color}}))));
+    const awardsDone=phase==="awards"||phase==="finished";
+    const ranked=[...players].sort((a,b)=>b.score-a.score);
+    const top=ranked[0];
+    const tied=ranked.filter(p=>p.score===top.score);
+    return tdH("div",{className:"tdp-shell"},tdH("div",{className:"tdp-wrap"},
+        tdH("header",{className:"tdp-header"},
+            tdH("h1",null,"🌊 TREASURE DIVE ",tdH("span",null,"PARTY")),
+            tdH("small",null,finalRound?"🏁 FINAL ROUND — finish the current round!":`ROUND ${round} • FIRST TO 100 • 2–6 PLAYERS`)),
+        tdH("div",{className:"tdp-scoreboard"},progress),
+        finalTide&&!awardsDone&&tdH("div",{className:"tdp-tide"},"🌊 FINAL TIDE! Treasure at depth 3+ earns 5 extra points!"),
+        active&&!awardsDone&&tdH("div",{className:"tdp-event-banner"},active.icon," ",active.name," — ",active.desc),
+        phase==="event"&&upcomingEvent&&tdH("div",{className:"tdp-special tdp-event"},
+            tdH("div",{className:"tdp-big-icon"},upcomingEvent.icon),tdH("h2",null,upcomingEvent.name),
+            tdH("p",null,upcomingEvent.desc),tdH("p",{className:"tdp-muted"},"Applies to every player in round ",round,"."),
+            tdButton("🌊 Start next round",()=>{setActiveEvent(upcomingEvent);setUpcomingEvent(null);setPhase("turn");},"#117a99")),
+        phase==="awards"&&tdH("div",{className:"tdp-special"},
+            tdH("div",{className:"tdp-big-icon"},"🎉🏅"),tdH("h2",null,"BONUS TREASURE AWARDS"),
+            tdH("p",{className:"tdp-muted"},"8 points per award, shared equally by tied leaders."),
+            awards.map(a=>tdH("div",{key:a.prop,className:"tdp-award-row"},tdH("b",null,a.label),tdH("span",null,a.players.length?`${a.players.join(" & ")} +8` :"No winner"))),
+            tdButton("🏆 See final results",()=>setPhase("finished"),"#ffd447")),
+        phase==="finished"&&tdH("div",{className:"tdp-special"},
+            tdH("div",{className:"tdp-big-icon"},"🏆"),
+            tdH("h2",null,tied.length>1?"IT'S A TIE!":`${top.name} WINS!`),
+            tdH("p",null,tied.map(p=>p.emoji+" "+p.name).join(" & ")),
+            ranked.map((p,i)=>tdH("div",{key:p.id,className:"tdp-award-row"},tdH("b",null,`${i+1}. ${p.emoji} ${p.name}`),tdH("strong",null,`${p.score} pts`))),
+            tdH("div",{className:"tdp-actions"},tdButton("🔄 Play again",restart,"#ffd447"),tdButton("🏠 Games",onMenu,"#31516b"))),
+        phase==="banked"&&tdH("div",{className:"tdp-special tdp-banked"},
+            tdH("div",{className:"tdp-big-icon"},bankMessage.startsWith("💀")?"🦑":"🏦"),
+            tdH("h2",null,bankMessage),tdH("p",null,finalRound?"Final round continues…":"Pass to the next player!")),
+        phase==="diving"&&tdH(DiveScene,{key:diveKey,depth,playerEmoji:cp.emoji,hasShield:cp.shield,
+            doubleNext:cp.magnet,forcedMonster:peek===null?undefined:peek,
+            dangerMod:dangerMod+(lastChance?getMonsterChance(depth):0),
+            scoreMultiplier:(active&&active.id==="gold"?1.5:1)*(lastChance?2:1),
+            extraPoints:(active&&active.id==="storm"?5:active&&active.id==="sharks"?6:0)+(finalTide&&depth>=3?5:0),
+            onComplete:onDiveComplete}),
+        phase==="turn"&&tdH("div",{className:"tdp-main"},
+            tdH("div",{className:"tdp-turn"},
+                tdH("div",{className:"tdp-avatar"},cp.emoji),
+                tdH("h2",{style:{color:cp.color}},cp.name,"'s Dive!"),
+                tdH("div",{className:"tdp-muted"},`Depth ${depth} • Next monster risk ≈ ${Math.round(nextDanger*100)}%`),
+                gap>=25&&tdH("div",{className:"tdp-comeback"},"⚡ CATCH-UP ACTIVE: +25% banked treasure, up to 10 bonus pts!"),
+                (cp.shield||cp.magnet||cp.sonar>0||cp.curse>0||lastChance)&&tdH("div",{className:"tdp-powers"},
+                    cp.shield&&tdH("span",null,"🛡️ Shield"),cp.magnet&&tdH("span",null,"🧲 Magnet"),
+                    cp.sonar>0&&tdH("span",null,"🔮 Sonar"),cp.curse>0&&tdH("span",null,"🐙 Cursed"),
+                    lastChance&&tdH("span",null,"🔥 Last Chance"))),
+            depth>0&&tdH("div",{className:"tdp-bag"},
+                tdH("div",null,tdH("b",null,"🎒 CURRENT BAG"),tdH("strong",null,`+${pts} pts`)),
+                tdH("div",{className:"tdp-treasure"},bag.map((t,i)=>tdH("span",{key:i,title:t.name},t.emoji)))),
+            toast&&tdH("div",{className:"tdp-toast"},toast),
+            peek!==null&&tdH("div",{className:"tdp-peek",role:"status"},
+                peek?"🔮 SONAR WARNING: A monster is on your next dive!":"🔮 SONAR CLEAR: Treasure awaits on your next dive!"),
+            tdH("div",{className:"tdp-actions"},
+                tdButton("🤿 DIVE DEEPER",dive,"#0b8cb4"),
+                depth>0&&tdButton("💰 BANK TREASURE",bank,"#ffd447")),
+            depth>0&&cp.sonar>0&&peek===null&&!lastChance&&tdButton("🔮 Use sonar (preview next dive)",useSonar,"#6c4b9a",false,{width:"100%"}),
+            !cp.lastChanceUsed&&peek===null&&tdH("div",{className:"tdp-last"},
+                tdButton("🔥 LAST CHANCE — double reward and danger",triggerLastChance,"#8c4152",lastChance),
+                tdH("small",{className:"tdp-muted"},"Once per player per game. Applies to one dive.")),
+            depth===0&&tdH("div",{className:"tdp-shop-wrap"},
+                tdButton(shopOpen?"✖ Close Pirate Shop":"🏴‍☠️ PIRATE SHOP",()=>setShopOpen(v=>!v),"#385677",bought,{width:"100%"}),
+                shopOpen&&!bought&&tdH("div",{className:"tdp-shop"},
+                    tdH("h3",null,"⚓ PIRATE SHOP"),tdH("p",{className:"tdp-muted"},`You have ${cp.score} banked points. One purchase per turn.`),
+                    TD_SHOP.map(item=>tdH("div",{className:"tdp-shop-item",key:item.id},
+                        tdH("span",{className:"tdp-shop-icon"},item.icon),
+                        tdH("div",{className:"tdp-shop-details"},tdH("b",null,item.name),tdH("small",null,item.desc),
+                            item.id==="curse"&&tdH("div",{className:"tdp-targets"},players.filter(p=>p.id!==cur).map(p=>tdH("button",{key:p.id,onClick:()=>setCurseTarget(p.id),className:curseTarget===p.id?"selected":""},p.emoji," ",p.name)))),
+                        tdButton(`${item.cost} 🪙`,()=>buy(item),"#bc7a12",cp.score<item.cost||(item.id==="shield"&&cp.shield)||(item.id==="magnet"&&cp.magnet)||(item.id==="sonar"&&cp.sonar>0)||(item.id==="curse"&&curseTarget===null)))))),
+            tdH("p",{className:"tdp-footnote"},"Bank before a monster to keep treasure. Monsters erase only your unbanked bag; bought items cost real points.")),
+        tdH("footer",{className:"tdp-footer"},tdH("button",{onClick:onMenu},"🏠 Back to Games"),tdH("span",null,"Spencer Games v4.17"))));
+}
+
 const EMOJI_POOL = ["🍕", "🚀", "🎸", "🌈", "🦄", "🍩", "🎯", "🌮", "🐸", "🎪", "🍉", "🔥", "🌻", "🎲", "🐵", "🍦", "🎈", "⚡", "🦊", "🎃", "🌺", "🍄", "🐝", "🎵", "🦋", "🍿", "🧁", "🐳", "🌙", "🎩"];
 function NoodleNoggin({ players: initPlayers, onMenu }) {
     const [players, setPlayers] = useState(initPlayers.map(p => (Object.assign(Object.assign({}, p), { score: 0, alive: true, level: 1 }))));
@@ -3406,7 +3685,7 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
                     React.createElement("button", { onClick: () => { reset(); onMenu(); }, style: { background: "none", border: "none", color: "rgba(255,255,255,.2)", cursor: "pointer", fontSize: 10, fontFamily: "'Fredoka'" } }, "\uD83C\uDFE0 Menu")))))));
 }
 const GAMES = [
-    { id: "dive", name: "Treasure Dive!", desc: "Dive deep for treasure — watch out for monsters!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
+    { id: "dive", name: "Treasure Dive!", desc: "Party Mode: pirate shop, monster shields, comebacks and bonus awards!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1-6"] },
     { id: "rallycrossx", name: "Rally Cross X", desc: "Draw your racing line across 11 unique circuits, from dirt and snow to figure-eight racing!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "1-6"] },
     { id: "holeshot", name: "Holeshot King", desc: "Stage at the motocross gate, wait for the board to turn, then react when the gate drops!", emoji: "🏁", emoji2: "👑", color: "#FF6B1A", bg: "linear-gradient(135deg,#071827,#4a1d0b)", tags: ["Reaction", "1 Player"] },
@@ -3508,13 +3787,13 @@ function BonkersBox() {
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
-            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.16", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.17", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.16", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.17", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "holeshot" && React.createElement("div", { style: { minHeight: "100vh", background: "#06182a", position: "relative" } },
-            React.createElement("iframe", { src: "holeshot/index.html?v=4.16", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "holeshot/index.html?v=4.17", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
         screen === "rallycrossx" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "rally-cross-x/index.html?v=4.16", title: "Rally Cross X", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
+            React.createElement("iframe", { src: "rally-cross-x/index.html?v=4.17", title: "Rally Cross X", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
 }
 
 
