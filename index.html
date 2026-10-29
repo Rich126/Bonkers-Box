@@ -3706,6 +3706,7 @@ const GAMES = [
     { id: "dive", name: "Treasure Dive!", desc: "Party Mode: pirate shop, monster shields, ocean events and bonus awards!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1–8 Players"] },
     { id: "rallycrossx", name: "Rally Cross X", desc: "Draw your racing line across 11 circuits. Play solo, race AI, or pass and play with 2–8 players!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "1–8 Players"] },
+    { id: "supercross", name: "Supercross Flow", desc: "Draw your line, ride the rhythm and control throttle and braking over berms, ruts and jumps.", emoji: "🏍️", emoji2: "⛰️", color: "#FFB963", bg: "linear-gradient(135deg,#17362e,#55351f)", tags: ["Motocross", "1–8 Turns"] },
     { id: "holeshot", name: "Holeshot King", desc: "Stage at the motocross gate, wait for the board to turn, then react when the gate drops!", emoji: "🏁", emoji2: "👑", color: "#FF6B1A", bg: "linear-gradient(135deg,#071827,#4a1d0b)", tags: ["Reaction", "1 Player"] },
     { id: "swatthat", name: "SWAT THAT!", desc: "Fly-swatting chaos for 1–8 players! Time your swing and send the terrified fly flying.", emoji: "🪰", emoji2: "🏓", color: "#FFBD3C", bg: "linear-gradient(135deg,#0d4864,#156d86)", tags: ["Arcade", "1–8 Players"] },
     { id: "flash", name: "Flash Frenzy!", desc: "Hit every green light — fastest reactions win!", emoji: "💡", emoji2: "👆", color: "#67E8F9", bg: "linear-gradient(135deg,#071827,#12314a)", tags: ["Reaction", "2-6"] },
@@ -3760,7 +3761,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "supercross" ? "supercross" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3811,6 +3812,8 @@ function BonkersBox() {
             React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.19", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
             React.createElement("iframe", { src: "speedway/index.html?v=4.19", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+        screen === "supercross" && React.createElement("div", { style: { minHeight: "100vh", background: "#0b1520", position: "relative" } },
+            React.createElement("iframe", { src: "supercross/index.html?v=0.1", title: "Supercross Flow", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#0b1520" } })),
         screen === "holeshot" && React.createElement("div", { style: { minHeight: "100vh", background: "#06182a", position: "relative" } },
             React.createElement("iframe", { src: "holeshot/index.html?v=4.19", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
         screen === "rallycrossx" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
@@ -3891,6 +3894,7 @@ try {
    <div class="bb-game-list">
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🏍️ Speedway Slide</strong><small>Each rider takes one turn at a three-lap shale time trial. The bike accelerates automatically; hold LEFT to turn in and RIGHT to catch the slide. Grass and the safety fence scrub speed. After the last run, every recorded ride is replayed together as one final race before the results.</small></div>
+    <div class="bb-game-rule"><strong>🏍️ Supercross Flow</strong><small>Draw one lap, then control throttle and braking live. Use berms and ruts, link rhythm jumps and skim whoops. Local riders take timed turns; watch the side view to control landing pitch.</small></div>
     <div class="bb-game-rule"><strong>🏁 Rally Cross X</strong><small>Draw your racing line in one continuous stroke, controlling the pace with your finger. Play solo, race AI, or choose Local pass-and-play for 2–8 players: draw your laps in turn, then race your cars together. Cars can pass through each other. Includes 11 tracks with dirt, snow and figure-eight circuits.</small></div>
     <div class="bb-game-rule"><strong>🏁 Holeshot King</strong><small>Choose a rider name and bike colour, go to the gate, then wait. When the 15-second board turns from 12 o’clock to 3 o’clock, the gate can drop at any moment. React as quickly as possible without making a jump start.</small></div>
     <div class="bb-game-rule"><strong>🪰 SWAT THAT!</strong><small>Choose 1–8 players, with three swings each. Tap just as the fly reaches the swatter, launch it as far as possible, and win with the longest combined distance. Watch its terrified expression!</small></div>
@@ -3991,6 +3995,17 @@ try {
 </script>
 
 
+<style>.bb-supercross-active #bb-help-button,.bb-supercross-active #bb-home-button{display:none!important}</style>
+<script id="bb-supercross-message-bridge">
+(function(){
+ window.addEventListener('message',function(event){
+  if(event.origin!==window.location.origin||!event.data||event.data.type!=='SPENCER_SUPERCROSS_STATE')return;
+  var frame=document.querySelector('iframe[title="Supercross Flow"]');
+  if(frame&&event.source===frame.contentWindow)document.body.classList.toggle('bb-supercross-active',event.data.active!==false);
+ });
+ new MutationObserver(function(){if(!document.querySelector('iframe[title="Supercross Flow"]'))document.body.classList.remove('bb-supercross-active');}).observe(document.getElementById('root')||document.body,{childList:true,subtree:true});
+})();
+</script>
 <script id="bb-rallycrossx-message-bridge">
 (function(){
  window.addEventListener('message',function(event){
