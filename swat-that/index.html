@@ -49,7 +49,7 @@ footer{position:absolute;right:10px;bottom:4px;z-index:1;font-size:10px;font-wei
   <div class="top"><div class="brand"><small>Spencer Games · v4.19</small><strong>SWAT THAT!</strong></div>
     <div class="stats"><div class="stat stat--live"><div class="tag">Distance</div><div class="num"><span id="distance">0.0</span><small> m</small></div></div><div class="stat"><div class="tag">Record</div><div class="num"><span id="best">0.0</span><small> m</small></div></div><div class="stat"><div class="tag">Swat</div><div class="num" id="swatCount">1 / 3</div></div></div>
   </div>
-  <div class="player-board" id="playerBoard" aria-label="Four player scoreboard" aria-live="polite"></div>
+  <div class="player-board" id="playerBoard" aria-label="Player scoreboard" aria-live="polite"></div>
   <div id="timing">GET READY!</div>
   <div class="bottom"><div id="hint" class="hint">Tap SWAT as the fly reaches your swatter!</div><div class="actions"><a class="btn btn--quiet btn--home" href="../" target="_top" onclick="try{top.__swatThatHome=true}catch(e){}" aria-label="Back to Spencer Games home page" title="Back to Spencer Games home page">⌂ Home</a><button class="btn btn--huge" id="swingButton" type="button" hidden>🪰 SWAT!</button></div></div>
 </div>
@@ -66,9 +66,10 @@ const BEST_KEY='spencer_games_swat_that_best_v010';
 let soundOn=true,audioCtx=null;
 try{soundOn=localStorage.getItem('swat_sound')!=='off'}catch(e){}; soundButton.textContent=soundOn?'🔊':'🔇';
 let best=0;try{best=Number(localStorage.getItem(BEST_KEY)||0)||0}catch(e){};bestEl.textContent=best.toFixed(1);
-const PLAYER_COUNT=4,SWATS_PER_PLAYER=3,NAMES_KEY='spencer_games_swat_that_names_v020';
+let playerCount=4;
+const SWATS_PER_PLAYER=3,NAMES_KEY='spencer_games_swat_that_names_v020';
 let storedNames=[];try{const names=JSON.parse(localStorage.getItem(NAMES_KEY)||'[]');if(Array.isArray(names))storedNames=names}catch(e){}
-let players=Array.from({length:PLAYER_COUNT},(_,i)=>({name:(typeof storedNames[i]==='string'&&storedNames[i].trim().slice(0,14))||`Player ${i+1}`,scores:[]}));
+let players=Array.from({length:playerCount},(_,i)=>({name:(typeof storedNames[i]==='string'&&storedNames[i].trim().slice(0,14))||`Player ${i+1}`,scores:[]}));
 let turnIndex=0,playerIndex=0,round=1,matchComplete=false;
 let W=960,H=600,scale=1,dpr=1,groundY=500,targetX=250,targetY=360,startDx=185,cam=0,clock=0,phase='intro',distance=0;
 let fly={x:430,y:180,vx:0,vy:0,spin:0},t=0,swingTime=0,contactDone=false,quality=0,flightTime=0,bounces=0,trail=[],particles=[],finishTimer=0,lastFrame=0,uiTime=0,launchX=0,sparkleAge=0,hitFeedback='',hitFeedbackTime=0;
@@ -82,26 +83,35 @@ function setHint(str){hint.textContent=str}
 function setOverlay(show){overlay.classList.toggle('hidden',!show)}
 function htmlSafe(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function updateBoard(){
-  playerBoard.innerHTML=players.map((p,i)=>{const total=p.scores.reduce((a,b)=>a+b,0);const current=phase!=='intro'&&!matchComplete&&i===playerIndex&&turnIndex<PLAYER_COUNT*SWATS_PER_PLAYER;const leader=matchComplete&&total===Math.max(...players.map(q=>q.scores.reduce((a,b)=>a+b,0)));
+  playerBoard.style.gridTemplateColumns=`repeat(${Math.min(playerCount,4)},minmax(0,1fr))`;
+  playerBoard.innerHTML=players.map((p,i)=>{const total=p.scores.reduce((a,b)=>a+b,0);const current=phase!=='intro'&&!matchComplete&&i===playerIndex&&turnIndex<playerCount*SWATS_PER_PLAYER;const leader=matchComplete&&total===Math.max(...players.map(q=>q.scores.reduce((a,b)=>a+b,0)));
     return `<div class="player-tile ${current?'active':''} ${leader?'champion':''} ${p.scores.length===SWATS_PER_PLAYER&&!current&&!matchComplete?'done':''}"><span class="player-pip">${i+1}</span><div class="player-info"><div class="player-name">${htmlSafe(p.name)}</div><div class="player-meta">${current?'▶ ':''}${p.scores.length}/3 swats</div></div><div class="player-total">${total.toFixed(1)}<small>m</small></div></div>`}).join('');
 }
 function showPanel(title,body,buttonLabel,handler){panel.innerHTML=`<div class="eyebrow">${title}</div>${body}<button class="btn" id="panelButton" type="button">${buttonLabel}</button><a class="home-panel-link" href="../" target="_top" onclick="try{top.__swatThatHome=true}catch(e){}">⌂ Back to Spencer Games home</a>`;setOverlay(true);document.getElementById('panelButton').addEventListener('click',handler)}
 function showIntroPanel(){
   phase='intro';swingButton.hidden=true;timingEl.classList.remove('on');
-  panel.innerHTML=`<div class="eyebrow">Spencer Games · Four player challenge</div><div class="flies">🪰 🏓 💥</div><h1>SWAT<br>THAT!</h1>
-  <p><strong>Four players. Three swats each. One very nervous fly.</strong><br>Take turns and launch the fly as far as possible. Highest combined distance wins!</p>
+  panel.innerHTML=`<div class="eyebrow">Spencer Games · 1–8 player challenge</div><div class="flies">🪰 🏓 💥</div><h1>SWAT<br>THAT!</h1>
+  <p><strong>1–8 players. Three swats each. One very nervous fly.</strong><br>Take turns and launch the fly as far as possible. Highest combined distance wins!</p>
+  <label for="playerCount" style="display:block;font-weight:900">Number of players
+  <select id="playerCount" style="font:inherit;padding:10px;margin:8px;border:2px solid #173451;border-radius:10px;background:white">${Array.from({length:8},(_,i)=>`<option value="${i+1}" ${playerCount===i+1?'selected':''}>${i+1}</option>`).join('')}</select></label>
   <div class="name-grid">${players.map((p,i)=>`<label for="name${i}">Player ${i+1}<input id="name${i}" maxlength="14" autocomplete="off" spellcheck="false" value="${htmlSafe(p.name)}"></label>`).join('')}</div>
-  <div class="pill">4 players</div><div class="pill">3 swats each</div><div class="pill">One-tap controls</div><br>
+  <div class="pill">${playerCount} ${playerCount===1?'player':'players'}</div><div class="pill">3 swats each</div><div class="pill">One-tap controls</div><br>
   <button class="btn" id="startButton" type="button">LET'S SWAT! →</button>
   <p class="tiny">Pass the device between turns · Tap SWAT or press SPACE</p><a class="home-panel-link" href="../" target="_top" onclick="try{top.__swatThatHome=true}catch(e){}">⌂ Back to Spencer Games home</a>`;
-  setOverlay(true);updateBoard();document.getElementById('startButton').addEventListener('click',()=>{
-    players.forEach((p,i)=>{p.name=document.getElementById(`name${i}`).value.trim().slice(0,14)||`Player ${i+1}`});
-    try{localStorage.setItem(NAMES_KEY,JSON.stringify(players.map(p=>p.name)))}catch(e){}
+  setOverlay(true);updateBoard();
+  function saveNames(){players.forEach((p,i)=>{p.name=document.getElementById(`name${i}`).value.trim().slice(0,14)||`Player ${i+1}`;storedNames[i]=p.name});try{localStorage.setItem(NAMES_KEY,JSON.stringify(storedNames))}catch(e){}}
+  document.getElementById('playerCount').addEventListener('change',e=>{
+    saveNames();playerCount=Math.max(1,Math.min(8,Number(e.target.value)||4));
+    players=Array.from({length:playerCount},(_,i)=>({name:storedNames[i]||`Player ${i+1}`,scores:[]}));
+    showIntroPanel();
+  });
+  document.getElementById('startButton').addEventListener('click',()=>{
+    saveNames();
     beginMatch();
   });
 }
 function beginMatch(){turnIndex=0;matchComplete=false;players.forEach(p=>p.scores=[]);beginRound()}
-function beginRound(){playerIndex=turnIndex%PLAYER_COUNT;round=Math.floor(turnIndex/PLAYER_COUNT)+1;
+function beginRound(){playerIndex=turnIndex%playerCount;round=Math.floor(turnIndex/playerCount)+1;
   cam=0;t=0;swingTime=0;contactDone=false;quality=0;flightTime=0;bounces=0;trail=[];particles=[];finishTimer=0;hitFeedback='';hitFeedbackTime=0;distance=0;launchX=targetX;phase='approach';
   fly={x:targetX+startDx,y:targetY-180,vx:0,vy:0,spin:0};distanceEl.textContent='0.0';swatCount.textContent=`${round} / 3`;
   swingButton.hidden=false;swingButton.disabled=false;swingButton.classList.add('pulse');setOverlay(false);updateBoard();
@@ -113,23 +123,23 @@ function finishRound(missed=false){if(phase==='result')return;phase='result';swi
   const score=missed?0:Math.max(0,Math.round(distance*10)/10);distance=score;
   const player=players[playerIndex];player.scores.push(score);distanceEl.textContent=score.toFixed(1);
   let newBest=false;if(score>best){best=score;newBest=true;bestEl.textContent=best.toFixed(1);try{localStorage.setItem(BEST_KEY,String(best))}catch(e){}};
-  updateBoard();if(turnIndex===PLAYER_COUNT*SWATS_PER_PLAYER-1){finishMatch();return}
+  updateBoard();if(turnIndex===playerCount*SWATS_PER_PLAYER-1){finishMatch();return}
   const rank=missed?'THE GREAT ESCAPE':score>=110?'FLYING LEGEND':score>=80?'ABSOLUTE ROCKET':score>=50?'SERIOUS SWAT':score>=25?'DECENT WHACK':'TINY TAP';
-  const next=players[(turnIndex+1)%PLAYER_COUNT];
+  const next=players[(turnIndex+1)%playerCount];
   const body=`<div class="flies">${missed?'🪰💨':'🪰💥'}</div><h1 style="font-size:clamp(30px,8vw,48px);margin:7px 0">${rank}</h1><div class="score-big">${score.toFixed(1)}<small> m</small></div>
   <p><strong>${htmlSafe(player.name)}</strong> ${newBest?'set a NEW RECORD! 🏆':missed?'missed the little rascal!':'gave that fly quite a fright!'}</p>
   <div class="pill">Swat ${round}/3</div><div class="pill">${htmlSafe(player.name)} total: ${player.scores.reduce((a,b)=>a+b,0).toFixed(1)} m</div>
-  <p class="tiny"><strong>Pass to ${htmlSafe(next.name)}</strong> · Swat ${Math.floor((turnIndex+1)/PLAYER_COUNT)+1}/3</p>`;
+  <p class="tiny"><strong>${playerCount===1?'Next swat for':'Pass to'} ${htmlSafe(next.name)}</strong> · Swat ${Math.floor((turnIndex+1)/playerCount)+1}/3</p>`;
   showPanel('SWAT COMPLETE',body,`NEXT: ${htmlSafe(next.name.toUpperCase())} →`,()=>{turnIndex++;beginRound()});
 }
 function finishMatch(){
   matchComplete=true;updateBoard();
   const standings=players.map((p,i)=>({i,name:p.name,total:p.scores.reduce((a,b)=>a+b,0),best:Math.max(...p.scores)})).sort((a,b)=>b.total-a.total||b.best-a.best||a.i-b.i);
-  const winning=standings.filter(p=>Math.abs(p.total-standings[0].total)<.05),winnerText=winning.map(p=>p.name).join(' & ');setHint(`${winnerText} ${winning.length===1?'wins':'tie for first'}! Play again or change names.`);
+  const winning=standings.filter(p=>Math.abs(p.total-standings[0].total)<.05),winnerText=winning.map(p=>p.name).join(' & ');setHint(`${winnerText} ${winning.length===1?'wins':'tie for first'}! Play again or change players.`);
   const rows=standings.map((p,i)=>`<div class="standings-row ${Math.abs(p.total-standings[0].total)<.05?'winner':''}"><div class="standings-name">${Math.abs(p.total-standings[0].total)<.05?'🏆':`#${i+1}`} ${htmlSafe(p.name)}</div><div class="points">${p.total.toFixed(1)} m<small>Best swat: ${p.best.toFixed(1)} m</small></div></div>`).join('');
   const body=`<div class="flies">🏆 🪰 🎉</div><h1 style="font-size:clamp(35px,8vw,52px);margin:8px 0">${winning.length===1?'CHAMPION!':'IT’S A TIE!'}</h1><p><strong>${htmlSafe(winnerText)}</strong> ${winning.length===1?'wins!':'share the crown!'}</p><div class="standings">${rows}</div><p class="tiny">Totals from three swats each · Highest distance wins</p>`;
-  showPanel('FOUR-PLAYER FINAL SCORES',body,'PLAY AGAIN ↻',beginMatch);
-  const change=document.createElement('button');change.type='button';change.className='secondary-action';change.textContent='Change player names';change.addEventListener('click',showIntroPanel);panel.appendChild(change);
+  showPanel(`${playerCount}-PLAYER FINAL SCORES`,body,'PLAY AGAIN ↻',beginMatch);
+  const change=document.createElement('button');change.type='button';change.className='secondary-action';change.textContent='Change players / names';change.addEventListener('click',showIntroPanel);panel.appendChild(change);
 }
 function update(dt){clock+=dt;if(phase==='intro'){
   fly.x=targetX+startDx*.72+Math.sin(clock*1.1)*15;fly.y=targetY-65+Math.sin(clock*4)*18;
