@@ -24,3 +24,12 @@ The code records finger movement speed along a spatial path, smooths the line an
 This is a three-band speed model rather than continuously proportional finger-speed control. There is no car-to-car collision response or boost mechanic. The referenced Draw Race APK/OBB were unavailable during this review, so parity with their internal logic has not been verified. No original game code or assets were imported.
 
 Validation: simulated 2- and 8-player three-lap matches with different input speeds, independent finishes, results and replay resets; solo/AI race regressions and JavaScript syntax checks. Browser launch was blocked by the execution sandbox; touch layout and iPad Safari still need a device check.
+
+
+## Movement review and v0.6.5
+
+The previous movement model directly assigned position from the route and a lateral offset. v0.6.5 integrates world-space velocity instead, bounds turning by local available grip, and estimates progress by projecting physical position onto nearby route segments. The body-yaw/rear-breakaway coefficients and three speed bands are retained. Route-following assistance still exists: this is an original guided arcade model, not a recovered Draw Race 2 simulation.
+
+Best times use a new storage namespace because the handling model changes lap times; earlier stored records are retained in their original namespace.
+
+Run `node rally-cross-x/tests/handling.cjs` from the repository root. The harness runs production game physics with UI stubs and synthetic original racing lines. See [the handling review](handling-review-v0.6.5.md) for methodology, results and limitations.

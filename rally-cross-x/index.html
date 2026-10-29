@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071526"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><title>Spencer Games | Rally Cross X v0.6.4</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071526"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><title>Spencer Games | Rally Cross X v0.6.5</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;color:#eff8ff;background:#071526;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 12% 0,#1c4358,#071526 58%);overflow-x:hidden}button,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.4}[hidden]{display:none!important}
 .shell{max-width:1380px;margin:auto;padding:clamp(12px,2.1vw,26px);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 22px}.brand{display:flex;align-items:center;gap:12px}.mark{height:45px;width:45px;border:2px solid #5ed7e9;border-radius:12px;display:grid;place-items:center;color:#75ecfc;font-size:27px;font-weight:1000;font-style:italic;box-shadow:inset 0 0 0 4px #132e43}.brand small{display:block;color:#89b3c9;font-size:10px;letter-spacing:.2em;font-weight:900}.brand strong{display:block;font-weight:950;font-size:clamp(19px,2.4vw,28px);letter-spacing:-.045em;line-height:1.1}.version{padding:7px 11px;border:1px solid #33546a;border-radius:30px;color:#a8c9d7;font-size:11px;font-weight:800}
@@ -36,7 +36,7 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 @media(max-width:1060px){.tune-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.tune-panel{padding:11px}.tune-grid{gap:7px}.tune-cell{padding:9px}.tune-cell label{font-size:9px;display:block;min-height:31px}.tune-cell output{display:block;font-size:16px;margin-top:3px}.tune-cell p{font-size:10px;margin-top:9px}.tune-ends{font-size:9px}.readout-grid{grid-template-columns:repeat(2,1fr)}.lab-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-setup{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .advanced{margin:13px 0 9px}.advanced>summary{cursor:pointer;color:#c1ebda;font-size:13px;font-weight:850;border:1px solid #375e70;padding:13px;border-radius:10px;background:#122f3b}.advanced[open]>summary{border-radius:10px 10px 0 0}.advanced .tune-panel{margin-top:0;border-radius:0 0 12px 12px}.circuit-preview{display:flex;align-items:center;gap:14px;margin:10px 0 18px;padding:12px;border:1px solid #3a6273;border-radius:13px;background:linear-gradient(95deg,#10283a,#163b45)}.circuit-preview svg{width:min(36%,340px);max-height:176px;background:#163e38;border-radius:10px;border:1px solid #426a69;flex:none}.circuit-note{display:grid;gap:5px;min-width:0}.circuit-note strong{font-size:16px;color:#e7fff0}.circuit-note span{font-size:12px;color:#b4dece}.circuit-note small{font-size:10px;color:#8ca7b9}.track-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:900px){.track-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.circuit-preview svg{width:40%}.circuit-note strong{font-size:13px}}
 
-/* v0.6.4: all telemetry sits outside the live track, not over the drawing surface. */
+/* v0.6.5: all telemetry sits outside the live track, not over the drawing surface. */
 .drawing-modal .hud{display:none!important}
 .draw-foot .toast{position:static;left:auto;bottom:auto;transform:none;max-width:70%;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 8px;border-radius:6px;background:#143043;border-color:#38576a;box-shadow:none}
 @media(max-width:640px){.draw-foot .toast{font-size:10px;padding:2px 5px;max-width:75%}.drawing-modal.landscape-fallback .draw-foot .toast{max-width:78%}}
@@ -60,7 +60,7 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 .sg-back:hover{background:#2a5367}
 @media(max-width:700px){.shell>header{flex-wrap:wrap}.sg-back{font-size:11px;padding:8px 10px}}
 </style></head><body>
-<main class="shell"><header><div class="brand"><div class="mark">X</div><div><small>SPENCER GAMES</small><strong>RALLY CROSS <span style="color:#72e5f4">X</span></strong></div></div><span class="version">PROTOTYPE v0.6.4</span><a class="sg-back" href="../" target="_top" aria-label="Back to Spencer Games">⌂ Home</a></header>
+<main class="shell"><header><div class="brand"><div class="mark">X</div><div><small>SPENCER GAMES</small><strong>RALLY CROSS <span style="color:#72e5f4">X</span></strong></div></div><span class="version">PROTOTYPE v0.6.5</span><a class="sg-back" href="../" target="_top" aria-label="Back to Spencer Games">⌂ Home</a></header>
 <section id="setupScreen" class="panel"><div class="eyebrow">ELEVEN DISTINCT CIRCUITS · SIX-CAR RACING</div><h1>Race your <span class="accent">line.</span></h1>
 <p class="subtitle">Draw your own racing line and speed plan, then watch the car try to follow it. The <b>v0.5.0 rear-breakaway physics stays locked</b>. Seven distinctive additional circuits now include Whilton Mill, real hairpins, switchbacks, esses and a figure-eight crossover. The camera keeps the full circuit visible, while circuit-specific grip rewards a cleaner racing line.</p>
 <div class="section-title">Choose your circuit · 11 tracks</div><div class="track-tabs" id="tracks"></div>
@@ -74,13 +74,13 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 </div>
 <div class="rules" id="setupRules"><strong>BRAKE · ROTATE · ACCELERATE.</strong> GREEN means brake for the tightest corners; AMBER balances entry speed; RED accelerates on the straights. Overspeed now damages corner-exit traction, not just the entry time.</div>
 <div class="setup-action"><p>Draw every lap in one continuous gesture. Each finished line fades into the background as you begin the next. No joker lane. Eleven circuits, including Whilton Mill International, full dirt, full snow and figure-of-eight options.</p><button class="primary" id="prepare">✏️ DRAW RACING LINE</button></div></section>
-<section class="drawing-modal" id="drawingScreen" hidden><div class="drawing-inner" id="drawingInner"><div class="draw-top"><div class="draw-name"><strong>✏️ DRAW YOUR LAPS · v0.6.4</strong><span id="lapLabel">LAP 1 / 1</span></div><div class="top-actions"><span class="speed-legend" aria-label="Drawing speed colours"><b class="speed-slow">SLOW</b><b class="speed-medium">MEDIUM</b><b class="speed-fast">FAST</b></span><button id="resetLap">↺ Reset lap</button><button id="fullscreen">⛶ Expand view</button><button id="exitDrawing">✕ Setup</button></div></div><div class="drawing-stage" id="drawingStage"></div><div class="draw-foot"><span id="drawHint">Draw laps in one stroke; cross START to save. GREEN brake · AMBER balance · RED accelerate. A clean apex wins time.</span><strong id="drawCounter">0 / 3 laps saved</strong></div></div></section>
+<section class="drawing-modal" id="drawingScreen" hidden><div class="drawing-inner" id="drawingInner"><div class="draw-top"><div class="draw-name"><strong>✏️ DRAW YOUR LAPS · v0.6.5</strong><span id="lapLabel">LAP 1 / 1</span></div><div class="top-actions"><span class="speed-legend" aria-label="Drawing speed colours"><b class="speed-slow">SLOW</b><b class="speed-medium">MEDIUM</b><b class="speed-fast">FAST</b></span><button id="resetLap">↺ Reset lap</button><button id="fullscreen">⛶ Expand view</button><button id="exitDrawing">✕ Setup</button></div></div><div class="drawing-stage" id="drawingStage"></div><div class="draw-foot"><span id="drawHint">Draw laps in one stroke; cross START to save. GREEN brake · AMBER balance · RED accelerate. A clean apex wins time.</span><strong id="drawCounter">0 / 3 laps saved</strong></div></div></section>
 <section class="race-screen" id="raceScreen" hidden>
-<div class="race-actions"><button class="action" id="backSetup">← Circuits</button><button class="action" id="redraw">✏️ Redraw line</button><button class="action" id="cameraToggle" type="button">🎥 Broadcast</button><button class="primary" id="run" disabled>▶ START RACE</button><button class="primary retry" id="retry" hidden>↻ REPLAY SAME LINE</button><span class="version" id="raceLabel">RACE · v0.6.4</span></div>
+<div class="race-actions"><button class="action" id="backSetup">← Circuits</button><button class="action" id="redraw">✏️ Redraw line</button><button class="action" id="cameraToggle" type="button">🎥 Broadcast</button><button class="primary" id="run" disabled>▶ START RACE</button><button class="primary retry" id="retry" hidden>↻ REPLAY SAME LINE</button><span class="version" id="raceLabel">RACE · v0.6.5</span></div>
 <div class="race-hud-slot" id="raceHudSlot"></div><div id="raceSlot"></div>
 <div class="metrics lab-metrics"><div class="metric"><small>TIME / CIRCUIT BEST</small><strong id="best">—</strong></div><div class="metric"><small>DRAWN SPEED → REAL SPEED</small><strong id="pace">—</strong></div><div class="metric"><small>GRIP LOAD · SAFE SPEED</small><strong id="risk">—</strong></div><div class="metric"><small>LIVE DRIFT ANGLE</small><strong id="drift">—</strong></div><div class="metric"><small>LAP / SURFACE</small><strong id="progress">1 / 1</strong></div><div class="metric"><small>LOSS STATUS</small><strong id="penalties">—</strong></div></div>
 <div class="standings" id="standingsPanel"><h2 id="standingsTitle">STARTING GRID · 6 CARS</h2><div class="standings-body" id="standings"></div></div>
-<details class="advanced"><summary>⚙️ HANDLING LAB · Optional physics sliders</summary><div class="tune-panel"><div class="tune-top"><div><div class="eyebrow">OPTIONAL PHYSICS TUNING · v0.6.4</div><h2>Handling controls · optional</h2><p>Balanced drift is the v0.5.0 baseline. Adjust only if you want to experiment; each circuit now has its own profile, and the sliders let you experiment on top of that.</p></div><button class="action" id="resetTune">↺ Reset sliders</button></div>
+<details class="advanced"><summary>⚙️ HANDLING LAB · Optional physics sliders</summary><div class="tune-panel"><div class="tune-top"><div><div class="eyebrow">OPTIONAL PHYSICS TUNING · v0.6.5</div><h2>Handling controls · optional</h2><p>Balanced drift is the v0.5.0 baseline. Adjust only if you want to experiment; each circuit now has its own profile, and the sliders let you experiment on top of that.</p></div><button class="action" id="resetTune">↺ Reset sliders</button></div>
 <div class="presets" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 15px"><button class="action" type="button" data-preset="balanced">Balanced drift</button><button class="action" type="button" data-preset="loose">Loose rear</button><button class="action" type="button" data-preset="stable">Stable</button><span style="font-size:11px;color:#9dbed1;align-self:center">Start with Balanced drift; tune only one setting at a time.</span></div><div class="tune-grid">
 <div class="tune-cell"><label for="tuneSlide">REAR BREAKAWAY <output id="slideValue" for="tuneSlide">1.5×</output></label><input id="tuneSlide" type="range" min="0.5" max="2.5" step="0.1" value="1.50"/><div class="tune-ends"><span>Rear stays planted</span><span>Rear steps out</span></div><p>Controls how readily the rear rotates outward under cornering load (rather than artificially turning the whole car).</p></div>
 <div class="tune-cell"><label for="tuneGrip">CORNER GRIP THRESHOLD <output id="gripValue" for="tuneGrip">70%</output></label><input id="tuneGrip" type="range" min="0.40" max="1.40" step="0.05" value="0.70"/><div class="tune-ends"><span>Very little grip</span><span>High grip</span></div><p>Lower = exceed available grip at lower corner speeds.</p></div>
@@ -91,7 +91,7 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 <p class="result-note" id="help">All laps use your drawn line. GREEN is not simply a lower speed: it lets the car settle before tight corners so you can accelerate cleanly onto the next straight. Each circuit now also has its own grip/slide profile, and the race camera is more dynamic to show the car loading up in corners.</p>
 </section>
 <div class="game" id="game" hidden><svg id="track-art" class="track-art" viewBox="0 0 1200 720" preserveAspectRatio="none" aria-label="Rally Cross X racing circuit"></svg><canvas id="race" width="1200" height="720" aria-label="Draw your racing line on the track"></canvas><div class="hud"><div class="hudpill"><small>STATUS</small><span id="status">READY</span></div><div class="hudpill hud-center"><small>RACE POSITION</small><span id="position">SOLO</span><div id="hudJoker">DIRT · LOW GRIP</div></div><div class="hudpill hudright"><small>RACE TIME</small><span id="clock">00.00s</span></div></div><div class="countdown" id="countdown" hidden>3</div><div class="toast" id="toast">Draw a lap to begin</div></div>
-<footer>Rally Cross X v0.6.4 · Eleven distinctive circuits · circuit-specific handling · clean broadcast camera · No joker lanes · Whilton Mill International added.</footer></main>
+<footer>Rally Cross X v0.6.5 · Eleven distinctive circuits · circuit-specific handling · clean broadcast camera · No joker lanes · Whilton Mill International added.</footer></main>
 <script>
 (()=>{'use strict';
 const W=1200,H=720,CAR_WIDTH=22,TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
@@ -210,7 +210,7 @@ function targetWithBrakePreview(route,s,requestedSpeed,brakeRate){
 let runHistory=[],runCounter=0,settingsChangedDuringRun=false,raceTuneSnapshot=null,currentRun=null;
 let cameraMode='broadcast';
 let chosen=0,track=makeTrack(layouts[0]),phase='setup',raceLaps=1,selectedJokerLap=1,lapPlans=[],currentLap=0,draw=[],progress=0,drawDistance=0,invalidDistance=0,pointer=null,latest=150,latestTime=0,finishPossible=false,racer=null,aiCars=[],raceClock=0,startAt=0,lastFrame=0,bests={},dust=[],skids=[],boardTick=0,camera={tx:0,ty:0,scale:1};
-try{bests=JSON.parse(localStorage.getItem('spencer_rx_v056_records')||'{}')||{};}catch(_){}
+try{bests=JSON.parse(localStorage.getItem('spencer_rx_v065_records')||'{}')||{};}catch(_){}
 const isLocal=()=>ui.mode.value==='local';
 const localColors=['#69d6ff','#ff8d78','#b4f07e','#e3a2ff','#ffdb6e','#78f0d0','#f79ad2','#f0f6ff'];
 let localPlans=[],localCars=[],drawingPlayer=0;
@@ -483,7 +483,7 @@ function resetCurrent(continuous=false,anchor=null){
 }
 function updateDrawingUI(){
  ui.lapLabel.textContent=`${isLocal()?'PLAYER '+(drawingPlayer+1)+' · ':''}LAP ${Math.min(currentLap+1,raceLaps)} / ${raceLaps}`;
- ui.drawingScreen.querySelector('.draw-name strong').textContent=isLocal()?`PLAYER ${drawingPlayer+1} OF ${localCount()} · DRAW YOUR LAPS`:'✏️ DRAW YOUR LAPS · v0.6.4';
+ ui.drawingScreen.querySelector('.draw-name strong').textContent=isLocal()?`PLAYER ${drawingPlayer+1} OF ${localCount()} · DRAW YOUR LAPS`:'✏️ DRAW YOUR LAPS · v0.6.5';
  ui.drawCounter.textContent=`${lapPlans.length} / ${raceLaps} laps completed`;
  ui.status.textContent=`DRAW LAP ${currentLap+1}`;
  ui.drawHint.textContent=`Keep drawing through START to begin the next lap automatically · ${track.name} · wider circuits reward a proper entry, apex and exit`;
@@ -666,7 +666,7 @@ function finishLocalRace(){
  ui.help.textContent='Replay all saved lines together, or redraw to start a new match.';
  setToast('🏁 LOCAL RACE COMPLETE · RESULTS BELOW');
 }
-function openRaceView(){ui.game.appendChild(ui.toast);const hud=document.querySelector('.hud');if(hud&&ui.raceHudSlot)ui.raceHudSlot.appendChild(hud);expanded=false;ui.drawingScreen.classList.remove('immersive');ui.fullscreen.textContent='⛶ Expand view';ui.drawingScreen.hidden=true;ui.raceScreen.hidden=false;ui.raceSlot.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='';ui.status.textContent='GRID READY';ui.run.disabled=false;ui.run.hidden=false;ui.retry.hidden=true;ui.raceLabel.textContent=`${raceLaps} LAP${raceLaps>1?'S':''} · ${isLocal()?localCount()+' LOCAL PLAYERS':isAI()?'SIX CARS':'SOLO'} · ${track.shortName} · v0.6.4`;ui.help.textContent='Race your chosen line. Track-position grip and runoff now affect every car. Try a late apex or a wide exit; replay the same line to compare.';ui.progress.textContent=`1 / ${raceLaps} · ${track.shortName}`;ui.pace.textContent='—';ui.risk.textContent='—';ui.drift.textContent='—';ui.penalties.textContent='READY';ui.clock.textContent='00.00s';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();showBest();resetResults();renderStandings();setToast('GRID READY · YOUR RACING LINE IS LOCKED IN.');window.scrollTo({top:0,behavior:'instant'});}
+function openRaceView(){ui.game.appendChild(ui.toast);const hud=document.querySelector('.hud');if(hud&&ui.raceHudSlot)ui.raceHudSlot.appendChild(hud);expanded=false;ui.drawingScreen.classList.remove('immersive');ui.fullscreen.textContent='⛶ Expand view';ui.drawingScreen.hidden=true;ui.raceScreen.hidden=false;ui.raceSlot.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='';ui.status.textContent='GRID READY';ui.run.disabled=false;ui.run.hidden=false;ui.retry.hidden=true;ui.raceLabel.textContent=`${raceLaps} LAP${raceLaps>1?'S':''} · ${isLocal()?localCount()+' LOCAL PLAYERS':isAI()?'SIX CARS':'SOLO'} · ${track.shortName} · v0.6.5`;ui.help.textContent='Race your chosen line. Track-position grip and runoff now affect every car. Try a late apex or a wide exit; replay the same line to compare.';ui.progress.textContent=`1 / ${raceLaps} · ${track.shortName}`;ui.pace.textContent='—';ui.risk.textContent='—';ui.drift.textContent='—';ui.penalties.textContent='READY';ui.clock.textContent='00.00s';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();showBest();resetResults();renderStandings();setToast('GRID READY · YOUR RACING LINE IS LOCKED IN.');window.scrollTo({top:0,behavior:'instant'});}
 function resetResults(){ui.labSummary.textContent='Ready to race. The same drawing can be replayed afterwards to compare handling changes.';ui.readoutGrid.innerHTML='<span>Corner overspeed: <b>—</b></span><span>Off-road time: <b>—</b></span><span>Peak drift: <b>—</b></span><span>Speed lost: <b>—</b></span>';}
 function renderHistory(){if(!ui.runHistory)return;ui.runHistory.innerHTML=runHistory.length?runHistory.slice(-8).reverse().map((h,i)=>`<div class="history-run${i===0?' latest':''}"><strong>Run ${h.number} · ${h.time.toFixed(2)}s</strong><small>Slide ${h.tune.slide.toFixed(1)}× · Grip ${Math.round(h.tune.grip*100)}% · Penalty ${h.tune.punish.toFixed(1)}× · FAST ${h.tune.fast}</small><small>Overspeed ${h.overspeed.toFixed(1)}s · Off-road ${h.offroad.toFixed(1)}s${h.changed?' · MIXED SETTINGS':''}</small></div>`).join(''):'<span class="hint">Finish a race to save the result.</span>';}
 function formatSeconds(x){return (Number.isFinite(x)?x:0).toFixed(2)+'s';}
@@ -694,7 +694,7 @@ function crossingPlayerRamp(previous,next){
 function crossingAIRamp(previous,next){const lo=Math.max(0,Math.floor(previous/track.total)-1),hi=Math.min(raceLaps-1,Math.floor(next/track.total)+1);
  for(let lap=lo;lap<=hi;lap++)for(const f of track.ramps){const trigger=lap*track.total+track.total*f;if(previous<trigger&&next>=trigger)return true;}return false;}
 function airborne(car){return car.airLeft>0?Math.sin(Math.PI*clamp(1-car.airLeft/car.airDuration,0,1)):0;}
-// v0.6.4 handling reference: DrawRace 2's risk/reward and Spencer Speedway's
+// v0.6.5 handling reference: DrawRace 2's risk/reward and Spencer Speedway's
 // heading-vs-travel separation. The route is not a train rail: it controls
 // progress and target speeds, while grip and corner radius determine the
 // *physical* line actually travelled. Front points toward the apex; rear lags.
@@ -807,10 +807,10 @@ function pendulumStep(v,dt,route,finish,requestedSpeed,material,onJoker,air){
  const damping=turnBlend?(snow?.88:dirt?.93:1.0):1.18;
  let accelSide=lateralWash+rearKick+noseAssist-omega*omega*v.offset-2*damping*omega*v.sideSpeed;
  v.sideSpeed+=clamp(accelSide,-1050,1050)*dt;
- v.offset+=v.sideSpeed*dt;
+ // Offset is measured from physical position after integration.
  if(cornerStrength<.04&&Math.abs(v.offset)<.4&&Math.abs(v.sideSpeed)<1.1){v.offset=0;v.sideSpeed=0;}
  const maxOffset=track.width*(snow?1.13:dirt?1.08:.95);
- if(Math.abs(v.offset)>maxOffset){v.offset=Math.sign(v.offset)*maxOffset;v.sideSpeed=0;v.speed*=Math.exp(-1.9*dt);}
+ if(Math.abs(v.offset)>maxOffset){v.sideSpeed*=Math.exp(-3*dt);v.speed*=Math.exp(-1.9*dt);}
 
  // FAST stays fastest on straights. At a hairpin, it cannot simply ignore
  // physics: scrub speed & roadward progress proportional to grip overload.
@@ -829,12 +829,33 @@ function pendulumStep(v,dt,route,finish,requestedSpeed,material,onJoker,air){
  v.groundPace=Number.isFinite(v.groundPace)?v.groundPace+(tractionGoal-v.groundPace)*(1-Math.exp(-9*dt)):tractionGoal;
  const stepSpeed=Math.max(12,v.speed*washFactor*offFactor*v.groundPace*(v.spinTime>0?.40:1));
  const previousX=v.x,previousY=v.y;
- v.s=Math.min(finish,v.s+stepSpeed*dt);
- v.effectiveSpeed=stepSpeed;
+ // Integrate world-space momentum. The route supplies a steering target;
+ // it never assigns the car's position. Available grip bounds turning.
+ if(!Number.isFinite(v.vx)||!Number.isFinite(v.vy)||Math.hypot(v.vx,v.vy)<1){v.vx=Math.cos(v.angle)*v.speed;v.vy=Math.sin(v.angle)*v.speed;}
+ const travelAngle=Number.isFinite(v.vx)&&Number.isFinite(v.vy)&&Math.hypot(v.vx,v.vy)>1?Math.atan2(v.vy,v.vx):tg.angle;
+ const desiredTravel=tg.angle+Math.atan2(v.sideSpeed,Math.max(22,stepSpeed));
+ const turnLimit=gripAccel/Math.max(35,Math.hypot(v.vx||0,v.vy||0));
+ const travel=travelAngle+clamp(wrap(desiredTravel-travelAngle),-turnLimit*dt,turnLimit*dt);
+ const actualSpeed=Math.hypot(v.vx||0,v.vy||0);
+ const momentumSpeed=Math.max(0,actualSpeed+clamp(stepSpeed-actualSpeed,-brake*dt,accel*dt));
+ v.vx=Math.cos(travel)*momentumSpeed;v.vy=Math.sin(travel)*momentumSpeed;
+ v.x+=v.vx*dt;v.y+=v.vy*dt;
+ // Find nearby route progress without moving the car onto that route.
+ let nearestS=v.s,nearestD=Infinity;
+ const reach=Math.max(32,momentumSpeed*dt*3);
+ const searchEnd=Math.min(finish,v.s+reach);
+ for(let candidate=Math.max(-256,v.s-16);candidate<searchEnd;candidate+=4){
+  const end=Math.min(searchEnd,candidate+4),a=route(candidate),b=route(end),dx=b.x-a.x,dy=b.y-a.y;
+  const f=clamp(((v.x-a.x)*dx+(v.y-a.y)*dy)/Math.max(.000001,dx*dx+dy*dy),0,1);
+  const d=(a.x+f*dx-v.x)**2+(a.y+f*dy-v.y)**2;
+  if(d<nearestD){nearestD=d;nearestS=lerp(candidate,end,f);}
+ }
+ v.s=Math.min(finish,Math.max(v.s,nearestS));
+ if(finish-v.s<2&&dist(v,route(finish))<Math.max(12,momentumSpeed*dt*2))v.s=finish;
+ v.effectiveSpeed=momentumSpeed;
  v.requestedSpeed=requestedSpeed;
  const next=tangentAt(route,v.s,finish),place=route(v.s);
- v.x=place.x+next.nx*v.offset;
- v.y=place.y+next.ny*v.offset;
+ v.offset=(v.x-place.x)*next.nx+(v.y-place.y)*next.ny;
 
  // Read the ACTUAL movement vector. The original version displayed slip
  // between two synthetic headings, which didn't match where the car moved.
@@ -854,7 +875,7 @@ function pendulumStep(v,dt,route,finish,requestedSpeed,material,onJoker,air){
  v.visualYawRate=v.bodyYawRate;
  v.steer=clamp(wrap(desiredAngle-v.velAngle)*.67-v.rearSlip*.25,-.58,.58);
  v.slip=slip;v.lateral=v.sideSpeed;v.yawRate=v.visualYawRate;
- v.vx=Math.cos(measured)*v.speed;v.vy=Math.sin(measured)*v.speed;
+ // Keep integrated velocity; do not reconstruct momentum from route speed.
  v.understeering=excessive>.23&&Math.abs(bend)>.004;
  v.contact=groundAt(v.x,v.y);
  v.surfaceLabel=v.contact.material.toUpperCase();
@@ -965,7 +986,7 @@ function renderStandings(){const entries=standEntries();const pos=entries.findIn
 }
 function finishRace(){if(phase!=='racing')return;if(isLocal()){finishLocalRace();return;}if(racer?.finishedAt==null&&raceClock<900)return;if(racer?.finishedAt!=null&&isAI()&&aiCars.some(a=>a.finishedAt==null)&&raceClock<Math.min(900,racer.finishedAt+5))return;if(racer.finishedAt==null)racer.finishedAt=Infinity;phase='finished';ui.backSetup.disabled=false;ui.redraw.disabled=false;ui.status.textContent=Number.isFinite(racer.finishedAt)?'FINISHED':'TIME OUT';ui.countdown.hidden=true;renderStandings();
  const time=racer.finishedAt;if(Number.isFinite(time)){const completed={number:currentRun.runNumber,time,tune:{...raceTuneSnapshot},overspeed:currentRun.overspeed,offroad:currentRun.offroad,runoffEvents:currentRun.runoffEvents,minimumGrip:currentRun.minimumGrip,peakSlip:currentRun.peakSlip,peakRear:currentRun.peakRear,peakLoad:currentRun.peakLoad,peakInstability:currentRun.peakInstability,exitTractionLoss:currentRun.exitTractionLoss,loss:currentRun.loss,events:currentRun.gripEvents,changed:settingsChangedDuringRun};runHistory.push(completed);}
- if(Number.isFinite(time)&&(!bests[key()]||time<bests[key()])){bests[key()]=time;try{localStorage.setItem('spencer_rx_v056_records',JSON.stringify(bests));}catch(_){}}
+ if(Number.isFinite(time)&&(!bests[key()]||time<bests[key()])){bests[key()]=time;try{localStorage.setItem('spencer_rx_v065_records',JSON.stringify(bests));}catch(_){}}
  showBest();renderHistory();renderStandings();ui.run.hidden=true;ui.retry.hidden=false;ui.retry.disabled=!Number.isFinite(time);ui.clock.textContent=Number.isFinite(time)?time.toFixed(2)+'s':'DNF';
  const prev=runHistory.at(-2),delta=prev&&Number.isFinite(time)?time-prev.time:null;
  const compared=delta==null?'First completed run':Math.abs(delta)<.005?'Exactly tied':`${delta<0?'FASTER':'SLOWER'} by ${Math.abs(delta).toFixed(2)}s versus your previous attempt`;
