@@ -33,3 +33,10 @@ The previous movement model directly assigned position from the route and a late
 Best times use a new storage namespace because the handling model changes lap times; earlier stored records are retained in their original namespace.
 
 Run `node rally-cross-x/tests/handling.cjs` from the repository root. The harness runs production game physics with UI stubs and synthetic original racing lines. See [the handling review](handling-review-v0.6.5.md) for methodology, results and limitations.
+
+
+## Kerb artwork fix (v0.6.6)
+
+Kerbs and edge lines now use masks derived from the complete stroked road boundary. This replaces per-point offset lines and rotated kerb rectangles, which could reverse or overlap on tight hairpins. The inner road mask also removes paint where neighbouring sections merge or cross. Driving geometry, surface classification and physics are unchanged.
+
+Validation: generated and rasterized production SVG artwork before and after for all 11 circuits, reviewed the comparison sheet, and checked all inline JavaScript syntax. Confirmed that edits outside the renderer are limited to version labels and the homepage cache key. Rasterization uses librsvg; iPad Safari remains a device check.
