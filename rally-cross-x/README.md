@@ -40,3 +40,10 @@ Run `node rally-cross-x/tests/handling.cjs` from the repository root. The harnes
 Kerbs and edge lines now use masks derived from the complete stroked road boundary. This replaces per-point offset lines and rotated kerb rectangles, which could reverse or overlap on tight hairpins. The inner road mask also removes paint where neighbouring sections merge or cross. Driving geometry, surface classification and physics are unchanged.
 
 Validation: generated and rasterized production SVG artwork before and after for all 11 circuits, reviewed the comparison sheet, and checked all inline JavaScript syntax. Confirmed that edits outside the renderer are limited to version labels and the homepage cache key. Rasterization uses librsvg; iPad Safari remains a device check.
+
+
+## Corner smoothness and pace explanations (v0.6.7)
+
+Consolidates duplicated speed penalties, smooths acceleration and body heading, and shows why pace is lost. Final condition durations are time spent under each condition, not exact lap-time deficits. Multiplayer uses independent counters and identifies Player 1 in the live feedback. Best-time storage is versioned for the revised handling.
+
+See [diagnosis and validation](feedback-review-v0.6.7.md) and run `node rally-cross-x/tests/handling.cjs` for the expanded regression checks.
