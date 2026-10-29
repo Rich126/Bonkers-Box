@@ -57,7 +57,7 @@
   let pollingHandle=null,pollBusy=false,realtimeState='idle';
   const POLL_MS=3000,REQUEST_TIMEOUT_MS=8000;
   let currentRoom=null, currentPlayers=[], currentAnswers=[], currentSubmissions=[], currentVotes=[];
-  let joinRoomSettings=null, joinIsSpeedway=false, timerHandle=null, creativeTimerHandle=null, autoRevealBusy=false, joinLookupTimer=null;
+  let joinRoomSettings=null, joinIsSpeedway=false, timerHandle=null, creativeTimerHandle=null, autoRevealBusy=false, joinLookupTimer=null,joinLookupRevision=0;
   let mediaStream=null, mediaRecorder=null, mediaChunks=[], recordingStopTimer=null;
   let pendingMediaBlob=null, pendingMediaMime='', pendingMediaUrl='', captureRoundKey='';
   let renderedQrValue='', answerSubmitBusy=false, reconnectBusy=false;
@@ -177,7 +177,7 @@
     const teamBox=$('team-grid');
     teams.forEach(([value,label],i)=>{const b=document.createElement('button');b.type='button';b.className='team-btn'+(i===0?' selected':'');b.textContent=label;b.addEventListener('click',()=>{selectedTeam=value;teamBox.querySelectorAll('.team-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});teamBox.appendChild(b);});
     document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{selectedMode=b.dataset.mode;document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('selected',x===b));}));
-    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.game==='speedway'){window.location.href='../speedway/live.html?mode=host';return;}selectedGame=b.dataset.game==='creative'?'creative':b.dataset.game==='mix'?'mix':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));syncGameSetupVisibility();}));
+    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.game==='speedway'){window.location.href='../speedway/live.html?v=4.19-speedway-2&mode=host';return;}selectedGame=b.dataset.game==='creative'?'creative':b.dataset.game==='mix'?'mix':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));syncGameSetupVisibility();}));
   }
   buildChoiceButtons();
   buildTopicButtons();syncGameSetupVisibility();updateGameLengthNote();
@@ -191,13 +191,16 @@
   $('join-code').addEventListener('input',e=>{e.target.value=cleanCode(e.target.value);clearTimeout(joinLookupTimer);joinLookupTimer=setTimeout(lookupJoinRoom,250);});
 
   async function lookupJoinRoom(){
+    const revision=++joinLookupRevision;
     joinRoomSettings=null;joinIsSpeedway=false;$('team-row').classList.add('hidden');$('join-room-info').innerHTML='';
     if(!configured)return;
     const code=cleanCode($('join-code').value);if(code.length!==4)return;
     const {data,error}=await db.from('rooms').select('id,code,status,settings').eq('code',code).maybeSingle();
-    if(error){console.error(error);return;}
-    if(!data||data.status!=='lobby'){
+    if(revision!==joinLookupRevision||code!==cleanCode($('join-code').value))return;
+    if(error)console.error(error);
+    if(error||!data||data.status!=='lobby'){
       const speedway=await db.from('speedway_rooms').select('id,code,status,lap_count').eq('code',code).maybeSingle();
+      if(revision!==joinLookupRevision||code!==cleanCode($('join-code').value))return;
       if(!speedway.error&&speedway.data&&speedway.data.status==='lobby'){
         joinIsSpeedway=true;
         $('join-room-info').innerHTML='<div class="room-info">🏍️ Speedway Live room found • '+Number(speedway.data.lap_count||3)+' laps. Tap Join Room to open the Speedway rider screen.</div>';
@@ -262,9 +265,11 @@
     const code=cleanCode($('join-code').value),name=cleanName($('player-name').value);
     if(code.length!==4){msg($('join-message'),'Enter the 4-character room code.');return;}
     if(!name){msg($('join-message'),'Enter your name.');return;}
-    if(joinIsSpeedway){window.location.href='../speedway/live.html?join='+encodeURIComponent(code)+'&name='+encodeURIComponent(name);return;}
     $('join-room').disabled=true;
     try{
+      clearTimeout(joinLookupTimer);await lookupJoinRoom();
+      if(code!==cleanCode($('join-code').value)){msg($('join-message'),'Room code changed. Tap Join Room again.');return;}
+      if(joinIsSpeedway){window.location.href='../speedway/live.html?v=4.19-speedway-2&join='+encodeURIComponent(code)+'&name='+encodeURIComponent(name);return;}
       // Keep joining deliberately lightweight. Creative/media readiness is checked by the host,
       // not by every phone that joins the room.
       const roomResult=await retryRead(()=>db.from('rooms').select('*').eq('code',code).eq('status','lobby').maybeSingle());
@@ -680,3 +685,4 @@
   const params=new URLSearchParams(location.search),join=params.get('join'),mode=params.get('mode');
   restore().then(restored=>{if(restored)return;if(join){$('join-code').value=cleanCode(join);show('join');lookupJoinRoom();}else if(mode==='host')show('host');else if(mode==='join')show('join');else show('choice');});
 })();
+
