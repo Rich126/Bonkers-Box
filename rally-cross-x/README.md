@@ -47,3 +47,10 @@ Validation: generated and rasterized production SVG artwork before and after for
 Consolidates duplicated speed penalties, smooths acceleration and body heading, and shows why pace is lost. Final condition durations are time spent under each condition, not exact lap-time deficits. Multiplayer uses independent counters and identifies Player 1 in the live feedback. Best-time storage is versioned for the revised handling.
 
 See [diagnosis and validation](feedback-review-v0.6.7.md) and run `node rally-cross-x/tests/handling.cjs` for the expanded regression checks.
+
+
+### v0.6.8 desktop artwork correction
+
+Preview and live race artwork now have separate SVG definition IDs, including masks, textures, gradients and symbols. This prevents hidden preview definitions from being reused by the race. Kerb and edge masks explicitly specify luminance and user-space content coordinates. Broadcast motion uses a slight zoom-out and bounds translation to the available margin so the full circuit stays visible. Circuit geometry and handling are unchanged.
+
+Run `node rally-cross-x/tests/artwork.cjs` to check all 11 tracks for globally unique preview/race definitions, references resolving within each SVG, and uncropped broadcast camera bounds. Standalone SVG renders were inspected for Whilton Mill; browser verification was unavailable because Chromium failed to launch in the workspace.
