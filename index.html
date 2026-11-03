@@ -137,7 +137,7 @@
 @keyframes sgLogoReveal{
   0%{opacity:0;clip-path:inset(0 100% 0 0);transform:scale(.965);filter:blur(8px) drop-shadow(0 18px 28px rgba(0,0,0,.48))}
   45%{opacity:1}
-  100%{opacity:1;clip-path:inset(0 0 0 0);transform:scale(1);filter:blur(0) drop-shadow(0 18px 28px rgba(0,0,0,.48))}
+  100%{opacity:1;clip-path:inset(0 0 0 0);transform:scale(1);filter:drop-shadow(0 18px 28px rgba(0,0,0,.48))}
 }
 @keyframes sgTagIn{to{opacity:1;transform:translateY(0)}}
 @keyframes sgTrackIn{to{opacity:1;transform:scaleX(1)}}
@@ -180,7 +180,7 @@
   <div class="sg-intro-stage">
     <div class="sg-phoenix-flare"></div>
     <div class="sg-elephant-flare"></div>
-    <img class="sg-intro-logo" src="assets/spencer-games-intro.png" alt="">
+    <img class="sg-intro-logo" src="assets/spencer-games-intro.png?v=edgefix1" alt="">
     <div class="sg-intro-tagline">PLAY • CREATE • TOGETHER</div>
     <div class="sg-intro-track"></div>
   </div>
@@ -3732,7 +3732,7 @@ function MainMenu({ onSelectGame }) {
         React.createElement("div", { style: { maxWidth: 520, margin: "0 auto", position: "relative", zIndex: 1 } },
             React.createElement("div", { style: { textAlign: "center", marginBottom: 28 } },
                 React.createElement("img", {
-                    src: "assets/spencer-games-intro.png",
+                    src: "assets/spencer-games-intro.png?v=edgefix1",
                     alt: "Spencer Games — Family. Fun. Compete Together.",
                     style: {
                         display: "block", width: "min(100%, 420px)", height: "auto", margin: "0 auto",
