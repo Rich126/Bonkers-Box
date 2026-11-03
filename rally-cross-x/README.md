@@ -54,3 +54,10 @@ See [diagnosis and validation](feedback-review-v0.6.7.md) and run `node rally-cr
 Preview and live race artwork now have separate SVG definition IDs, including masks, textures, gradients and symbols. This prevents hidden preview definitions from being reused by the race. Kerb and edge masks explicitly specify luminance and user-space content coordinates. Broadcast motion uses a slight zoom-out and bounds translation to the available margin so the full circuit stays visible. Circuit geometry and handling are unchanged.
 
 Run `node rally-cross-x/tests/artwork.cjs` to check all 11 tracks for globally unique preview/race definitions, references resolving within each SVG, and uncropped broadcast camera bounds. Standalone SVG renders were inspected for Whilton Mill; browser verification was unavailable because Chromium failed to launch in the workspace.
+
+
+### v0.6.9 — Named fastest-lap leaderboards
+
+Adds per-circuit top-50 boards and required driver names for solo, AI-opponent and 2–8-player local races. Only human, completed standard-handling runs submit their fastest lap; custom/mixed settings stay practice runs. Split crossings use within-step interpolation and boards display three decimals. Failed uploads use a Rally Cross-only persistent retry queue.
+
+One-time Supabase setup is required: see [LEADERBOARD-SETUP.md](LEADERBOARD-SETUP.md) and run only [the new Rally Cross SQL](../supabase/rallycross-leaderboard.sql). No Speedway files, tables, policies, views, records or storage are modified. Existing Rally Cross race-total records are retained. Casual display-name records are client-reported, not authenticated or anti-cheat verified.

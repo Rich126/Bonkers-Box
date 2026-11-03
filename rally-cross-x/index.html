@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071526"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><title>Spencer Games | Rally Cross X v0.6.8</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071526"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><title>Spencer Games | Rally Cross X v0.6.9</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;color:#eff8ff;background:#071526;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 12% 0,#1c4358,#071526 58%);overflow-x:hidden}button,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.4}[hidden]{display:none!important}
 .shell{max-width:1380px;margin:auto;padding:clamp(12px,2.1vw,26px);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 22px}.brand{display:flex;align-items:center;gap:12px}.mark{height:45px;width:45px;border:2px solid #5ed7e9;border-radius:12px;display:grid;place-items:center;color:#75ecfc;font-size:27px;font-weight:1000;font-style:italic;box-shadow:inset 0 0 0 4px #132e43}.brand small{display:block;color:#89b3c9;font-size:10px;letter-spacing:.2em;font-weight:900}.brand strong{display:block;font-weight:950;font-size:clamp(19px,2.4vw,28px);letter-spacing:-.045em;line-height:1.1}.version{padding:7px 11px;border:1px solid #33546a;border-radius:30px;color:#a8c9d7;font-size:11px;font-weight:800}
@@ -36,7 +36,7 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 @media(max-width:1060px){.tune-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.tune-panel{padding:11px}.tune-grid{gap:7px}.tune-cell{padding:9px}.tune-cell label{font-size:9px;display:block;min-height:31px}.tune-cell output{display:block;font-size:16px;margin-top:3px}.tune-cell p{font-size:10px;margin-top:9px}.tune-ends{font-size:9px}.readout-grid{grid-template-columns:repeat(2,1fr)}.lab-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.lab-setup{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .advanced{margin:13px 0 9px}.advanced>summary{cursor:pointer;color:#c1ebda;font-size:13px;font-weight:850;border:1px solid #375e70;padding:13px;border-radius:10px;background:#122f3b}.advanced[open]>summary{border-radius:10px 10px 0 0}.advanced .tune-panel{margin-top:0;border-radius:0 0 12px 12px}.circuit-preview{display:flex;align-items:center;gap:14px;margin:10px 0 18px;padding:12px;border:1px solid #3a6273;border-radius:13px;background:linear-gradient(95deg,#10283a,#163b45)}.circuit-preview svg{width:min(36%,340px);max-height:176px;background:#163e38;border-radius:10px;border:1px solid #426a69;flex:none}.circuit-note{display:grid;gap:5px;min-width:0}.circuit-note strong{font-size:16px;color:#e7fff0}.circuit-note span{font-size:12px;color:#b4dece}.circuit-note small{font-size:10px;color:#8ca7b9}.track-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:900px){.track-tabs{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.circuit-preview svg{width:40%}.circuit-note strong{font-size:13px}}
 
-/* v0.6.8: all telemetry sits outside the live track, not over the drawing surface. */
+/* v0.6.9: all telemetry sits outside the live track, not over the drawing surface. */
 .drawing-modal .hud{display:none!important}
 .draw-foot .toast{position:static;left:auto;bottom:auto;transform:none;max-width:70%;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 8px;border-radius:6px;background:#143043;border-color:#38576a;box-shadow:none}
 @media(max-width:640px){.draw-foot .toast{font-size:10px;padding:2px 5px;max-width:75%}.drawing-modal.landscape-fallback .draw-foot .toast{max-width:78%}}
@@ -60,8 +60,10 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 .sg-back{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:10px;text-decoration:none;background:#193548;border:1px solid #426478;color:#e0f6fa;font:900 12px/1 system-ui,sans-serif;white-space:nowrap}
 .sg-back:hover{background:#2a5367}
 @media(max-width:700px){.shell>header{flex-wrap:wrap}.sg-back{font-size:11px;padding:8px 10px}}
+
+.rx-driver-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:14px 0}.rx-driver-grid label{display:grid;gap:6px;font-size:12px;color:#b6d3df;font-weight:800}.rx-driver-grid input{min-width:0;width:100%;padding:12px;background:#091c2c;border:1px solid #537c90;color:#fff;border-radius:8px;font:inherit}.rx-name-error{color:#ffb4a9}.rx-board{margin:18px 0;padding:18px;background:#102638;border:1px solid #3a6273;border-radius:13px}.rx-board h2{margin:0 0 7px;font-size:20px}.rx-board p{font-size:12px;color:#b6d3df;line-height:1.5}.rx-board table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}.rx-board th,.rx-board td{text-align:left;padding:10px 6px;border-bottom:1px solid #34566f;overflow-wrap:anywhere}.rx-board td:nth-child(3){white-space:nowrap;font-weight:900;color:#9df1c8}.rx-board .rx-board-scroll{overflow-x:auto}.rx-board-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.rx-board small{color:#97bacb}
 </style></head><body>
-<main class="shell"><header><div class="brand"><div class="mark">X</div><div><small>SPENCER GAMES</small><strong>RALLY CROSS <span style="color:#72e5f4">X</span></strong></div></div><span class="version">PROTOTYPE v0.6.8</span><a class="sg-back" href="../" target="_top" aria-label="Back to Spencer Games">⌂ Home</a></header>
+<main class="shell"><header><div class="brand"><div class="mark">X</div><div><small>SPENCER GAMES</small><strong>RALLY CROSS <span style="color:#72e5f4">X</span></strong></div></div><span class="version">PROTOTYPE v0.6.9</span><a class="sg-back" href="../" target="_top" aria-label="Back to Spencer Games">⌂ Home</a></header>
 <section id="setupScreen" class="panel"><div class="eyebrow">ELEVEN DISTINCT CIRCUITS · SIX-CAR RACING</div><h1>Race your <span class="accent">line.</span></h1>
 <p class="subtitle">Draw your racing line and speed plan, then watch the cars compete. Brake before tight corners, carry a controlled slide and build speed on exit. Live feedback explains when pace is lost to braking, corner grip, sliding or runoff. Eleven circuits include Whilton Mill, snow, dirt and a figure-eight crossover.</p>
 <div class="section-title">Choose your circuit · 11 tracks</div><div class="track-tabs" id="tracks"></div>
@@ -74,14 +76,15 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 <div class="setting"><label>CIRCUIT STYLE</label><div class="setup-note" id="surfaceNote">Dirt + tarmac · compact rallycross</div></div>
 </div>
 <div class="rules" id="setupRules"><strong>BRAKE · ROTATE · ACCELERATE.</strong> GREEN means brake for the tightest corners; AMBER balances entry speed; RED accelerates on the straights. Overspeed now damages corner-exit traction, not just the entry time.</div>
+<div class="section-title">Driver names</div><div id="rxDriverFields" class="rx-driver-grid"></div><p id="rxNameError" class="rx-name-error" role="alert"></p><p class="setup-note">Fastest laps use standard handling. Enter a public display name; avoid personal details. Each name has one best time per circuit.</p>
 <div class="setup-action"><p>Draw every lap in one continuous gesture. Each finished line fades into the background as you begin the next. No joker lane. Eleven circuits, including Whilton Mill International, full dirt, full snow and figure-of-eight options.</p><button class="primary" id="prepare">✏️ DRAW RACING LINE</button></div></section>
-<section class="drawing-modal" id="drawingScreen" hidden><div class="drawing-inner" id="drawingInner"><div class="draw-top"><div class="draw-name"><strong>✏️ DRAW YOUR LAPS · v0.6.8</strong><span id="lapLabel">LAP 1 / 1</span></div><div class="top-actions"><span class="speed-legend" aria-label="Drawing speed colours"><b class="speed-slow">SLOW</b><b class="speed-medium">MEDIUM</b><b class="speed-fast">FAST</b></span><button id="resetLap">↺ Reset lap</button><button id="fullscreen">⛶ Expand view</button><button id="exitDrawing">✕ Setup</button></div></div><div class="drawing-stage" id="drawingStage"></div><div class="draw-foot"><span id="drawHint">Draw laps in one stroke; cross START to save. GREEN brake · AMBER balance · RED accelerate. A clean apex wins time.</span><strong id="drawCounter">0 / 3 laps saved</strong></div></div></section>
+<section class="drawing-modal" id="drawingScreen" hidden><div class="drawing-inner" id="drawingInner"><div class="draw-top"><div class="draw-name"><strong>✏️ DRAW YOUR LAPS · v0.6.9</strong><span id="lapLabel">LAP 1 / 1</span></div><div class="top-actions"><span class="speed-legend" aria-label="Drawing speed colours"><b class="speed-slow">SLOW</b><b class="speed-medium">MEDIUM</b><b class="speed-fast">FAST</b></span><button id="resetLap">↺ Reset lap</button><button id="fullscreen">⛶ Expand view</button><button id="exitDrawing">✕ Setup</button></div></div><div class="drawing-stage" id="drawingStage"></div><div class="draw-foot"><span id="drawHint">Draw laps in one stroke; cross START to save. GREEN brake · AMBER balance · RED accelerate. A clean apex wins time.</span><strong id="drawCounter">0 / 3 laps saved</strong></div></div></section>
 <section class="race-screen" id="raceScreen" hidden>
-<div class="race-actions"><button class="action" id="backSetup">← Circuits</button><button class="action" id="redraw">✏️ Redraw line</button><button class="action" id="cameraToggle" type="button">🎥 Broadcast</button><button class="primary" id="run" disabled>▶ START RACE</button><button class="primary retry" id="retry" hidden>↻ REPLAY SAME LINE</button><span class="version" id="raceLabel">RACE · v0.6.8</span></div>
+<div class="race-actions"><button class="action" id="backSetup">← Circuits</button><button class="action" id="redraw">✏️ Redraw line</button><button class="action" id="cameraToggle" type="button">🎥 Broadcast</button><button class="primary" id="run" disabled>▶ START RACE</button><button class="primary retry" id="retry" hidden>↻ REPLAY SAME LINE</button><span class="version" id="raceLabel">RACE · v0.6.9</span></div>
 <div class="race-hud-slot" id="raceHudSlot"></div><div class="pace-feedback" id="paceFeedback"><div><strong id="paceCause" role="status" aria-live="polite">Ready to race</strong><p id="paceAdvice">Your drawn speed sets the target; grip decides how much pace you can carry.</p></div><div class="pace-ratio"><span id="paceRatio">—</span><small>PACE / DRAWN TARGET</small></div></div><div id="raceSlot"></div>
 <div class="metrics lab-metrics"><div class="metric"><small>TIME / CIRCUIT BEST</small><strong id="best">—</strong></div><div class="metric"><small>DRAWN SPEED → REAL SPEED</small><strong id="pace">—</strong></div><div class="metric"><small>GRIP LOAD · SAFE SPEED</small><strong id="risk">—</strong></div><div class="metric"><small>LIVE DRIFT ANGLE</small><strong id="drift">—</strong></div><div class="metric"><small>LAP / SURFACE</small><strong id="progress">1 / 1</strong></div><div class="metric"><small>LOSS STATUS</small><strong id="penalties">—</strong></div></div>
 <div class="standings" id="standingsPanel"><h2 id="standingsTitle">STARTING GRID · 6 CARS</h2><div class="standings-body" id="standings"></div></div>
-<details class="advanced"><summary>⚙️ HANDLING LAB · Optional physics sliders</summary><div class="tune-panel"><div class="tune-top"><div><div class="eyebrow">OPTIONAL PHYSICS TUNING · v0.6.8</div><h2>Handling controls · optional</h2><p>Adjust these only if you want to experiment. Each circuit has its own grip profile; replay the same drawing to compare settings. Local races keep the same settings for every car.</p></div><button class="action" id="resetTune">↺ Reset sliders</button></div>
+<details class="advanced"><summary>⚙️ HANDLING LAB · Optional physics sliders</summary><div class="tune-panel"><div class="tune-top"><div><div class="eyebrow">OPTIONAL PHYSICS TUNING · v0.6.9</div><h2>Handling controls · optional</h2><p>Adjust these only if you want to experiment. Each circuit has its own grip profile; replay the same drawing to compare settings. Local races keep the same settings for every car.</p></div><button class="action" id="resetTune">↺ Reset sliders</button></div>
 <div class="presets" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 15px"><button class="action" type="button" data-preset="balanced">Balanced drift</button><button class="action" type="button" data-preset="loose">Loose rear</button><button class="action" type="button" data-preset="stable">Stable</button><span style="font-size:11px;color:#9dbed1;align-self:center">Start with Balanced drift; tune only one setting at a time.</span></div><div class="tune-grid">
 <div class="tune-cell"><label for="tuneSlide">REAR BREAKAWAY <output id="slideValue" for="tuneSlide">1.5×</output></label><input id="tuneSlide" type="range" min="0.5" max="2.5" step="0.1" value="1.50"/><div class="tune-ends"><span>Rear stays planted</span><span>Rear steps out</span></div><p>Controls how readily the rear rotates outward under cornering load (rather than artificially turning the whole car).</p></div>
 <div class="tune-cell"><label for="tuneGrip">CORNER GRIP THRESHOLD <output id="gripValue" for="tuneGrip">70%</output></label><input id="tuneGrip" type="range" min="0.40" max="1.40" step="0.05" value="0.70"/><div class="tune-ends"><span>Very little grip</span><span>High grip</span></div><p>Lower = exceed available grip at lower corner speeds.</p></div>
@@ -92,7 +95,8 @@ footer{margin-top:17px;font-size:11px;color:#819bad;line-height:1.55}.drawing-mo
 <p class="result-note" id="help">All laps use your drawn line. GREEN is not simply a lower speed: it lets the car settle before tight corners so you can accelerate cleanly onto the next straight. Each circuit now also has its own grip/slide profile, and the race camera is more dynamic to show the car loading up in corners.</p>
 </section>
 <div class="game" id="game" hidden><svg id="track-art" class="track-art" viewBox="0 0 1200 720" preserveAspectRatio="none" aria-label="Rally Cross X racing circuit"></svg><canvas id="race" width="1200" height="720" aria-label="Draw your racing line on the track"></canvas><div class="hud"><div class="hudpill"><small>STATUS</small><span id="status">READY</span></div><div class="hudpill hud-center"><small>RACE POSITION</small><span id="position">SOLO</span><div id="hudJoker">DIRT · LOW GRIP</div></div><div class="hudpill hudright"><small>RACE TIME</small><span id="clock">00.00s</span></div></div><div class="countdown" id="countdown" hidden>3</div><div class="toast" id="toast">Draw a lap to begin</div></div>
-<footer>Rally Cross X v0.6.8 · Eleven distinctive circuits · circuit-specific handling · clean broadcast camera · No joker lanes · Whilton Mill International added.</footer></main>
+<section id="rxLeaderboard" class="rx-board" aria-labelledby="rxBoardTitle"><h2 id="rxBoardTitle">Fastest laps</h2><p>Top 50 drivers · standard handling · solo, AI races and local players · times in seconds. AI opponents are not entered.</p><div class="rx-board-actions"><button id="rxRefreshBoard" class="action" type="button">Refresh leaderboard</button><button id="rxRetryUpload" class="action" type="button">Retry upload</button></div><p id="rxUploadStatus" role="status" aria-live="polite"></p><p id="rxBoardStatus" role="status">Loading circuit leaderboard…</p><div class="rx-board-scroll"><table><thead><tr><th scope="col">Rank</th><th scope="col">Driver</th><th scope="col">Fastest lap</th><th scope="col">Lap</th></tr></thead><tbody id="rxBoardRows"></tbody></table></div><small>Display names are not reserved accounts. Online boards are casual, client-reported times.</small></section><footer>Rally Cross X v0.6.9 · Eleven distinctive circuits · circuit-specific handling · clean broadcast camera · No joker lanes · Whilton Mill International added.</footer></main>
+<script src="../live/config.js"></script><script src="leaderboard.js?v=0.6.9"></script>
 <script>
 (()=>{'use strict';
 const W=1200,H=720,CAR_WIDTH=22,TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
@@ -217,6 +221,30 @@ const localColors=['#69d6ff','#ff8d78','#b4f07e','#e3a2ff','#ffdb6e','#78f0d0','
 let localPlans=[],localCars=[],drawingPlayer=0;
 const localCount=()=>Math.max(2,Math.min(8,Number(ui.localCount.value)||2));
 const isAI=()=>ui.mode.value==='ai',hasJoker=()=>false;
+// Rally Cross uses independent service, queue and driver-name storage.
+const RX=window.RXLeaderboard;
+let driverDrafts=[],raceNames=[],leaderboardLoad=0;
+try{driverDrafts=JSON.parse(localStorage.getItem('spencer_rx_driver_names_v1')||'[]');if(!Array.isArray(driverDrafts))driverDrafts=[];}catch(_){}
+const byId=id=>document.getElementById(id);
+const escapeDriver=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const leaderboard=RX.create({config:window.SPENCER_LIVE_CONFIG,storage:localStorage,fetch:(...args)=>fetch(...args),onStatus:state=>{byId('rxUploadStatus').textContent=state.text;byId('rxRetryUpload').hidden=!state.pending;}});
+function renderDriverFields(){
+ const container=byId('rxDriverFields');for(const input of container.querySelectorAll('input'))driverDrafts[Number(input.dataset.driver)]=input.value;
+ container.replaceChildren();for(let i=0;i<(isLocal()?localCount():1);i++){const label=document.createElement('label');label.textContent=isLocal()?'Player '+(i+1)+' name':'Your driver name';const input=document.createElement('input');input.type='text';input.maxLength=48;input.required=true;input.autocomplete='nickname';input.dataset.driver=String(i);input.value=driverDrafts[i]||'';input.placeholder=isLocal()?'Player '+(i+1):'Enter your name';input.addEventListener('input',()=>{driverDrafts[i]=input.value;byId('rxNameError').textContent='';});label.appendChild(input);container.appendChild(label);}
+}
+function captureDriverNames(){try{const names=[...byId('rxDriverFields').querySelectorAll('input')].map(input=>RX.normaliseName(input.value));if(!names.length)throw Error('Enter a driver name.');if(new Set(names.map(n=>n.toLowerCase())).size!==names.length)throw Error('Give each local player a different name.');raceNames=names;driverDrafts=names;try{localStorage.setItem('spencer_rx_driver_names_v1',JSON.stringify(names));}catch(_){}byId('rxNameError').textContent='';return true;}catch(e){byId('rxNameError').textContent=e.message;byId('rxDriverFields').querySelector('input')?.focus();return false;}}
+async function refreshLeaderboard(){const generation=++leaderboardLoad,id=layouts[chosen].id;byId('rxBoardTitle').textContent=layouts[chosen].shortName+' · fastest laps';byId('rxBoardRows').replaceChildren();byId('rxBoardStatus').textContent='Loading leaderboard…';try{const rows=await leaderboard.load(id);if(generation!==leaderboardLoad)return;byId('rxBoardStatus').textContent=rows.length?'Fastest recorded lap per driver.':'No times yet. Set the first lap!';rows.forEach((row,i)=>{const tr=document.createElement('tr');for(const value of [String(i+1),row.player_name,(row.lap_ms/1000).toFixed(3)+'s',String(row.lap_number)]){const td=document.createElement('td');td.textContent=value;tr.appendChild(td);}byId('rxBoardRows').appendChild(tr);});}catch(e){if(generation!==leaderboardLoad)return;byId('rxBoardStatus').textContent=e.message;}}
+function submitLeaderboard(){
+ if(!RX.isStandard(raceTuneSnapshot,settingsChangedDuringRun)){byId('rxUploadStatus').textContent='Practice run: leaderboard laps require standard sliders throughout. Reset sliders, then replay to enter.';return;}
+ const entries=isLocal()?localCars.map((e,i)=>({car:e.car,name:raceNames[i]})):[{car:racer,name:raceNames[0]}];let count=0;
+ for(const {car,name} of entries){if(!Number.isFinite(car.finishedAt)||car.lapSplits.length!==raceLaps)continue;const best=RX.fastestLap(car.lapSplits);if(!best)continue;leaderboard.enqueue({player_name:name,track_id:track.id,ruleset:RX.RULESET,...best,mode:isLocal()?'local':isAI()?'ai':'solo'});count++;}
+ if(count){leaderboard.sync().then(ok=>{if(ok)refreshLeaderboard();});}else byId('rxUploadStatus').textContent='No completed race to upload. Finish all laps to record a fastest lap.';
+}
+byId('rxRefreshBoard').addEventListener('click',refreshLeaderboard);
+byId('rxRetryUpload').addEventListener('click',()=>leaderboard.sync().then(ok=>{if(ok)refreshLeaderboard();}));
+window.addEventListener('online',()=>leaderboard.sync().then(ok=>{if(ok)refreshLeaderboard();}));
+byId('rxRetryUpload').hidden=!leaderboard.pending().length;
+if(leaderboard.pending().length)leaderboard.sync();
 function point(s){s=((s%track.total)+track.total)%track.total;let lo=0,hi=track.edges.length-1;while(lo<hi){let mid=Math.ceil((lo+hi)/2);if(track.edges[mid].start<=s)lo=mid;else hi=mid-1;}const e=track.edges[lo],t=clamp((s-e.start)/(e.len||1),0,1);return {x:lerp(e.a.x,e.b.x,t),y:lerp(e.a.y,e.b.y,t)};}
 function angle(s){const a=point(s-7),b=point(s+7);return Math.atan2(b.y-a.y,b.x-a.x);}
 function surface(s){
@@ -472,7 +500,7 @@ function showTrackPreview(){
 }
 function updateSelector(){
  raceLaps=Number(ui.laps.value)||3;selectedJokerLap=0;
- ui.localSettings.hidden=!isLocal();
+ ui.localSettings.hidden=!isLocal();renderDriverFields();refreshLeaderboard();
  ui.difficulty.disabled=!isAI();
  const selected=layouts[chosen];
  ui.surfaceNote.textContent=selected.description+(selected.material==='snow'?' · SNOW GRIP':selected.material==='dirt'?' · FULL DIRT':selected.ramps.length?' · JUMP':'')+' · '+selected.note;showTrackPreview();
@@ -484,7 +512,7 @@ function showBest(){const times=runHistory.filter(h=>Number.isFinite(h.time)).ma
  ui.best.textContent=Number.isFinite(best)?best.toFixed(2)+'s':'—';}
 function updateRotate(){const portrait=matchMedia('(orientation: portrait)').matches&&innerWidth<=800;ui.drawingScreen.classList.toggle('landscape-fallback',portrait);}
 function toSetup(){document.getElementById('localHandoff')?.remove();ui.game.appendChild(ui.toast);expanded=false;ui.drawingScreen.classList.remove('immersive');ui.fullscreen.textContent='⛶ Expand view';phase='setup';resetCamera();ui.drawingScreen.hidden=true;ui.raceScreen.hidden=true;ui.setupScreen.hidden=false;ui.game.hidden=true;ui.game.remove();document.querySelector('main').appendChild(ui.game);document.body.style.overflow='';}
-function enterDrawing(){document.getElementById('localHandoff')?.remove();localPlans=[];localCars=[];drawingPlayer=0;ui.drawingScreen.querySelector('.draw-foot').appendChild(ui.toast);track=makeTrack(layouts[chosen]);updateSelector();art();runHistory=[];runCounter=0;renderHistory();lapPlans=[];currentLap=0;resetCurrent();ui.setupScreen.hidden=true;ui.raceScreen.hidden=true;ui.drawingScreen.hidden=false;ui.drawingStage.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='hidden';updateRotate();phase='draw';ui.clock.textContent='00.00s';ui.position.textContent=isAI()?'1 / 6':'SOLO';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();updateDrawingUI();}
+function enterDrawing(){if(!captureDriverNames())return;document.getElementById('localHandoff')?.remove();localPlans=[];localCars=[];drawingPlayer=0;ui.drawingScreen.querySelector('.draw-foot').appendChild(ui.toast);track=makeTrack(layouts[chosen]);updateSelector();art();runHistory=[];runCounter=0;renderHistory();lapPlans=[];currentLap=0;resetCurrent();ui.setupScreen.hidden=true;ui.raceScreen.hidden=true;ui.drawingScreen.hidden=false;ui.drawingStage.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='hidden';updateRotate();phase='draw';ui.clock.textContent='00.00s';ui.position.textContent=isAI()?'1 / 6':'SOLO';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();updateDrawingUI();}
 function resetCurrent(continuous=false,anchor=null){
  // Preserve the captured finger through the start/finish crossing. Each lap is
  // stored separately, but the user never has to release the screen.
@@ -494,8 +522,8 @@ function resetCurrent(continuous=false,anchor=null){
  if(!continuous)setToast('Touch START, then draw every lap without lifting your finger.');
 }
 function updateDrawingUI(){
- ui.lapLabel.textContent=`${isLocal()?'PLAYER '+(drawingPlayer+1)+' · ':''}LAP ${Math.min(currentLap+1,raceLaps)} / ${raceLaps}`;
- ui.drawingScreen.querySelector('.draw-name strong').textContent=isLocal()?`PLAYER ${drawingPlayer+1} OF ${localCount()} · DRAW YOUR LAPS`:'✏️ DRAW YOUR LAPS · v0.6.8';
+ ui.lapLabel.textContent=`${isLocal()?raceNames[drawingPlayer]+' · ':''}LAP ${Math.min(currentLap+1,raceLaps)} / ${raceLaps}`;
+ ui.drawingScreen.querySelector('.draw-name strong').textContent=isLocal()?`${raceNames[drawingPlayer]} · PLAYER ${drawingPlayer+1} OF ${localCount()} · DRAW YOUR LAPS`:'✏️ DRAW YOUR LAPS · v0.6.9';
  ui.drawCounter.textContent=`${lapPlans.length} / ${raceLaps} laps completed`;
  ui.status.textContent=`DRAW LAP ${currentLap+1}`;
  ui.drawHint.textContent=`Keep drawing through START to begin the next lap automatically · ${track.name} · wider circuits reward a proper entry, apex and exit`;
@@ -643,9 +671,9 @@ function sealLap(continuous=false){
 function showHandoff(){
  phase='handoff';ui.game.hidden=true;
  const card=document.createElement('div');card.id='localHandoff';card.className='result-note';
- const title=document.createElement('h2');title.textContent=`Player ${drawingPlayer+1}'s line saved`;
- const text=document.createElement('p');text.textContent=`Pass the device to Player ${drawingPlayer+2}. Each player draws their own ${raceLaps} lap${raceLaps===1?'':'s'} before the race starts.`;
- const button=document.createElement('button');button.type='button';button.className='primary';button.textContent=`Player ${drawingPlayer+2}: draw my line →`;
+ const title=document.createElement('h2');title.textContent=`${raceNames[drawingPlayer]}'s line saved`;
+ const text=document.createElement('p');text.textContent=`Pass the device to ${raceNames[drawingPlayer+1]}. Each player draws their own ${raceLaps} lap${raceLaps===1?'':'s'} before the race starts.`;
+ const button=document.createElement('button');button.type='button';button.className='primary';button.textContent=`${raceNames[drawingPlayer+1]}: draw my line →`;
  button.addEventListener('click',()=>{card.remove();drawingPlayer++;lapPlans=[];currentLap=0;resetCurrent();phase='draw';ui.game.hidden=false;updateDrawingUI();});
  card.append(title,text,button);ui.drawingStage.appendChild(card);
 }
@@ -656,7 +684,7 @@ function initLocalCars(){
   const entry={plans,cumulative:[0],car:JSON.parse(template),telemetry:JSON.parse(telemetry)};
   for(const plan of plans)entry.cumulative.push(entry.cumulative.at(-1)+plan.length);
   useLocalCar(entry);const p=routePlayer(0),f=routePlayer(20),heading=Math.atan2(f.y-p.y,f.x-p.x);
-  Object.assign(entry.car,{x:p.x,y:p.y,angle:heading,velAngle:heading,vx:Math.cos(heading)*58,vy:Math.sin(heading)*58,name:`Player ${i+1}`,colour:localColors[i]});
+  Object.assign(entry.car,{x:p.x,y:p.y,angle:heading,velAngle:heading,vx:Math.cos(heading)*58,vy:Math.sin(heading)*58,name:raceNames[i],colour:localColors[i]});
   return entry;
  });
  useLocalCar(localCars[0]);
@@ -676,9 +704,9 @@ function finishLocalRace(){
  ui.labSummary.textContent=winner?`${tied.map(e=>e.name).join(' & ')} ${tied.length>1?'tie':'wins'} in ${winner.time.toFixed(2)}s!`:'Race timed out. Redraw or replay your lines.';
  ui.readoutGrid.textContent=localCars.map((e,i)=>`Player ${i+1}: ${conditionSummary(e.telemetry.causeSeconds)}`).join(' | ');showPaceFeedback('finished');
  ui.help.textContent='Condition durations show time affected, not seconds added to the lap. Replay all lines together or redraw to compare.';
- setToast('🏁 LOCAL RACE COMPLETE · RESULTS BELOW');
+ setToast('🏁 LOCAL RACE COMPLETE · RESULTS BELOW');submitLeaderboard();
 }
-function openRaceView(){ui.paceCause.textContent='Ready to race';ui.paceAdvice.textContent='Your drawn speed sets the target; grip decides how much pace you can carry.';ui.paceRatio.textContent='—';ui.paceFeedback.classList.toggle('losing',false);ui.game.appendChild(ui.toast);const hud=document.querySelector('.hud');if(hud&&ui.raceHudSlot)ui.raceHudSlot.appendChild(hud);expanded=false;ui.drawingScreen.classList.remove('immersive');ui.fullscreen.textContent='⛶ Expand view';ui.drawingScreen.hidden=true;ui.raceScreen.hidden=false;ui.raceSlot.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='';ui.status.textContent='GRID READY';ui.run.disabled=false;ui.run.hidden=false;ui.retry.hidden=true;ui.raceLabel.textContent=`${raceLaps} LAP${raceLaps>1?'S':''} · ${isLocal()?localCount()+' LOCAL PLAYERS':isAI()?'SIX CARS':'SOLO'} · ${track.shortName} · v0.6.8`;ui.help.textContent='Race your chosen line. Track-position grip and runoff now affect every car. Try a late apex or a wide exit; replay the same line to compare.';ui.progress.textContent=`1 / ${raceLaps} · ${track.shortName}`;ui.pace.textContent='—';ui.risk.textContent='—';ui.drift.textContent='—';ui.penalties.textContent='READY';ui.clock.textContent='00.00s';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();showBest();resetResults();renderStandings();setToast('GRID READY · YOUR RACING LINE IS LOCKED IN.');window.scrollTo({top:0,behavior:'instant'});}
+function openRaceView(){ui.paceCause.textContent='Ready to race';ui.paceAdvice.textContent='Your drawn speed sets the target; grip decides how much pace you can carry.';ui.paceRatio.textContent='—';ui.paceFeedback.classList.toggle('losing',false);ui.game.appendChild(ui.toast);const hud=document.querySelector('.hud');if(hud&&ui.raceHudSlot)ui.raceHudSlot.appendChild(hud);expanded=false;ui.drawingScreen.classList.remove('immersive');ui.fullscreen.textContent='⛶ Expand view';ui.drawingScreen.hidden=true;ui.raceScreen.hidden=false;ui.raceSlot.appendChild(ui.game);ui.game.hidden=false;document.body.style.overflow='';ui.status.textContent='GRID READY';ui.run.disabled=false;ui.run.hidden=false;ui.retry.hidden=true;ui.raceLabel.textContent=`${raceLaps} LAP${raceLaps>1?'S':''} · ${isLocal()?localCount()+' LOCAL PLAYERS':isAI()?'SIX CARS':'SOLO'} · ${track.shortName} · v0.6.9`;ui.help.textContent='Race your chosen line. Track-position grip and runoff now affect every car. Try a late apex or a wide exit; replay the same line to compare.';ui.progress.textContent=`1 / ${raceLaps} · ${track.shortName}`;ui.pace.textContent='—';ui.risk.textContent='—';ui.drift.textContent='—';ui.penalties.textContent='READY';ui.clock.textContent='00.00s';ui.hudJoker.textContent=track.shortName+' · '+track.material.toUpperCase();showBest();resetResults();renderStandings();setToast('GRID READY · YOUR RACING LINE IS LOCKED IN.');window.scrollTo({top:0,behavior:'instant'});}
 function resetResults(){ui.labSummary.textContent='Ready to race. The same drawing can be replayed afterwards to compare handling changes.';ui.readoutGrid.innerHTML='<span>Corner overspeed: <b>—</b></span><span>Off-road time: <b>—</b></span><span>Peak drift: <b>—</b></span><span>Speed lost: <b>—</b></span>';}
 function renderHistory(){if(!ui.runHistory)return;ui.runHistory.innerHTML=runHistory.length?runHistory.slice(-8).reverse().map((h,i)=>`<div class="history-run${i===0?' latest':''}"><strong>Run ${h.number} · ${h.time.toFixed(2)}s</strong><small>Slide ${h.tune.slide.toFixed(1)}× · Grip ${Math.round(h.tune.grip*100)}% · Penalty ${h.tune.punish.toFixed(1)}× · FAST ${h.tune.fast}</small><small>Overspeed ${h.overspeed.toFixed(1)}s · Off-road ${h.offroad.toFixed(1)}s${h.changed?' · MIXED SETTINGS':''}</small></div>`).join(''):'<span class="hint">Finish a race to save the result.</span>';}
 function formatSeconds(x){return (Number.isFinite(x)?x:0).toFixed(2)+'s';}
@@ -744,7 +772,7 @@ function crossingPlayerRamp(previous,next){
 function crossingAIRamp(previous,next){const lo=Math.max(0,Math.floor(previous/track.total)-1),hi=Math.min(raceLaps-1,Math.floor(next/track.total)+1);
  for(let lap=lo;lap<=hi;lap++)for(const f of track.ramps){const trigger=lap*track.total+track.total*f;if(previous<trigger&&next>=trigger)return true;}return false;}
 function airborne(car){return car.airLeft>0?Math.sin(Math.PI*clamp(1-car.airLeft/car.airDuration,0,1)):0;}
-// v0.6.8 handling reference: DrawRace 2's risk/reward and Spencer Speedway's
+// v0.6.9 handling reference: DrawRace 2's risk/reward and Spencer Speedway's
 // heading-vs-travel separation. The route is not a train rail: it controls
 // progress and target speeds, while grip and corner radius determine the
 // *physical* line actually travelled. Front points toward the apex; rear lags.
@@ -982,13 +1010,15 @@ function updatePlayer(dt){const v=racer;if(v.finishedAt!=null)return;
  currentRun.topSpeed=Math.max(currentRun.topSpeed,v.effectiveSpeed||0);if(beyond&&!currentRun.lastOver)currentRun.gripEvents++;currentRun.lastOver=beyond;}
  // Record a split at every completed lap (different hand-drawn laps can vary in length).
  while(v.lapSplits.length<raceLaps&&v.s>=cumulative[v.lapSplits.length+1]-.001){
-  v.lapSplits.push(raceClock-v.lastLapClock);v.lastLapClock=raceClock;
+  const boundary=cumulative[v.lapSplits.length+1];
+  const crossingClock=raceClock-dt+dt*clamp((boundary-previousS)/Math.max(1e-9,v.s-previousS),0,1);
+  v.lapSplits.push(crossingClock-v.lastLapClock);v.lastLapClock=crossingClock;
  }
  makeRearMarks(v,dt,material);
  if(material!=='tarmac'&&(Math.abs(v.visualSlip||0)>.18||Math.abs(v.offset)>track.width*.46)&&Math.random()<dt*28)dust.push({x:v.x-16*Math.cos(v.angle),y:v.y-16*Math.sin(v.angle),r:4+Math.random()*7,t:1,material});
  if(force.offroad)v.out+=dt;
  ui.status.textContent=v.spinTime>0?'RACING · SPIN':force.offroad?'RACING · RUNOFF':v.understeering?'RACING · UNDERSTEER':v.flicking?'RACING · FLICK':Math.abs(v.slip)>.17?'RACING · SLIDING':'RACING · '+v.surfaceLabel;
- if(v.s>=cumulative.at(-1)-.001){v.s=cumulative.at(-1);v.finishedAt=raceClock;}
+ if(v.s>=cumulative.at(-1)-.001){v.s=cumulative.at(-1);v.finishedAt=v.lastLapClock;}
  ui.pace.textContent=`${speedBand(here.v)} · ${Math.round(v.effectiveSpeed||0)} / ${Math.round(target)} · REAR ${Math.round(Math.abs(v.rearSlip||0)*180/Math.PI)}° · SLIP ${Math.round(Math.abs(v.visualSlip||0)*180/Math.PI)}°`;
  ui.progress.textContent=`${Math.min(raceLaps,lapForS(v.s).lap+1)} / ${raceLaps} · ${v.surfaceLabel}${v.airLeft>0?' · AIR':''}`;ui.risk.textContent=Math.abs(force.bend)<.001?'STRAIGHT':`${Math.round(force.load*100)}% · SAFE ${Math.round(force.safeSpeed)}`;ui.risk.style.color=force.load>1?'#ff9b88':'#b1f2d0';ui.drift.textContent=Math.round(Math.abs(v.visualSlip||0)*180/Math.PI)+'°';ui.penalties.textContent=paceMessages[v.lossReason][0];
 }
@@ -1017,10 +1047,10 @@ function updateAI(dt){for(const a of aiCars){if(a.finishedAt!=null)continue;
  if(a.s>=track.total*raceLaps-.001){a.s=track.total*raceLaps;a.finishedAt=raceClock;}
 }}
 function localStandEntries(){
- const entries=localPlans.map((plans,i)=>{const e=localCars[i],car=e?.car;return {name:`Player ${i+1}`,color:localColors[i],s:car?.s||0,total:plans.reduce((sum,p)=>sum+p.length,0),time:car?.finishedAt,you:i===0};});
+ const entries=localPlans.map((plans,i)=>{const e=localCars[i],car=e?.car;return {name:raceNames[i]||`Player ${i+1}`,color:localColors[i],s:car?.s||0,total:plans.reduce((sum,p)=>sum+p.length,0),time:car?.finishedAt,you:i===0};});
  return entries.sort((a,b)=>{const af=Number.isFinite(a.time),bf=Number.isFinite(b.time);if(af||bf)return af&&bf?a.time-b.time:af?-1:1;return b.s/b.total-a.s/a.total;});
 }
-function standEntries(){if(isLocal())return localStandEntries();const a=[{name:'YOU',color:'#69d6ff',s:racer?.s||0,total:cumulative.at(-1)||raceLaps*track.total,done:racer?.jokerDone||!hasJoker(),time:racer?.finishedAt,you:true}];if(isAI()){if(aiCars.length)for(const car of aiCars)a.push({name:car.name,color:car.colour,s:car.s,total:raceLaps*track.total,done:car.jokerDone,time:car.finishedAt});else for(let i=0;i<5;i++)a.push({name:aiNames[i],color:aiColors[i],s:-30-i*20,total:raceLaps*track.total,done:!hasJoker(),time:null});}
+function standEntries(){if(isLocal())return localStandEntries();const a=[{name:raceNames[0]||'YOU',color:'#69d6ff',s:racer?.s||0,total:cumulative.at(-1)||raceLaps*track.total,done:racer?.jokerDone||!hasJoker(),time:racer?.finishedAt,you:true}];if(isAI()){if(aiCars.length)for(const car of aiCars)a.push({name:car.name,color:car.colour,s:car.s,total:raceLaps*track.total,done:car.jokerDone,time:car.finishedAt});else for(let i=0;i<5;i++)a.push({name:aiNames[i],color:aiColors[i],s:-30-i*20,total:raceLaps*track.total,done:!hasJoker(),time:null});}
  a.sort((x,y)=>{const xf=x.time!=null&&Number.isFinite(x.time)&&x.done,yf=y.time!=null&&Number.isFinite(y.time)&&y.done;if(xf||yf)return xf&&yf?x.time-y.time:xf?-1:1;return (y.s/y.total)-(x.s/x.total);});return a;}
 function renderStandings(){const entries=standEntries();const pos=entries.findIndex(e=>e.you)+1;
  ui.position.textContent=`${pos} / ${entries.length}`;
@@ -1028,7 +1058,7 @@ function renderStandings(){const entries=standEntries();const pos=entries.findIn
  ui.standings.innerHTML=entries.map((e,i)=>{
   const lap=clamp(Math.floor(Math.max(0,e.s)/e.total*raceLaps)+1,1,raceLaps);
   const desc=phase==='finished'?(e.time!=null&&Number.isFinite(e.time)?e.time.toFixed(2)+'s':(e.s>0?'BEHIND · LAP '+lap+'/'+raceLaps:'DNF')):(phase==='racing'?`LAP ${lap}/${raceLaps}`:'READY');
-  return `<div class="driver${e.you?' you':''}"><strong><span class="warn">P${i+1}</span> <em style="background:${e.color}"></em>${e.name}</strong><small>${desc}</small></div>`;
+  return `<div class="driver${e.you?' you':''}"><strong><span class="warn">P${i+1}</span> <em style="background:${e.color}"></em>${escapeDriver(e.name)}</strong><small>${desc}</small></div>`;
  }).join('');
 }
 function finishRace(){if(phase!=='racing')return;if(isLocal()){finishLocalRace();return;}if(racer?.finishedAt==null&&raceClock<900)return;if(racer?.finishedAt!=null&&isAI()&&aiCars.some(a=>a.finishedAt==null)&&raceClock<Math.min(900,racer.finishedAt+5))return;if(racer.finishedAt==null)racer.finishedAt=Infinity;phase='finished';ui.backSetup.disabled=false;ui.redraw.disabled=false;ui.status.textContent=Number.isFinite(racer.finishedAt)?'FINISHED':'TIME OUT';ui.countdown.hidden=true;renderStandings();
@@ -1040,6 +1070,7 @@ function finishRace(){if(phase!=='racing')return;if(isLocal()){finishLocalRace()
  ui.labSummary.innerHTML=`<b>${Number.isFinite(time)?time.toFixed(2)+'s':'DNF'} · ${compared}</b>${settingsChangedDuringRun?' · ⚠ Sliders changed during this lap. Replay without changes for a controlled result.':''} · ${raceLaps} laps on ${track.name}.`;
  ui.readoutGrid.innerHTML=`<span>Over grip limit: <b>${formatSeconds(currentRun.overspeed)}</b></span><span>Runoff time: <b>${formatSeconds(currentRun.offroad)}</b></span><span>Runoff excursions: <b>${currentRun.runoffEvents}</b></span><span>Minimum surface grip: <b>${Math.round(currentRun.minimumGrip*100)}%</b></span><span>Peak body slip: <b>${Math.round(currentRun.peakSlip*180/Math.PI)}°</b></span><span>Peak rear rotation: <b>${Math.round(currentRun.peakRear*180/Math.PI)}°</b></span><span>Lost speed budget: <b>${Math.round(currentRun.loss)} units</b></span><span>Grip limit events: <b>${currentRun.gripEvents}</b></span><span>Peak grip load: <b>${Math.round(currentRun.peakLoad*100)}%</b></span><span>Top actual speed: <b>${Math.round(currentRun.topSpeed)}</b></span><span>Worst exit instability: <b>${Math.round(currentRun.peakInstability*100)}%</b></span><span>Corner-exit speed loss: <b>${Math.round(currentRun.exitTractionLoss)} units</b></span><span>Time braking: <b>${currentRun.brakingSeconds.toFixed(1)}s</b></span><span>GREEN / AMBER / RED: <b>${[currentRun.greenSeconds,currentRun.amberSeconds,currentRun.redSeconds].map(x=>x.toFixed(1)).join(' / ')}s</b></span><span>Recorded runs: <b>${runHistory.length}</b></span>${(racer.lapSplits||[]).map((split,i)=>`<span>Lap ${i+1}: <b>${split.toFixed(2)}s</b></span>`).join('')}`;
  ui.help.textContent='Conditions active during this run (not seconds added to your lap): '+conditionSummary(currentRun.causeSeconds);showPaceFeedback('finished');
+ submitLeaderboard();
  setToast(Number.isFinite(time)?'🏁 FINISHED · '+time.toFixed(2)+'s · '+(isAI()?'RESULTS BELOW':'SOLO RECORD'):'TIME OUT');}
 
 function resetCamera(){camera.tx=0;camera.ty=0;camera.scale=1;svg.style.transform='';canvas.style.transform='';}
