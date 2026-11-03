@@ -17,3 +17,14 @@ async function run(assert,L){
 }
 
 run(assert,L).then(console.log).catch(e=>{console.error(e);process.exitCode=1;});
+
+
+// Recent history retains slower laps independently from the best-only upload queue.
+{
+ const values=new Map(),storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)},config={};
+ let client=L.create({config,storage,fetch:async()=>{throw Error('Offline');}});
+ const lap=ms=>({player_name:'Rich',track_id:'whiltonmill',ruleset:L.RULESET,lap_ms:ms,lap_number:1,mode:'solo'});
+ client.recordLap(lap(22000));client.recordLap(lap(25000));assert.equal(client.history('whiltonmill').length,2);assert.equal(client.pending().length,1);assert.equal(client.pending()[0].lap_ms,22000);
+ client=L.create({config,storage,fetch:async()=>{throw Error('Offline');}});assert.equal(client.history().length,2,'Every recent lap survives reload');assert.equal(client.pending()[0].lap_ms,22000);
+ console.log('PASS: slower completed laps retained in separate persistent lap history');
+}

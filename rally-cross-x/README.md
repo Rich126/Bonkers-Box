@@ -61,3 +61,11 @@ Run `node rally-cross-x/tests/artwork.cjs` to check all 11 tracks for globally u
 Adds per-circuit top-50 boards and required driver names for solo, AI-opponent and 2–8-player local races. Only human, completed standard-handling runs submit their fastest lap; custom/mixed settings stay practice runs. Split crossings use within-step interpolation and boards display three decimals. Failed uploads use a Rally Cross-only persistent retry queue.
 
 One-time Supabase setup is required: see [LEADERBOARD-SETUP.md](LEADERBOARD-SETUP.md) and run only [the new Rally Cross SQL](../supabase/rallycross-leaderboard.sql). No Speedway files, tables, policies, views, records or storage are modified. Existing Rally Cross race-total records are retained. Casual display-name records are client-reported, not authenticated or anti-cheat verified.
+
+
+
+### v0.6.10 — Fixed handling and every completed lap
+
+Removes handling sliders, presets and legacy tuning restoration. All drivers use the existing standard model. Every human lap is recorded at its interpolated crossing and queued immediately, including before the remaining race finishes. A separate device history retains the latest 200 laps (20 displayed per circuit), including slower laps. Online rankings retain each driver's fastest lap. Existing board, pending uploads and Speedway data are preserved; no new Supabase migration is required.
+
+Tests cover ignored old slider values, local-player laps, all three Whilton Mill solo laps and the first lap reaching the upload queue before race finish.
