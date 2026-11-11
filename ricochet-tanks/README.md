@@ -27,3 +27,11 @@ Physics checks cover all eight missions, clear/reachable spawns, finite movement
 ## Limits
 
 This is an arcade prototype with simplified axis-separated tank collision and grid navigation, not a reproduction of Nintendo's game. AI plans direct shots and, for hunters/heavies, validated single banks off outer walls. It does not solve arbitrary multi-wall shots. No online service, audio, destructible stone, shell-versus-shell interception, level editor or saved mid-campaign progress. Difficulty and small-screen feel still need player feedback.
+
+## v0.2 visual overhaul
+
+New original SVG tank badge replaces the shield on the Spencer Games menu and in the game header. The menu now has custom tank key art and a navy/gold field-notes identity. The dedicated renderer adds high-resolution armoured hulls, moving track links, rivets, vents, turrets, muzzle flashes, shell trails, sparks, smoke, wrecks and persistent cosmetic rubble/scorch marks.
+
+Four mission palettes provide weathered slabs, grit, cracks, painted markings, drains, shaded stone and braced wooden crates. Floor and wall layers are cached at 2× resolution; cover is repainted only when its count changes. Rendering has its own deterministic visual randomness and never consumes the simulation RNG. Gameplay, collisions, AI, scoring and saved records are unchanged.
+
+`renderer.js` must load between `core.js` and `app.js`. Existing browser/flow tests now load it too; browser checks exercise all eight mission renderers, destroyed cover and explosions, and assert that painting does not change simulation state.
