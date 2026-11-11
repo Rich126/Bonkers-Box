@@ -3706,6 +3706,7 @@ const GAMES = [
     { id: "dive", name: "Treasure Dive!", desc: "Party Mode: pirate shop, monster shields, ocean events and bonus awards!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1–8 Players"] },
     { id: "rallycrossx", name: "Rally Cross X", desc: "Draw your racing line across 11 circuits. Play solo, race AI, or pass and play with 2–8 players!", emoji: "🏁", emoji2: "🏎️", color: "#22D3EE", bg: "linear-gradient(135deg,#071b34,#123f63)", tags: ["Racing", "1–8 Players"] },
+    { id: "tanks", name: "Ricochet Tanks", desc: "Single-player tank battles against AI. Bank shells around cover, break crates and clear eight tactical arenas.", emoji: "🛡️", emoji2: "💥", color: "#E7B356", bg: "linear-gradient(135deg,#152c35,#41645e)", tags: ["Tactics", "1 Player vs AI"] },
     { id: "trackfield", name: "The Track and Field Thingimagig", desc: "Sprint, leap and launch a javelin. Three athletics events, eight mates and one highly questionable sports day.", emoji: "🏃", emoji2: "🥇", color: "#C3E8AE", bg: "linear-gradient(135deg,#14384b,#31736c)", tags: ["Athletics", "1–8 Players"] },
     { id: "supercross", name: "Supercross Flow", desc: "Draw line and speed, then race together over berms, ruts, jumps and whoops.", emoji: "🏍️", emoji2: "⛰️", color: "#FFB963", bg: "linear-gradient(135deg,#17362e,#55351f)", tags: ["Motocross", "1–8 Players"] },
     { id: "holeshot", name: "Holeshot King", desc: "Stage at the motocross gate, wait for the board to turn, then react when the gate drops!", emoji: "🏁", emoji2: "👑", color: "#FF6B1A", bg: "linear-gradient(135deg,#071827,#4a1d0b)", tags: ["Reaction", "1 Player"] },
@@ -3767,7 +3768,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "trackfield" ? "trackfield" : id === "supercross" ? "supercross" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "tanks" ? "tanks" : id === "trackfield" ? "trackfield" : id === "supercross" ? "supercross" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3818,6 +3819,8 @@ function BonkersBox() {
             React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.19", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
             React.createElement("iframe", { src: "speedway/index.html?v=4.19", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+        screen === "tanks" && React.createElement("div", { style: { minHeight: "100vh", background: "#152c35", position: "relative" } },
+            React.createElement("iframe", { src: "ricochet-tanks/index.html?v=0.1", title: "Ricochet Tanks", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#152c35" } })),
         screen === "trackfield" && React.createElement("div", { style: { minHeight: "100vh", background: "#f5f0df", position: "relative" } },
             React.createElement("iframe", { src: "track-field/index.html?v=0.1", title: "The Track and Field Thingimagig", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#f5f0df" } })),
         screen === "supercross" && React.createElement("div", { style: { minHeight: "100vh", background: "#0b1520", position: "relative" } },
@@ -3902,6 +3905,7 @@ try {
    <div class="bb-game-list">
     <div class="bb-game-rule"><strong>🌊 Treasure Dive</strong><small>Push your luck by diving deeper for treasure. Stop safely or risk meeting a monster and losing what you found.</small></div>
     <div class="bb-game-rule"><strong>🏍️ Speedway Slide</strong><small>Each rider takes one turn at a three-lap shale time trial. The bike accelerates automatically; hold LEFT to turn in and RIGHT to catch the slide. Grass and the safety fence scrub speed. After the last run, every recorded ride is replayed together as one final race before the results.</small></div>
+    <div class="bb-game-rule"><strong>🛡️ Ricochet Tanks</strong><small>A single-player eight-mission tank campaign against AI. WASD/arrows move, mouse aims, click/Space fires, E drops a mine. On touchscreens use the left stick to move and right stick to aim and fire. Shells bounce once from stone; crates break. Friendly fire includes your own ricochets and mines.</small></div>
     <div class="bb-game-rule"><strong>🏃 The Track and Field Thingimagig</strong><small>A local athletics meet for 1–8 players. Alternate feet for the 100m sprint. For long jump and javelin, build run-up speed, hold to aim and release before the white line. Three field attempts each; your best mark earns event points and medals.</small></div>
     <div class="bb-game-rule"><strong>🏍️ Supercross Flow</strong><small>Draw a line and speed plan for each rider, then race together. Use the banked berm line, plan jump approach speed and skim whoops. Includes optional solo live pedals.</small></div>
     <div class="bb-game-rule"><strong>🏁 Rally Cross X</strong><small>Draw your racing line in one continuous stroke, controlling the pace with your finger. Play solo, race AI, or choose Local pass-and-play for 2–8 players: draw your laps in turn, then race your cars together. Cars can pass through each other. Includes 11 tracks with dirt, snow and figure-eight circuits.</small></div>
@@ -4007,6 +4011,18 @@ try {
 <style>.bb-supercross-active #bb-help-button,.bb-supercross-active #bb-home-button{display:none!important}</style>
 
 <style>.bb-track-field-active #bb-help-button,.bb-track-field-active #bb-home-button{display:none!important}</style>
+
+<style>.bb-tanks-active #bb-help-button,.bb-tanks-active #bb-home-button{display:none!important}</style>
+<script id="bb-tanks-message-bridge">
+(function(){
+ window.addEventListener('message',function(event){
+  if(event.origin!==window.location.origin||!event.data||event.data.type!=='SPENCER_TANKS_STATE')return;
+  var frame=document.querySelector('iframe[title="Ricochet Tanks"]');
+  if(frame&&event.source===frame.contentWindow)document.body.classList.toggle('bb-tanks-active',event.data.active!==false);
+ });
+ new MutationObserver(function(){if(!document.querySelector('iframe[title="Ricochet Tanks"]'))document.body.classList.remove('bb-tanks-active');}).observe(document.getElementById('root')||document.body,{childList:true,subtree:true});
+})();
+</script>
 <script id="bb-track-field-message-bridge">
 (function(){
  window.addEventListener('message',function(event){
