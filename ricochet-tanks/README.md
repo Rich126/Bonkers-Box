@@ -35,3 +35,15 @@ New original SVG tank badge replaces the shield on the Spencer Games menu and in
 Four mission palettes provide weathered slabs, grit, cracks, painted markings, drains, shaded stone and braced wooden crates. Floor and wall layers are cached at 2× resolution; cover is repainted only when its count changes. Rendering has its own deterministic visual randomness and never consumes the simulation RNG. Gameplay, collisions, AI, scoring and saved records are unchanged.
 
 `renderer.js` must load between `core.js` and `app.js`. Existing browser/flow tests now load it too; browser checks exercise all eight mission renderers, destroyed cover and explosions, and assert that painting does not change simulation state.
+
+
+
+## v0.3 — Level 9: The Crucible
+
+An optional nightmare arena unlocks after mission 8. Existing device records with eight cleared missions unlock it immediately from the menu. The eight-mission campaign still has its own victory screen; continue into The Crucible or return to the menu.
+
+Nightmare rules: one player hull point, one mine, eight enemies (four three-hit heavies and four two-hit hunters), 55% faster AI movement, predictive aim, shorter think intervals and 46% of normal shot cooldown. Enemy shells travel at 390 versus the player's 300 units/s, allow four shells per enemy and ricochet twice. Player handling, rate of fire and one-bounce shells remain unchanged. Initial enemy fire is staggered from 1.8 seconds to allow an opening response. Elite kills pay double; clearing earns 2,500 points. Retry keeps the mission score checkpoint and still grants only one hull point.
+
+A new cover layout and muted red nightmare styling mark the challenge. Tests verify reachable spawns, opening grace, armour, shell rules, unlock/progression, checkpoint retries and final victory. A deterministic comparison against v0.2 confirms unchanged simulation outcomes in missions 1–8. No human completion or difficulty balance is claimed: this is deliberately punishing and needs player feedback.
+
+Run `node ricochet-tanks/tests/nightmare.cjs` in addition to the existing tests. Browser checks now render all nine arenas.

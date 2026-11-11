@@ -8,7 +8,7 @@ function linear(c,x,y,x2,y2,a,b){const g=c.createLinearGradient(x,y,x2,y2);g.add
 function radial(c,x,y,r,a,b){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,a);g.addColorStop(1,b);return g;}
 function layer(){const el=document.createElement('canvas');el.width=1920;el.height=1200;const c=el.getContext('2d');c.scale(2,2);return {el,c};}
 function create(canvas){const c=canvas.getContext('2d');canvas.width=1920;canvas.height=1200;c.setTransform(2,0,0,2,0,0);let current=null,floor=null,walls=null,palette=null,wallCount=-1,seen=new WeakSet(),trails=new WeakMap(),oldCrates=new Map();
-function build(g){current=g;palette=palettes[g.mission%4];floor=layer();walls=layer();seen=new WeakSet();trails=new WeakMap();oldCrates=new Map(g.walls.filter(w=>w.wood).map(w=>[w.x+','+w.y,w]));wallCount=-1;const f=floor.c,random=rng(2771+g.mission*91);f.fillStyle=linear(f,0,0,960,600,...palette.floor);f.fillRect(0,0,960,600);
+function build(g){current=g;palette=g.nightmare?{floor:['#a8978d','#6a6165'],stone:['#87918e','#3c4853'],trim:'#e4bda3',wash:'#d8a18d'}:palettes[g.mission%4];floor=layer();walls=layer();seen=new WeakSet();trails=new WeakMap();oldCrates=new Map(g.walls.filter(w=>w.wood).map(w=>[w.x+','+w.y,w]));wallCount=-1;const f=floor.c,random=rng(2771+g.mission*91);f.fillStyle=linear(f,0,0,960,600,...palette.floor);f.fillRect(0,0,960,600);
  // Large staggered slabs, pores, chips and hairline cracks are painted once.
  for(let row=0;row<7;row++)for(let col=-1;col<10;col++){const x=col*112+(row%2?56:0),y=row*96;f.fillStyle=random()>.5?'#ffffff06':'#102d2b07';f.fillRect(x+1,y+1,110,94);f.strokeStyle='#1c383b20';f.lineWidth=1.1;f.strokeRect(x,y,112,96);f.strokeStyle='#f5e9c527';f.beginPath();f.moveTo(x+1,y+2);f.lineTo(x+111,y+2);f.stroke();if(random()>.6){f.strokeStyle='#273e3829';f.lineWidth=.65;f.beginPath();let xx=x+random()*100,yy=y+random()*80;f.moveTo(xx,yy);for(let i=0;i<4;i++){xx+=(random()-.3)*12;yy+=random()*9;f.lineTo(xx,yy);}f.stroke();}}
  for(let i=0;i<14500;i++){const x=random()*960,y=random()*600;f.fillStyle=i%3===0?'#102d2c18':'#fff6d51c';f.fillRect(x,y,random()*1.5+.3,random()*.8+.3);}
@@ -39,7 +39,7 @@ function tank(g,t){const colours=t.id===0?['#ffe0a0','#c18c3d','#8b622e']:t.type
  c.fillStyle=colours[2];c.beginPath();c.ellipse(-4,0,5.7,6.5,0,0,Math.PI*2);c.fill();c.fillStyle=colours[0];c.beginPath();c.ellipse(-4,-1,4.7,5.1,0,0,Math.PI*2);c.fill();c.strokeStyle='#344e42aa';c.lineWidth=1;c.beginPath();c.moveTo(-4,-4);c.lineTo(-4,2);c.stroke();c.fillStyle=t.id===0?'#f6f1d8':'#f0d0bd';c.fillRect(3,-4,3,8);c.fillStyle='#1d3532';c.fillRect(4,-1,2,2);
  if(t.type==='heavy'){c.strokeStyle='#f2e7c6';c.lineWidth=1.5;round(c,-10,-9,20,18,5);c.stroke();c.fillStyle='#423e2e';c.fillRect(-9,6,16,3);}
  if(g.shells.some(s=>s.owner===t.id&&s.age<.055)){c.save();c.translate(34,0);c.globalCompositeOperation='lighter';c.fillStyle=radial(c,0,0,23,'#fffbe9ee','#ffc65c00');c.fillRect(-23,-23,46,46);c.fillStyle='#fff8cf';c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,r=i%2?3:11;c.lineTo(Math.cos(a)*r,Math.sin(a)*r);}c.closePath();c.fill();c.restore();}c.restore();
- if(t.type==='heavy'&&t.hp===1){c.fillStyle='#182e31';round(c,t.x-9,t.y-28,18,6,3);c.fill();c.fillStyle='#f0bc70';round(c,t.x-8,t.y-27,7,4,2);c.fill();}}
+ if(t.type==='heavy'&&t.hp<(g.nightmare?3:2)){c.fillStyle='#182e31';round(c,t.x-9,t.y-28,18,6,3);c.fill();c.fillStyle='#f0bc70';round(c,t.x-8,t.y-27,14*t.hp/(g.nightmare?3:2),4,2);c.fill();}}
 function wreck(t){c.save();c.translate(t.x,t.y);c.rotate(t.angle);c.fillStyle='#27372c70';c.beginPath();c.ellipse(2,2,24,19,0,0,Math.PI*2);c.fill();c.fillStyle='#253431';round(c,-19,-15,34,29,4);c.fill();c.fillStyle='#4e5c47';round(c,-14,-10,27,19,3);c.fill();c.strokeStyle='#182c2b';c.lineWidth=2;c.beginPath();c.moveTo(-13,-8);c.lineTo(9,9);c.moveTo(-8,8);c.lineTo(10,-8);c.stroke();c.fillStyle='#1c302e';c.beginPath();c.arc(-1,0,9,0,Math.PI*2);c.fill();c.fillRect(1,2,19,5);c.fillStyle='#bd8b4640';c.fillRect(-8,-4,8,2);c.restore();}
 function draw(g,aim,phase){if(!g)return;if(current!==g)build(g);scars(g);if(wallCount!==g.walls.length)paintWalls(g);c.clearRect(0,0,960,600);c.drawImage(floor.el,0,0,960,600);
  // Soft canopy shadows provide atmosphere while keeping every collision boundary visible.
@@ -55,3 +55,4 @@ function draw(g,aim,phase){if(!g)return;if(current!==g)build(g);scars(g);if(wall
 return {draw};}
 root.RicochetRenderer={create};
 })(typeof window!=='undefined'?window:globalThis);
+
