@@ -3723,13 +3723,18 @@ const GAMES = [
     { id: "god", name: "Guess or Die", desc: "Hangman with attitude — guess the word before the stick man dies!", emoji: "💀", emoji2: "☠️", color: "#FFD740", bg: "linear-gradient(135deg,#0a0a0a,#1a0a1a)", tags: ["Words", "2-6"] },
 ];
 function MainMenu({ onSelectGame }) {
-    return (React.createElement("div", { style: { minHeight: "100vh", background: "linear-gradient(135deg,#0f0c29,#302b63,#24243e)", padding: "20px 16px", fontFamily: "'Fredoka',sans-serif", color: "#fff", position: "relative", overflow: "hidden" } },
+    const [marioMode, setMarioMode] = useState(() => { try { return localStorage.getItem("spencer_mario_mode_v1") === "true"; } catch (_) { return false; } });
+    const toggleMarioMode = () => { const next = !marioMode; setMarioMode(next); try { localStorage.setItem("spencer_mario_mode_v1", String(next)); } catch (_) {} };
+    return (React.createElement("div", { className: "sg-main-menu", style: { minHeight: "100vh", background: marioMode ? "#AA151B" : "linear-gradient(135deg,#0f0c29,#302b63,#24243e)", padding: "20px 16px", fontFamily: "'Fredoka',sans-serif", color: "#fff", position: "relative", overflow: "hidden" } },
+        marioMode && React.createElement("div", { "aria-hidden": true, style: { position: "fixed", inset: 0, background: "linear-gradient(to bottom,#AA151B 0%,#AA151B 25%,#F1BF00 25%,#F1BF00 75%,#AA151B 75%,#AA151B 100%)", pointerEvents: "none" } }),
         React.createElement("div", { style: { position: "fixed", top: "8%", left: "8%", fontSize: 48, animation: "menuFloat 4s infinite ease-in-out", opacity: .15, pointerEvents: "none" } }, "\uD83C\uDFAE"),
         React.createElement("div", { style: { position: "fixed", top: "15%", right: "10%", fontSize: 40, animation: "menuFloat2 5s infinite ease-in-out", opacity: .12, pointerEvents: "none" } }, "\uD83C\uDFB2"),
         React.createElement("div", { style: { position: "fixed", bottom: "20%", left: "12%", fontSize: 36, animation: "menuFloat 6s 1s infinite ease-in-out", opacity: .1, pointerEvents: "none" } }, "\uD83C\uDFC6"),
         React.createElement("div", { style: { position: "fixed", bottom: "12%", right: "8%", fontSize: 44, animation: "menuFloat2 4.5s .5s infinite ease-in-out", opacity: .12, pointerEvents: "none" } }, "\uD83C\uDFAA"),
         Array.from({ length: 20 }).map((_, i) => React.createElement("div", { key: i, style: { position: "fixed", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, width: 2 + Math.random() * 3, height: 2 + Math.random() * 3, borderRadius: "50%", background: "rgba(255,255,255,.15)", animation: `pulse ${2 + Math.random() * 4}s ${Math.random() * 3}s infinite`, pointerEvents: "none" } })),
         React.createElement("div", { style: { maxWidth: 520, margin: "0 auto", position: "relative", zIndex: 1 } },
+            React.createElement("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: 12 } },
+                React.createElement("button", { type: "button", "aria-pressed": marioMode, onClick: toggleMarioMode, style: { minHeight: 44, padding: "10px 15px", borderRadius: 24, border: "2px solid " + (marioMode ? "#F1BF00" : "#54718c"), background: "#0d263c", color: "#fff", fontWeight: 800, cursor: "pointer", boxShadow: "0 3px 12px rgba(0,0,0,.25)" } }, "🇪🇸 Mario mode: " + (marioMode ? "ON" : "OFF"))),
             React.createElement("div", { style: { textAlign: "center", marginBottom: 28 } },
                 React.createElement("img", {
                     src: "assets/spencer-games-intro.png?v=edgefix1",
