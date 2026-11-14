@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<meta name="spencer-games-version" content="v4.21">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -171,7 +172,7 @@
 
 </style>
 <link rel="stylesheet" href="assets/spencer-theme.css?v=4.19">
-<script src="/version.js?v=4.19"></script>
+<script src="/version.js?v=4.21"></script>
 </head>
 <body class="sg-corporate">
 
@@ -700,7 +701,7 @@ function TreasureDive({players, onMenu}) {
                 tdH("button",{className:"tdp-mode",onClick:()=>setMode("classic")},
                     tdH("strong",null,"🤿 CLASSIC MODE"),tdH("span",null,"The original Treasure Dive: collect treasure, dodge monsters and bank 100 points."),tdH("em",null,"ORIGINAL RULES"))),
             tdButton("🏠 Back to games",onMenu,"#31516b"),
-            tdH("small",{className:"tdp-muted"},"Spencer Games v4.18")));
+            tdH("small",{className:"tdp-muted"},"Spencer Games v4.21")));
 }
 function TreasureDiveParty({players:initPlayers,onMenu}) {
     const makePlayers=()=>initPlayers.map((p,i)=>({...p,id:i,score:0,shield:false,magnet:false,sonar:0,curse:0,finds:0,saves:0,deepest:0,lastChanceUsed:false}));
@@ -937,7 +938,7 @@ function TreasureDiveParty({players:initPlayers,onMenu}) {
                             item.id==="curse"&&tdH("div",{className:"tdp-targets"},players.filter(p=>p.id!==cur).map(p=>tdH("button",{key:p.id,onClick:()=>setCurseTarget(p.id),className:curseTarget===p.id?"selected":""},p.emoji," ",p.name)))),
                         tdButton(`${item.cost} 🪙`,()=>buy(item),"#bc7a12",cp.score<item.cost||(item.id==="shield"&&cp.shield)||(item.id==="magnet"&&cp.magnet)||(item.id==="sonar"&&cp.sonar>0)||(item.id==="curse"&&curseTarget===null)))))),
             tdH("p",{className:"tdp-footnote"},"Bank before a monster to keep treasure. Monsters erase only your unbanked bag; bought items cost real points.")),
-        tdH("footer",{className:"tdp-footer"},tdH("button",{onClick:onMenu},"🏠 Back to Games"),tdH("span",null,"Spencer Games v4.18"))));
+        tdH("footer",{className:"tdp-footer"},tdH("button",{onClick:onMenu},"🏠 Back to Games"),tdH("span",null,"Spencer Games v4.21"))));
 }
 
 const EMOJI_POOL = ["🍕", "🚀", "🎸", "🌈", "🦄", "🍩", "🎯", "🌮", "🐸", "🎪", "🍉", "🔥", "🌻", "🎲", "🐵", "🍦", "🎈", "⚡", "🦊", "🎃", "🌺", "🍄", "🐝", "🎵", "🦋", "🍿", "🧁", "🐳", "🌙", "🎩"];
@@ -3814,21 +3815,21 @@ function BonkersBox() {
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
         screen === "swatthat" && React.createElement("div", { style: { minHeight: "100dvh", background: "#85d9fb", position: "relative", zIndex: 99997 } },
-            React.createElement("iframe", { src: "swat-that/index.html?v=4.19-players", title: "SWAT THAT!", onLoad: () => document.body.classList.add("bb-swatthat-active"), style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#85d9fb" } })),
+            React.createElement("iframe", { src: "swat-that/index.html?v=4.21", title: "SWAT THAT!", onLoad: () => document.body.classList.add("bb-swatthat-active"), style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#85d9fb" } })),
         screen === "flash" && React.createElement("div", { style: { minHeight: "100vh", background: "#070b19", position: "relative" } },
-            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.19", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "flash-frenzy/index.html?v=4.21", title: "Flash Frenzy!", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "speedway" && React.createElement("div", { style: { minHeight: "100vh", background: "#130d08", position: "relative" } },
-            React.createElement("iframe", { src: "speedway/index.html?v=4.19", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "speedway/index.html?v=4.21", title: "Speedway Slide", style: { width: "100%", height: "100vh", border: 0, display: "block", background: "#06182a" } })),
         screen === "tanks" && React.createElement("div", { style: { minHeight: "100vh", background: "#152c35", position: "relative" } },
-            React.createElement("iframe", { src: "ricochet-tanks/index.html?v=0.3", title: "Ricochet Tanks", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#152c35" } })),
+            React.createElement("iframe", { src: "ricochet-tanks/index.html?v=0.3&release=4.21", title: "Ricochet Tanks", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#152c35" } })),
         screen === "trackfield" && React.createElement("div", { style: { minHeight: "100vh", background: "#f5f0df", position: "relative" } },
-            React.createElement("iframe", { src: "track-field/index.html?v=0.1", title: "The Track and Field Thingimagig", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#f5f0df" } })),
+            React.createElement("iframe", { src: "track-field/index.html?v=0.1&release=4.21", title: "The Track and Field Thingimagig", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#f5f0df" } })),
         screen === "supercross" && React.createElement("div", { style: { minHeight: "100vh", background: "#0b1520", position: "relative" } },
-            React.createElement("iframe", { src: "supercross/index.html?v=0.2", title: "Supercross Flow", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#0b1520" } })),
+            React.createElement("iframe", { src: "supercross/index.html?v=0.2&release=4.21", title: "Supercross Flow", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#0b1520" } })),
         screen === "holeshot" && React.createElement("div", { style: { minHeight: "100vh", background: "#06182a", position: "relative" } },
-            React.createElement("iframe", { src: "holeshot/index.html?v=4.19", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
+            React.createElement("iframe", { src: "holeshot/index.html?v=4.21", title: "Holeshot King", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } })),
         screen === "rallycrossx" && React.createElement("div", { style: { minHeight: "100vh", background: "#07111f", position: "relative" } },
-            React.createElement("iframe", { src: "rally-cross-x/index.html?v=0.6.10", title: "Rally Cross X", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
+            React.createElement("iframe", { src: "rally-cross-x/index.html?v=0.6.10&release=4.21", title: "Rally Cross X", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#06182a" } }))));
 }
 
 
@@ -3942,7 +3943,7 @@ try {
  document.getElementById('bb-live-back').onclick=function(){live.style.display='none';welcome.style.display='block';document.body.style.overflow='hidden';};
  document.getElementById('bb-live-host').onclick=function(){window.location.href='live/?mode=host';};
  document.getElementById('bb-live-join').onclick=function(){window.location.href='live/?mode=join';};
- document.getElementById('bb-live-speedway').onclick=function(){window.location.href='speedway/live.html?v=4.19-speedway-2';};
+ document.getElementById('bb-live-speedway').onclick=function(){window.location.href='speedway/live.html?v=4.21';};
  document.getElementById('bb-rules-first').onclick=openHelp;
  document.getElementById('bb-help-button').onclick=openHelp;
  document.getElementById('bb-close-help').onclick=closeHelp;

@@ -1,6 +1,6 @@
-# Spencer Games v4.18
+# Spencer Games v4.21
 
-Current build: Treasure Dive Party Mode now uses quiet round balancing from the second round, with no onscreen balancing notices. Shop, special events, and Classic Mode remain available. Rally Cross X continues to replace Draw Dash. Speedway and Holeshot King leaderboards and Supabase schema remain unchanged.
+Current release: v4.21 brings together the latest multiplayer media fix, Rally Cross X lap recording, Ricochet Tanks (including the Crucible), Supercross Flow, The Track and Field Thingimagig and Mario mode. Shared version labels and local asset cache tags are refreshed. Existing scores, device storage keys and Supabase data are retained. See [VERSION-v4.21.md](VERSION-v4.21.md).
 
 # Spencer Games — Deployable Master
 
