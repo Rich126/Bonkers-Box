@@ -20,6 +20,7 @@
 </style>
 <link rel="stylesheet" href="../assets/spencer-theme.css?v=4.12">
 <script src="/version.js?v=4.21"></script>
+<link rel="stylesheet" href="party.css?v=4.21-party-1">
 </head>
 <body class="sg-corporate">
 <main class="wrap" id="app">
@@ -30,6 +31,7 @@
   </div>
   <p class="sg-live-note">Family party games for ages 5–100. Everyone joins from their own phone.</p>
   <div id="service-status" class="status warn">Checking multiplayer connection…</div>
+  <div id="party-gifts" class="pm-gifts hidden" role="status"></div>
   <details id="connection-diagnostics" class="diag">
     <summary>Connection diagnostics</summary>
     <div class="diag-body">
@@ -56,6 +58,7 @@
     <div class="form-row"><label>Choose a Spencer Live game</label><div class="game-grid" id="game-grid">
       <button type="button" class="game-btn selected" data-game="quiz"><strong>🧠 Family Mega Quiz</strong><small>Choose the length and topics, then play a fresh family-adaptive question set.</small></button>
       <button type="button" class="game-btn" data-game="creative"><strong>📸🎙️ Creative Party</strong><small>Picture, sound and impression challenges, including people in the room and celebrities.</small></button>
+      <button type="button" class="game-btn" data-game="party"><strong>🏔️👑 Party Mountain</strong><small>Quiz, pictures and audio + quick minigames, catch-up gifts and a chaotic climb to the crown. Every star = one starting step.</small></button>
       <button type="button" class="game-btn" data-game="mix"><strong>🎲 Spencer Mix</strong><small>A shuffled blend of quiz questions, picture/sound challenges and impressions.</small></button>
       <button type="button" class="game-btn" data-game="speedway"><strong>🏍️ Speedway Live</strong><small>2–4 riders race simultaneously on their own phones. Opens the dedicated motorsport lobby.</small></button>
     </div></div>
@@ -173,6 +176,7 @@
     </div>
   </section>
 
+  <section id="screen-party" class="panel pm-panel hidden"></section>
   <section id="screen-leaderboard" class="panel hidden">
     <h2 id="leaderboard-title">🏆 Leaderboard</h2>
     <div id="leaderboard" class="leaderboard"></div>
@@ -195,7 +199,10 @@
 <script src="supabase.min.js?release=4.21"></script>
 <script src="qr.js?release=4.21"></script>
 <script src="music.js?v=4.21"></script>
-<script src="app.js?v=4.21"></script>
+<script src="party-core.js?v=4.21-party-1"></script>
+<script src="party-live.js?v=4.21-party-1"></script>
+<script src="app.js?v=4.21-party-1"></script>
 </body>
 </html>
+
 

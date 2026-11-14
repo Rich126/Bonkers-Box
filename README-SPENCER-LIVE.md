@@ -131,3 +131,30 @@ Recorder callbacks use their own chunks, MIME type and capture revision. Abandon
 The existing unique private storage paths, non-upsert upload method and one-entry-per-player-per-round rule are retained. No schema, bucket policy, credentials, SDK version or Speedway data changes are required.
 
 Validation: `node live/tests/media-capture.cjs` covers consecutive audio/photo rounds, MP4 chunks, re-recording, retry after failure, polling, stale recorder/permission callbacks, duplicate uploads, late upload cleanup and same-round replay reset. `live/tests/browser-media.cjs` uses native Chromium MediaRecorder with a synthetic audio stream and mocked private storage to exercise two consecutive recording/submission rounds. Requires Playwright and Chromium; optionally set MEDIA_BROWSER_PATH. Real-device microphone permissions and the live Supabase service still need session testing.
+
+
+## Party Mountain — mixed party rounds and crown finale
+
+Choose **Party Mountain** in the multiplayer host game selector. Existing Quiz, Creative Party, Spencer Mix and Speedway modes remain available. Party Mountain uses individual climbers (up to the existing 20-player room limit).
+
+Each block of five rounds contains a family-adaptive question, a picture challenge, a quick minigame, a sound/impression challenge and another minigame. Standard 5/10/15/20-round lengths are supported. Picture/audio capture, private storage, heats/finals voting and repeat-recording fixes are retained.
+
+Quick games: Bubble Trouble (pop green, avoid red), Stop the Clock (feel five seconds), Snack Stack (five timed pancake drops), Cloud Count (count stars among clouds) and Lucky Doors (a quick luck round). Each has a ready button and simple phone controls. Players can start when ready within a 60-second round; the host can reveal early or the round resolves automatically when everyone is done/time expires. Unsubmitted attempts earn nothing.
+
+### Stars and closeness
+
+Quiz: 3 stars for a correct answer, 1 for trying. Creative voting: winners 3, second place 2, other submissions 1. Minigames: ranked 3/2/1, with tied marks sharing rank. Trailing players at the joint-lowest star total receive a Star Magnet: +1 star for completing that round. Other players get Lucky Gloves (+50 minigame points before ranking). Gifts are shown before play, not silently applied. Stars are committed by the host to a room-state ledger, with per-round award IDs and compare-and-set room revisions to prevent refreshes/duplicate host actions awarding twice.
+
+### Climb to the Crown
+
+After the mixed rounds, every star is exactly one starting step — no points conversion or multiplier. The summit is the higher of 24 steps or the leading star total +12. Earned stars never change during the climb.
+
+Every 25-second turn, choose Steady Trail (2 steps), Risky Ridge (slip or 1–5) or Wild Cloud Lift (6, zero or a setback). Gifts are recomputed from current positions: trailing climbers get Rocket Boots (+3) or Super Grapple (+2 plus storm protection); leaders mostly get protection or +1 boots. Middle climbers can get a snowball that knocks a current leader back, with total snowball loss capped at three steps per turn. Gifts are automatic and labelled. Route outcomes are seeded once per turn, so reconnecting cannot reroll them. Missing choices do not move. Multiple players reaching the summit in the same resolution share the crown. At 30 turns without a summit, weather ends the climb without inventing a winner.
+
+The host remains the big-screen guide and can end the game; players use their own phones. Replay returns the room to the lobby with a fresh round order. Media is cleaned up before the mountain as well as on ordinary game end.
+
+### Compatibility and validation
+
+No new SQL, tables, policies, credentials or Realtime publication changes are required. Party state uses the existing rooms JSON and answers schema; mountain choices use question slots starting at 1001. Party stars do not invoke the existing creative-points triggers or change racing leaderboards. This retains Spencer Live's casual, client-reported trust model, not a competitive anti-cheat service.
+
+Tests: `node live/tests/party-core.cjs`; `node live/tests/media-capture.cjs`. Playwright tests: `live/tests/party-minigames.cjs`, `live/tests/party-browser.cjs`, `live/tests/browser-media.cjs` (set PARTY_BROWSER_PATH or MEDIA_BROWSER_PATH if needed). They cover all five minigames through phone-sized controls; a host and two simulated phones playing quiz, photo/audio capture and voting, minigames and the crown; idempotent stars; exact head starts; catch-up comebacks; ties; and consecutive native MediaRecorder uploads. Live schema/policies were inspected read-only. Network writes in these tests use mocked transport; a real family session and hands-on iPhone/iPad validation remain to be done.

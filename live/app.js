@@ -49,6 +49,8 @@
   const configured=Boolean(cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY&&window.supabase);
   const db=configured?window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY):null;
   const MEDIA_BUCKET='spencer-live-media';
+  const mixedGame=key=>key==='mix'||key==='party';
+  const isParty=()=>settingsOf().gameKey==='party';
 
   const avatars=['🦊','🐙','🦁','🐸','🦄','🐼','🐯','🦖','🐵','🐧','🐨','🦈'];
   const teams=[['Red','🔴 Red'],['Blue','🔵 Blue'],['Green','🟢 Green'],['Yellow','🟡 Yellow']];
@@ -72,7 +74,7 @@
   function syncMusic(mode){if(!music)return;music.setHostActive(musicHostActive());music.setMode(mode||'lobby');updateMusicButton();}
   function stopHostMusic(){if(!music)return;hostMusicPreview=false;music.setHostActive(false);updateMusicButton();}
 
-  const screens=['choice','host','join','lobby','game','creative-capture','creative-vote','creative-result','leaderboard','finished'];
+  const screens=['choice','host','join','lobby','game','creative-capture','creative-vote','creative-result','leaderboard','finished','party'];
   function show(name){screens.forEach(x=>{const el=$('screen-'+x);if(el)el.classList.toggle('hidden',x!==name);});}
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function cleanName(v){return String(v||'').trim().replace(/\s+/g,' ').slice(0,24);}
@@ -85,10 +87,10 @@
     const s=(room&&room.settings)||{},availableTopics=quizTopics();
     const topics=Array.isArray(s.topics)&&s.topics.length?s.topics.filter(t=>availableTopics.includes(t)):availableTopics.slice();
     const order=Array.isArray(s.questionOrder)?s.questionOrder.map(String).filter(id=>questionById.has(id)):[];
-    const mixOrder=Array.isArray(s.mixOrder)?s.mixOrder.map(String).filter(token=>{const [kind,id]=token.split(':');return (kind==='q'&&questionById.has(id))||(kind==='c'&&mixCreativeById.has(id));}):[];
-    const gameKey=s.gameKey==='creative'?'creative':s.gameKey==='mix'?'mix':'quiz';
+    const mixOrder=Array.isArray(s.mixOrder)?s.mixOrder.map(String).filter(token=>{const [kind,id]=token.split(':');return (kind==='q'&&questionById.has(id))||(kind==='c'&&mixCreativeById.has(id))||(s.gameKey==='party'&&kind==='p'&&window.PartyMountain.games.some(g=>g.id===id));}):[];
+    const gameKey=s.gameKey==='party'?'party':s.gameKey==='creative'?'creative':s.gameKey==='mix'?'mix':'quiz';
     const requested=clamp(Number(s.questionCount)||Number(s.roundCount)||5,1,Math.max(1,quiz.questions.length));
-    const roundCount=gameKey==='mix'?(mixOrder.length||clamp(Number(s.roundCount)||10,1,20)):gameKey==='creative'?creative.rounds.length:(order.length?Math.min(requested,order.length):requested);
+    const roundCount=mixedGame(gameKey)?(mixOrder.length||clamp(Number(s.roundCount)||10,1,20)):gameKey==='creative'?creative.rounds.length:(order.length?Math.min(requested,order.length):requested);
     return {gameMode:s.gameMode==='teams'?'teams':'individual',adaptive:s.adaptive!==false,questionSeconds:clamp(Number(s.questionSeconds)||30,10,120),gameKey,questionCount:order.length?Math.min(requested,order.length):requested,roundCount,topics,questionOrder:order,mixOrder};
   }
   function gs(){return (currentRoom&&currentRoom.game_state)||{};}
@@ -100,9 +102,9 @@
   function quizTotal(){const s=settingsOf();return s.questionOrder.length||Math.min(s.questionCount,quiz.questions.length);}
   function mixTotal(){const s=settingsOf();return s.mixOrder.length||s.roundCount||0;}
   function questionAt(i){const index=Number(i),s=settingsOf();const id=s.questionOrder[index];return (id&&questionById.get(id))||quiz.questions[index]||null;}
-  function questionForState(state=gs()){if(settingsOf().gameKey==='mix'&&state.questionId)return questionById.get(String(state.questionId))||null;return questionAt(state.questionIndex);}
+  function questionForState(state=gs()){if(mixedGame(settingsOf().gameKey)&&state.questionId)return questionById.get(String(state.questionId))||null;return questionAt(state.questionIndex);}
   function creativeAt(i){return creative.rounds[Number(i)]||null;}
-  function creativeRoundForState(state=gs()){if(settingsOf().gameKey==='mix'&&state.creativeId)return mixCreativeById.get(String(state.creativeId))||null;return creativeAt(state.creativeIndex);}
+  function creativeRoundForState(state=gs()){if(mixedGame(settingsOf().gameKey)&&state.creativeId)return mixCreativeById.get(String(state.creativeId))||null;return creativeAt(state.creativeIndex);}
   function playerAge(player){return exactAge(player&&player.age_band);}
   function resolvedQuestion(q,player,adaptive=settingsOf().adaptive){
     const age=adaptive&&player?playerAge(player):30;
@@ -114,7 +116,7 @@
   function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem(SESSION_KEY);}catch(_){}try{sessionStorage.removeItem('spencer_live_room');}catch(_){}}
   function savedSession(){for(const store of [localStorage,sessionStorage]){try{const raw=store.getItem(SESSION_KEY)||store.getItem('spencer_live_room');if(raw){const parsed=JSON.parse(raw);if(parsed&&parsed.roomId&&parsed.role)return parsed;}}catch(_){}}return null;}
   function setHomeGuard(active){const home=$('site-home');if(!home)return;home.classList.toggle('guarded',Boolean(active));home.setAttribute('aria-disabled',active?'true':'false');home.textContent=active?'🎮 Game Active':'← Spencer Games';}
-  function gameName(key=settingsOf().gameKey){return key==='creative'?'Creative Party':key==='mix'?'Spencer Mix':'Family Mega Quiz';}
+  function gameName(key=settingsOf().gameKey){return key==='party'?'Party Mountain':key==='creative'?'Creative Party':key==='mix'?'Spencer Mix':'Family Mega Quiz';}
   function isCreativeState(state=gs()){return String(state.phase||'').startsWith('creative_');}
   function isCreativeRoundState(state=gs()){return isCreativeState(state)||state.roundType==='creative';}
 
@@ -162,12 +164,14 @@
     const creativePositions=new Set();for(let i=1;i<=counts.creativeCount;i++){let pos=Math.floor(i*total/(counts.creativeCount+1));pos=clamp(pos,1,total-2);while(creativePositions.has(pos)&&pos<total-1)pos++;creativePositions.add(pos);}
     const result=[];let qi=0,ci=0;for(let i=0;i<total;i++){if(creativePositions.has(i)&&ci<creativeIds.length)result.push('c:'+creativeIds[ci++]);else if(qi<questionIds.length)result.push('q:'+questionIds[qi++]);else result.push('c:'+creativeIds[ci++]);}return result;
   }
+  function buildPartyOrder(topics,total){const n=Math.ceil(total/5),questions=buildQuestionOrder(topics,n),pictures=shuffle(mixCreativeRounds.filter(r=>r.kind==='picture')).map(r=>r.id),sounds=shuffle(mixCreativeRounds.filter(r=>r.kind==='sound')).map(r=>r.id);return window.PartyMountain.order(total,questions,pictures,sounds,String(Date.now()));}
+  function selectedMixOrder(topics,total,key=selectedGame){return key==='party'?buildPartyOrder(topics,total):buildMixOrder(topics,total);}
   function updateGameLengthNote(){
     if(!$('game-length-note')||!$('game-length'))return;const count=clamp(Number($('game-length').value)||10,1,20),options=Array.from($('game-length').options);
     options.forEach(o=>{const n=Number(o.value),prefix=n===5?'Quick':n===10?'Standard':n===15?'Long':'Epic';o.textContent=selectedGame==='quiz'?prefix+' • '+n+' questions':prefix+' • '+n+' rounds';});
-    if(selectedGame==='mix'){const c=mixCounts(count);$('game-length-note').textContent=count+' rounds • '+c.quizCount+' quiz + '+c.creativeCount+' creative challenges.';}else $('game-length-note').textContent=count+' questions will be chosen for this room.';
+    if(selectedGame==='party'){$('game-length-note').textContent=count+' rounds · quiz, photos, audio + quick minigames · then the mountain finale. Every star = one starting step.';return;}if(mixedGame(selectedGame)){const c=mixCounts(count);$('game-length-note').textContent=count+' rounds • '+c.quizCount+' quiz + '+c.creativeCount+' creative challenges.';}else $('game-length-note').textContent=count+' questions will be chosen for this room.';
   }
-  function syncGameSetupVisibility(){const usesQuiz=selectedGame==='quiz'||selectedGame==='mix';$('quiz-settings').classList.toggle('hidden',!usesQuiz);$('creative-privacy').classList.toggle('hidden',selectedGame==='quiz');if(selectedGame==='mix')$('creative-privacy').textContent='🔒 Spencer Mix creative photos and audio are stored privately and cleaned up when the host ends the game.';else $('creative-privacy').textContent='🔒 Creative photos and audio are stored privately and are cleaned up when the host ends the game.';updateGameLengthNote();}
+  function syncGameSetupVisibility(){document.querySelectorAll('.mode-btn').forEach(b=>b.disabled=selectedGame==='party');if(selectedGame==='party'){selectedMode='individual';document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('selected',b.dataset.mode==='individual'));}const usesQuiz=selectedGame==='quiz'||mixedGame(selectedGame);$('quiz-settings').classList.toggle('hidden',!usesQuiz);$('creative-privacy').classList.toggle('hidden',selectedGame==='quiz');if(mixedGame(selectedGame))$('creative-privacy').textContent='🔒 Spencer Mix creative photos and audio are stored privately and cleaned up when the host ends the game.';else $('creative-privacy').textContent='🔒 Creative photos and audio are stored privately and are cleaned up when the host ends the game.';updateGameLengthNote();}
   function buildTopicButtons(){const box=$('topic-grid');box.innerHTML='';quizTopics().forEach((topic,i)=>{const label=document.createElement('label');label.className='topic-option';const input=document.createElement('input');input.type='checkbox';input.value=topic;input.checked=true;input.id='topic-'+i;const span=document.createElement('span');span.textContent=topic;label.append(input,span);box.appendChild(label);});}
 
   function buildChoiceButtons(){
@@ -178,7 +182,7 @@
     const teamBox=$('team-grid');
     teams.forEach(([value,label],i)=>{const b=document.createElement('button');b.type='button';b.className='team-btn'+(i===0?' selected':'');b.textContent=label;b.addEventListener('click',()=>{selectedTeam=value;teamBox.querySelectorAll('.team-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});teamBox.appendChild(b);});
     document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{selectedMode=b.dataset.mode;document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('selected',x===b));}));
-    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.game==='speedway'){window.location.href='../speedway/live.html?v=4.19-speedway-2&mode=host';return;}selectedGame=b.dataset.game==='creative'?'creative':b.dataset.game==='mix'?'mix':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));syncGameSetupVisibility();}));
+    document.querySelectorAll('.game-btn').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.game==='speedway'){window.location.href='../speedway/live.html?v=4.19-speedway-2&mode=host';return;}selectedGame=b.dataset.game==='creative'?'creative':b.dataset.game==='mix'?'mix':b.dataset.game==='party'?'party':'quiz';document.querySelectorAll('.game-btn').forEach(x=>x.classList.toggle('selected',x===b));syncGameSetupVisibility();}));
   }
   buildChoiceButtons();
   buildTopicButtons();syncGameSetupVisibility();updateGameLengthNote();
@@ -210,7 +214,7 @@
       $('join-room-info').innerHTML='<div class="error">Room not found or no longer open.</div>';return;
     }
     const s=settingsOf(data);joinRoomSettings=s;
-    const detail=s.gameKey==='quiz'?' • '+s.questionCount+' questions'+(s.adaptive?' • Family Adaptive':''):s.gameKey==='mix'?' • '+s.roundCount+' mixed rounds'+(s.adaptive?' • Family Adaptive':''):'';
+    const detail=s.gameKey==='quiz'?' • '+s.questionCount+' questions'+(s.adaptive?' • Family Adaptive':''):mixedGame(s.gameKey)?' • '+s.roundCount+' mixed rounds'+(s.adaptive?' • Family Adaptive':''):'';
     $('join-room-info').innerHTML='<div class="room-info">Room found • '+escapeHtml(gameName(s.gameKey))+' • '+(s.gameMode==='teams'?'Teams':'Individuals')+detail+'</div>';
     $('team-row').classList.toggle('hidden',s.gameMode!=='teams');
   }
@@ -223,18 +227,18 @@
   async function createRoom(){
     msg($('host-message'),'');if(!configured){msg($('host-message'),'Multiplayer service is not configured.');return;}
     const hostName=cleanName($('host-name').value)||'Host';
-    const usesQuiz=selectedGame==='quiz'||selectedGame==='mix',topics=usesQuiz?selectedTopicNames():[],length=usesQuiz?clamp(Number($('game-length').value)||10,1,20):0;
+    const usesQuiz=selectedGame==='quiz'||mixedGame(selectedGame),topics=usesQuiz?selectedTopicNames():[],length=usesQuiz?clamp(Number($('game-length').value)||10,selectedGame==='party'?5:1,20):0;
     if(usesQuiz&&!topics.length){msg($('host-message'),'Choose at least one question topic.');return;}
     const questionOrder=selectedGame==='quiz'?buildQuestionOrder(topics,length):[];
-    const mixOrder=selectedGame==='mix'?buildMixOrder(topics,length):[];
+    const mixOrder=mixedGame(selectedGame)?selectedMixOrder(topics,length):[];
     if(selectedGame==='quiz'&&questionOrder.length<length){msg($('host-message'),'There are not enough questions for that combination yet. Choose another topic or a shorter game.');return;}
-    if(selectedGame==='mix'&&mixOrder.length<length){msg($('host-message'),'Spencer Mix could not build this round set. Refresh once and try again. If it continues, the creative challenge pack has not loaded correctly.');return;}
-    const settings={gameMode:selectedMode,adaptive:$('adaptive').checked,questionSeconds:Number($('question-seconds').value)||30,gameKey:selectedGame};
+    if(mixedGame(selectedGame)&&mixOrder.length<length){msg($('host-message'),'Spencer Mix could not build this round set. Refresh once and try again. If it continues, the creative challenge pack has not loaded correctly.');return;}
+    const settings={gameMode:selectedGame==='party'?'individual':selectedMode,adaptive:$('adaptive').checked,questionSeconds:Number($('question-seconds').value)||30,gameKey:selectedGame};
     if(selectedGame==='quiz'){settings.questionCount=length;settings.topics=topics;settings.questionOrder=questionOrder;}
-    if(selectedGame==='mix'){settings.roundCount=length;settings.topics=topics;settings.mixOrder=mixOrder;settings.questionOrder=mixOrder.filter(x=>x.startsWith('q:')).map(x=>x.slice(2));settings.questionCount=settings.questionOrder.length;}
+    if(mixedGame(selectedGame)){settings.roundCount=length;settings.topics=topics;settings.mixOrder=mixOrder;settings.questionOrder=mixOrder.filter(x=>x.startsWith('q:')).map(x=>x.slice(2));settings.questionCount=settings.questionOrder.length;}
     $('create-room').disabled=true;
     try{
-      if(selectedGame==='creative'||selectedGame==='mix')await assertPhase3Ready();
+      if(selectedGame==='creative'||mixedGame(selectedGame))await assertPhase3Ready();
       let room=null;
       for(let attempt=0;attempt<8;attempt++){
         const code=randomCode();
@@ -244,7 +248,7 @@
         if(error.code!=='23505')throw error;
       }
       if(!room)throw new Error('Could not create a unique room code. Please try again.');
-      roomId=room.id;roomCode=room.code;role='host';hostMusicPreview=false;playerId=null;currentRoom=room;syncMusic('lobby');if(selectedGame==='quiz')rememberQuestionIds(questionOrder);if(selectedGame==='mix'){rememberQuestionIds(settings.questionOrder);rememberCreativeIds(mixOrder.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)));}saveSession();await subscribeRoom();await openExperience();
+      roomId=room.id;roomCode=room.code;role='host';hostMusicPreview=false;playerId=null;currentRoom=room;syncMusic('lobby');if(selectedGame==='quiz')rememberQuestionIds(questionOrder);if(mixedGame(selectedGame)){rememberQuestionIds(settings.questionOrder);rememberCreativeIds(mixOrder.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)));}saveSession();await subscribeRoom();await openExperience();
     }catch(e){msg($('host-message'),friendlyError(e));}
     finally{$('create-room').disabled=false;}
   }
@@ -317,17 +321,17 @@
     renderPlayers();renderHostAnswerCount();renderCreativeCounts();
   }
   async function loadAnswers(){
-    if(!db||!roomId)return;const q=Number(gs().questionIndex);if(!Number.isFinite(q)){currentAnswers=[];return;}
-    const {data,error}=await db.from('answers').select('*').eq('room_id',roomId).eq('question_index',q);if(error){console.error(error);return;}currentAnswers=data||[];renderHostAnswerCount();if((settingsOf().gameKey==='quiz'||settingsOf().gameKey==='mix')&&!isCreativeRoundState(gs()))renderGame();
+    if(!db||!roomId)return;const requestRoom=roomId,requestSeed=gs().partySeed;const q=Number(gs().questionIndex);if(!Number.isFinite(q)){currentAnswers=[];return;}
+    const {data,error}=await db.from('answers').select('*').eq('room_id',roomId).eq('question_index',q);if(error){console.error(error);return;}if(isParty()&&(roomId!==requestRoom||gs().partySeed!==requestSeed||Number(gs().questionIndex)!==q))return;currentAnswers=data||[];if(isParty()){renderCurrentView();return;}renderHostAnswerCount();if((settingsOf().gameKey==='quiz'||mixedGame(settingsOf().gameKey))&&!isCreativeRoundState(gs()))renderGame();
   }
   async function loadCreativeData(){
-    if(!db||!roomId)return;const r=creativeDataRoundIndex(gs());if(!Number.isFinite(r)){currentSubmissions=[];currentVotes=[];return;}
+    if(!db||!roomId)return;const requestRoom=roomId,requestKey=creativeRoundKey();const r=creativeDataRoundIndex(gs());if(!Number.isFinite(r)){currentSubmissions=[];currentVotes=[];return;}
     const [{data:subs,error:subErr},{data:votes,error:voteErr}]=await Promise.all([
       db.from('creative_submissions').select('*').eq('room_id',roomId).eq('round_index',r).order('submitted_at',{ascending:true}),
       db.from('creative_votes').select('*').eq('room_id',roomId).eq('round_index',r)
     ]);
     if(subErr){console.error(subErr);return;}if(voteErr){console.error(voteErr);return;}
-    currentSubmissions=subs||[];currentVotes=votes||[];renderCreativeCounts();if((settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')&&isCreativeRoundState(gs()))renderCurrentView();
+    if(roomId!==requestRoom||creativeRoundKey()!==requestKey)return;currentSubmissions=subs||[];currentVotes=votes||[];renderCreativeCounts();if((settingsOf().gameKey==='creative'||mixedGame(settingsOf().gameKey))&&isCreativeRoundState(gs()))renderCurrentView();
   }
 
   async function pollRoom(){
@@ -344,9 +348,9 @@
     channel=db.channel('spencer-live-'+roomId)
       .on('postgres_changes',{event:'*',schema:'public',table:'rooms',filter:'id=eq.'+roomId},async()=>{if(await loadRoom())await openExperience();})
       .on('postgres_changes',{event:'*',schema:'public',table:'players',filter:'room_id=eq.'+roomId},async()=>{await loadPlayers();if(currentRoom&&currentRoom.status!=='lobby')renderCurrentView();})
-      .on('postgres_changes',{event:'*',schema:'public',table:'answers',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='quiz'||settingsOf().gameKey==='mix')await loadAnswers();})
-      .on('postgres_changes',{event:'*',schema:'public',table:'creative_submissions',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')await loadCreativeData();})
-      .on('postgres_changes',{event:'*',schema:'public',table:'creative_votes',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')await loadCreativeData();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'answers',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='quiz'||mixedGame(settingsOf().gameKey))await loadAnswers();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'creative_submissions',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative'||mixedGame(settingsOf().gameKey))await loadCreativeData();})
+      .on('postgres_changes',{event:'*',schema:'public',table:'creative_votes',filter:'room_id=eq.'+roomId},async()=>{if(settingsOf().gameKey==='creative'||mixedGame(settingsOf().gameKey))await loadCreativeData();})
       .subscribe(status=>{realtimeState=status==='SUBSCRIBED'?'subscribed':String(status||'').toLowerCase();if(status==='SUBSCRIBED'){setDiagnostic('diag-realtime','Connected','good');setDiagnostic('diag-updates','Realtime','good');stopPolling();$('diag-note').textContent='REST and Realtime are connected.';}else if(status==='TIMED_OUT'){setDiagnostic('diag-realtime','Timed out','bad');startPolling('Realtime timed out.');}else if(status==='CHANNEL_ERROR'){setDiagnostic('diag-realtime','Connection error','bad');startPolling('Realtime could not connect.');}else if(status==='CLOSED'){setDiagnostic('diag-realtime','Disconnected','bad');startPolling('Realtime disconnected.');}else{setDiagnostic('diag-realtime','Connecting…','warn');}});
     setTimeout(()=>{if(roomId&&realtimeState!=='subscribed'){setDiagnostic('diag-realtime','Unavailable','bad');startPolling('Realtime did not establish promptly.');}},7000);
   }
@@ -366,7 +370,8 @@
     const s=settingsOf();$('start-game').textContent='Start '+gameName(s.gameKey);
     const chips=['<span class="chip">'+(s.gameMode==='teams'?'👨‍👩‍👧‍👦 Teams':'👤 Individuals')+'</span>','<span class="chip">🎮 '+escapeHtml(gameName(s.gameKey))+'</span>'];
     if(s.gameKey==='quiz'){chips.push('<span class="chip">🧩 '+s.questionCount+' questions</span>','<span class="chip">'+(s.adaptive?'🧒 Family Adaptive':'🧠 Same questions')+'</span>','<span class="chip">⏱ '+s.questionSeconds+' sec</span>','<span class="chip">📚 '+escapeHtml(s.topics.length===quizTopics().length?'All topics':s.topics.join(' • '))+'</span>','<span class="chip">✅ 800 + up to 200 speed</span>');}
-    else if(s.gameKey==='mix'){const q=s.mixOrder.filter(x=>x.startsWith('q:')).length,c=s.mixOrder.filter(x=>x.startsWith('c:')).length;chips.push('<span class="chip">🎲 '+s.roundCount+' rounds</span>','<span class="chip">🧠 '+q+' quiz</span>','<span class="chip">📸🎙️ '+c+' creative</span>','<span class="chip">'+(s.adaptive?'🧒 Family Adaptive':'🧠 Same questions')+'</span>','<span class="chip">📚 '+escapeHtml(s.topics.length===quizTopics().length?'All topics':s.topics.join(' • '))+'</span>');}
+    else if(s.gameKey==='party'){chips.push('<span class="chip">⭐ '+s.roundCount+' mixed party rounds</span>','<span class="chip">📸🎙️ Quiz + photos + audio</span>','<span class="chip">🎲 Quick minigames</span>','<span class="chip">🏔️ Every star = one mountain step</span>');}
+    else if(mixedGame(s.gameKey)){const q=s.mixOrder.filter(x=>x.startsWith('q:')).length,c=s.mixOrder.filter(x=>x.startsWith('c:')).length;chips.push('<span class="chip">🎲 '+s.roundCount+' rounds</span>','<span class="chip">🧠 '+q+' quiz</span>','<span class="chip">📸🎙️ '+c+' creative</span>',...(s.gameKey==='party'?['<span class="chip">🎮 '+s.mixOrder.filter(x=>x.startsWith('p:')).length+' minigames + mountain</span>']:[]),'<span class="chip">'+(s.adaptive?'🧒 Family Adaptive':'🧠 Same questions')+'</span>','<span class="chip">📚 '+escapeHtml(s.topics.length===quizTopics().length?'All topics':s.topics.join(' • '))+'</span>');}
     else chips.push('<span class="chip">📸 Camera</span>','<span class="chip">🎙️ Microphone</span>','<span class="chip">🗳️ Anonymous voting</span>');
     $('settings-summary').innerHTML=chips.join('');
     $('lobby-note').textContent=role==='host'?'Scan the QR code or enter the room code. The host screen does not count toward the 20-player limit.':'Waiting for the host to start the game…';show('lobby');renderPlayers();
@@ -386,8 +391,8 @@
       let state;const key=settingsOf().gameKey;
       if(key==='creative'){
         await assertPhase3Ready();await cleanupCreativeMedia(true);state=newCreativeCaptureState(0);
-      }else if(key==='mix'){
-        await assertPhase3Ready();await cleanupCreativeMedia(true);state=newMixedState(0);
+      }else if(mixedGame(key)){
+        await assertPhase3Ready();await cleanupCreativeMedia(true);state=newMixedState(0);if(key==='party')Object.assign(state,{partySeed:String(Date.now())+'-'+roomId,partyRevision:0,partyStars:{},partyAwarded:[]});
       }else state=newQuestionState(0);
       const {error}=await db.from('rooms').update({status:'playing',game_state:state,updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;
     }catch(e){serviceStatus.textContent=friendlyError(e);serviceStatus.className='status warn';$('start-game').disabled=false;}
@@ -403,10 +408,14 @@
   function creativeKindLabel(round){if(round&&round.creativeType==='impression')return '🎭 IMPRESSION';return round&&round.kind==='picture'?'📸 PICTURE':'🎙️ SOUND';}
   function newQuestionState(index,extra={}){return {phase:'question',questionIndex:index,startedAt:new Date().toISOString(),paused:false,pausedStartedAt:null,pauseMs:0,impressionTargetHistory:impressionHistory(),...extra};}
   function newCreativeCaptureState(index,extra={}){const r=extra.creativeId?mixCreativeById.get(String(extra.creativeId)):creativeAt(index),dynamic=playerImpressionState(r);return {phase:'creative_capture',creativeIndex:index,kind:r?r.kind:'picture',startedAt:new Date().toISOString(),voteStage:null,heatIndex:0,heatGroups:[],finalists:[],candidateIds:[],stageKey:null,lastWinners:[],stageVoteCounts:{},scored:false,...dynamic,...extra};}
-  function newMixedState(index){const token=settingsOf().mixOrder[index];if(!token)return null;const [kind,id]=String(token).split(':');if(kind==='c'){const creativeIndex=mixCreativeRounds.findIndex(r=>String(r.id)===id);return newCreativeCaptureState(creativeIndex,{mixIndex:index,roundType:'creative',creativeId:id});}return newQuestionState(index,{mixIndex:index,roundType:'quiz',questionId:id});}
+  function newMixedState(index){const token=settingsOf().mixOrder[index];if(!token)return null;const [kind,id]=String(token).split(':');let next;if(kind==='c'){const creativeIndex=mixCreativeRounds.findIndex(r=>String(r.id)===id);next=newCreativeCaptureState(creativeIndex,{mixIndex:index,roundType:'creative',creativeId:id});}else if(kind==='p'){next={phase:'party_mini',questionIndex:index,mixIndex:index,roundType:'minigame',miniId:id,startedAt:new Date().toISOString(),partyDeadline:Date.now()+60000};}else next=newQuestionState(index,{mixIndex:index,roundType:'quiz',questionId:id});if(isParty())Object.assign(next,{partyRoundItems:window.PartyMountain.gifts(currentPlayers,gs().partyStars||{}),partyRoundSeed:String(Date.now())+'-'+index});return next;}
+  let partyController=null;
+  function partyUI(){if(!partyController)partyController=window.PartyMountainLive.create({get:()=>({room:currentRoom,role,playerId,players:currentPlayers,answers:currentAnswers}),show:()=>{stopTimers();stopAllMedia();syncMusic(gs().phase==='party_crown'?'finished':'creative');show('party');},submit:submitPartyInput,commit:updateGameState,refresh:loadAnswers,cleanup:()=>cleanupCreativeMedia(true),end:finishGame,replay:playAgain,leave});return partyController;}
+  async function submitPartyInput(input){if(role!=='player'||!isParty())return;const s=gs();if(input.slot!==s.questionIndex||!['party_mini','party_mountain'].includes(s.phase)||Date.now()>s.partyDeadline)throw Error('This round has ended.');const row={room_id:roomId,player_id:playerId,question_index:input.slot,variant:input.variant,answer_index:clamp(Math.floor(input.choice)||0,0,3),is_correct:true,response_ms:clamp(Math.round(input.value)||0,0,1000),points:0};const {error}=await db.from('answers').insert(row);if(error&&error.code!=='23505')throw error;await loadAnswers();}
+
 
   function renderCurrentView(){
-    if(!currentRoom)return;setHomeGuard(currentRoom.status==='lobby'||currentRoom.status==='playing');const state=gs();
+    if(!currentRoom)return;if(isParty()){partyUI().gifts();if(String(gs().phase).startsWith('party_')){partyUI().render();return;}if(partyController)partyController.stop();}else if(partyController){partyController.stop();$('party-gifts').classList.add('hidden');}setHomeGuard(currentRoom.status==='lobby'||currentRoom.status==='playing');const state=gs();
     if(currentRoom.status==='finished'||state.phase==='finished'){renderFinished();return;}
     if(state.phase==='leaderboard'){renderLeaderboard();return;}
     if(settingsOf().gameKey==='creative'||isCreativeState(state)){renderCreativeView();return;}
@@ -416,7 +425,7 @@
   // ---------------- Quiz engine (Phase 2) ----------------
   function renderGame(){
     if(!currentRoom||currentRoom.status==='lobby')return;const state=gs(),q=questionForState(state);if(!q)return;
-    const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.questionIndex),total=mixed?mixTotal():quizTotal();syncMusic(state.phase==='reveal'?'result':'quiz');show('game');$('round-category').textContent=(mixed?'🎲 QUIZ • ':'')+q.category.toUpperCase();$('round-title').textContent=mixed?'Round '+(current+1)+' of '+total+' • Quiz':'Question '+(current+1)+' of '+total;$('round-progress').style.width=((current+1)/total*100)+'%';
+    const mixed=mixedGame(settingsOf().gameKey),current=mixed?Number(state.mixIndex):Number(state.questionIndex),total=mixed?mixTotal():quizTotal();syncMusic(state.phase==='reveal'?'result':'quiz');show('game');$('round-category').textContent=(mixed?'🎲 QUIZ • ':'')+q.category.toUpperCase();$('round-title').textContent=mixed?'Round '+(current+1)+' of '+total+' • Quiz':'Question '+(current+1)+' of '+total;$('round-progress').style.width=((current+1)/total*100)+'%';
     const s=settingsOf();const host=role==='host';const player=myPlayer();const v=resolvedQuestion(q,player,s.adaptive);
     $('host-adaptive-view').classList.toggle('hidden',!(host&&s.adaptive));
     if(host&&s.adaptive){
@@ -448,7 +457,7 @@
     }
     if(state.phase==='reveal'){
       if(!mine){target.innerHTML='<div class="result-banner bad">Time’s up — no answer this round.</div>';return;}
-      target.innerHTML='<div class="result-banner '+(mine.is_correct?'good':'bad')+'">'+(mine.is_correct?'✅ Correct! +'+mine.points+' points':'❌ Not this time — 0 points')+'</div>';
+      target.innerHTML='<div class="result-banner '+(mine.is_correct?'good':'bad')+'">'+(isParty()?(mine.is_correct?'✅ Correct! 3 stars, plus any catch-up gift.':'Good try! 1 participation star, plus any catch-up gift.'):(mine.is_correct?'✅ Correct! +'+mine.points+' points':'❌ Not this time — 0 points'))+'</div>';
     }
   }
 
@@ -457,13 +466,13 @@
     const existing=currentAnswers.find(a=>a.player_id===playerId)||null;if(existing&&Number(existing.answer_index)===Number(index))return;
     answerSubmitBusy=true;renderAnswers(v,state,false);
     try{
-      const duration=settingsOf().questionSeconds*1000;const response=clamp(Math.round(effectiveElapsedMs()),0,duration);const speed=isCorrect?Math.round(200*(1-response/duration)):0;const points=isCorrect?800+clamp(speed,0,200):0;
+      const duration=settingsOf().questionSeconds*1000;const response=clamp(Math.round(effectiveElapsedMs()),0,duration);const speed=isCorrect?Math.round(200*(1-response/duration)):0;const points=isParty()?(isCorrect?3:1):(isCorrect?800+clamp(speed,0,200):0);
       const row={variant,answer_index:index,is_correct:isCorrect,response_ms:response,points};let error=null;
       if(existing)({error}=await db.from('answers').update(row).eq('id',existing.id).eq('player_id',playerId));
       else ({error}=await db.from('answers').insert({room_id:roomId,player_id:playerId,question_index:Number(state.questionIndex),...row}));
       if(error)throw error;
-      const oldPoints=existing?Number(existing.points)||0:0,newScore=Math.max(0,(Number(p.score)||0)-oldPoints+points);p.score=newScore;
-      const {error:scoreError}=await db.from('players').update({score:newScore}).eq('id',playerId);if(scoreError)throw scoreError;
+      if(!isParty()){const oldPoints=existing?Number(existing.points)||0:0,newScore=Math.max(0,(Number(p.score)||0)-oldPoints+points);p.score=newScore;
+      const {error:scoreError}=await db.from('players').update({score:newScore}).eq('id',playerId);if(scoreError)throw scoreError;}
       await loadAnswers();
     }catch(e){console.error(e);msg($('answer-status'),friendlyError(e));}
     finally{answerSubmitBusy=false;if(currentRoom&&gs().phase==='question')renderGame();}
@@ -483,7 +492,7 @@
     const phase=gs().phase;if(phase==='creative_capture')renderCreativeCapture();else if(phase==='creative_vote')renderCreativeVote();else if(phase==='creative_result')renderCreativeResult();else renderCreativeCapture();
   }
 
-  function creativeDataRoundIndex(state=gs()){return settingsOf().gameKey==='mix'?Number(state.mixIndex):Number(state.creativeIndex);}
+  function creativeDataRoundIndex(state=gs()){return mixedGame(settingsOf().gameKey)?Number(state.mixIndex):Number(state.creativeIndex);}
   function creativeRoundKey(){const s=gs(),r=creativeRoundForState(s);return [roomId,creativeDataRoundIndex(s),s.creativeId||s.creativeIndex,r&&r.kind,s.startedAt||''].join(':');}
   function renderCreativeCounts(){
     if(!$('creative-host-count'))return;const s=gs();if(s.phase==='creative_capture')$('creative-host-count').textContent='Submissions: '+currentSubmissions.length+' / '+currentPlayers.length;
@@ -492,7 +501,7 @@
 
   function renderCreativeCapture(){
     const state=gs(),round=creativeRoundForState(state);if(!round)return;syncMusic('creative');stopQuizOnly();show('creative-capture');
-    const mixed=settingsOf().gameKey==='mix',current=mixed?Number(state.mixIndex):Number(state.creativeIndex),total=mixed?mixTotal():creative.rounds.length;$('creative-kind').textContent=creativeKindLabel(round)+(mixed?' • MIX':'');$('creative-round-title').textContent=round.title+' • Round '+(current+1)+' of '+total;$('creative-progress').style.width=((current+1)/total*100)+'%';$('creative-prompt').textContent=creativePrompt(round,state);
+    const mixed=mixedGame(settingsOf().gameKey),current=mixed?Number(state.mixIndex):Number(state.creativeIndex),total=mixed?mixTotal():creative.rounds.length;$('creative-kind').textContent=creativeKindLabel(round)+(mixed?' • MIX':'');$('creative-round-title').textContent=round.title+' • Round '+(current+1)+' of '+total;$('creative-progress').style.width=((current+1)/total*100)+'%';$('creative-prompt').textContent=creativePrompt(round,state);
     startCreativeTimer(round);
     const host=role==='host';$('creative-host-capture').classList.toggle('hidden',!host);$('creative-player-capture').classList.toggle('hidden',host);
     if(host){
@@ -611,7 +620,7 @@
   async function awardCreativeRound(winnerIds,counts){
     const state=gs(),entries=Object.entries(counts||{}),top=entries.length?Math.max(...entries.map(([,n])=>n)):0;let secondIds=[];
     if(entries.length){const lower=entries.map(([,n])=>n).filter(n=>n<top);if(lower.length){const second=Math.max(...lower);secondIds=entries.filter(([,n])=>n===second).map(([id])=>id);}}
-    const winnerSet=new Set(winnerIds),secondSet=new Set(secondIds);for(const sub of currentSubmissions){let points=100,reason='Participation';if(winnerSet.has(sub.id)){points+=1000;reason='Winner + participation';}else if(secondSet.has(sub.id)){points+=500;reason='Second place + participation';}
+    const winnerSet=new Set(winnerIds),secondSet=new Set(secondIds);if(isParty()){const scores={};for(const sub of currentSubmissions)scores[sub.player_id]=winnerSet.has(sub.id)?3:secondSet.has(sub.id)?2:1;return partyUI().award(scores,'round:'+state.mixIndex);}for(const sub of currentSubmissions){let points=100,reason='Participation';if(winnerSet.has(sub.id)){points+=1000;reason='Winner + participation';}else if(secondSet.has(sub.id)){points+=500;reason='Second place + participation';}
       const {error}=await db.from('creative_awards').insert({room_id:roomId,player_id:sub.player_id,round_index:creativeDataRoundIndex(state),points,reason});if(error&&error.code!=='23505')console.error(error);
     }await loadPlayers();
   }
@@ -631,29 +640,31 @@
     }await showLeaderboard();
   }
 
-  async function advanceMixedRound(){const next=Number(gs().mixIndex)+1;if(next>=mixTotal()){await finishGame();return;}currentAnswers=[];currentSubmissions=[];currentVotes=[];captureRoundKey='';resetCaptureUI();const state=newMixedState(next);if(!state){await finishGame();return;}await updateGameState(state);}
-  async function nextCreativeRound(){if(settingsOf().gameKey==='mix')return advanceMixedRound();const next=Number(gs().creativeIndex)+1;if(next>=creative.rounds.length){await finishGame();return;}currentSubmissions=[];currentVotes=[];captureRoundKey='';resetCaptureUI();await updateGameState(newCreativeCaptureState(next));}
+  async function advanceMixedRound(){const next=Number(gs().mixIndex)+1;if(next>=mixTotal()){if(isParty())await partyUI().mountain();else await finishGame();return;}currentAnswers=[];currentSubmissions=[];currentVotes=[];captureRoundKey='';resetCaptureUI();const state=newMixedState(next);if(!state){await finishGame();return;}await updateGameState(state);}
+  async function nextCreativeRound(){if(mixedGame(settingsOf().gameKey))return advanceMixedRound();const next=Number(gs().creativeIndex)+1;if(next>=creative.rounds.length){await finishGame();return;}currentSubmissions=[];currentVotes=[];captureRoundKey='';resetCaptureUI();await updateGameState(newCreativeCaptureState(next));}
   async function skipCreativeRound(){if(role!=='host')return;await nextCreativeRound();}
 
   // ---------------- Shared host / scoring / lifecycle ----------------
-  async function updateGameState(next,status){if(role!=='host'||!currentRoom)return;const payload={game_state:next,updated_at:new Date().toISOString()};if(status)payload.status=status;const {error}=await db.from('rooms').update(payload).eq('id',roomId);if(error)throw error;}
-  async function showLeaderboard(){await updateGameState({...gs(),phase:'leaderboard'});}
-  async function nextQuestion(){const key=settingsOf().gameKey;if(key==='creative')return nextCreativeRound();if(key==='mix')return advanceMixedRound();const next=Number(gs().questionIndex)+1;if(next>=quizTotal()){await finishGame();return;}currentAnswers=[];await updateGameState(newQuestionState(next));}
+  async function updateGameState(next,status){if(role!=='host'||!currentRoom)return;const current=gs();if(isParty()){next={...next,partyStars:next._partyStars||current.partyStars||{},partyAwarded:next._partyAwarded||current.partyAwarded||[],partySeed:current.partySeed,partyRevision:(current.partyRevision||0)+1};delete next._partyStars;delete next._partyAwarded;}const payload={game_state:next,updated_at:new Date().toISOString()};if(status)payload.status=status;let query=db.from('rooms').update(payload).eq('id',roomId);if(isParty()){const {data,error}=await query.eq('game_state->>partyRevision',String(current.partyRevision||0)).select('id').maybeSingle();if(error)throw error;if(!data){await loadRoom();throw Error('Room advanced on another host screen. Please retry.');}currentRoom={...currentRoom,...payload};renderCurrentView();}else{const {error}=await query;if(error)throw error;}}
+
+  async function showLeaderboard(){if(isParty()&&gs().roundType==='quiz')await partyUI().quizAward();await updateGameState({...gs(),phase:'leaderboard'});}
+  async function nextQuestion(){const key=settingsOf().gameKey;if(key==='creative')return nextCreativeRound();if(mixedGame(key)){if(isParty()&&gs().roundType==='quiz')await partyUI().quizAward();return advanceMixedRound();}const next=Number(gs().questionIndex)+1;if(next>=quizTotal()){await finishGame();return;}currentAnswers=[];await updateGameState(newQuestionState(next));}
   async function skipQuestion(){await nextQuestion();}
-  async function finishGame(){if(role!=='host')return;try{if(settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')await cleanupCreativeMedia(true);}catch(e){console.error(e);}await updateGameState({...gs(),phase:'finished'},'finished');}
+  async function finishGame(){if(role!=='host')return;try{if(settingsOf().gameKey==='creative'||mixedGame(settingsOf().gameKey))await cleanupCreativeMedia(true);}catch(e){console.error(e);}await updateGameState({...gs(),phase:'finished'},'finished');}
 
   function getLeaderboardRows(){
+    if(isParty())return currentPlayers.map(p=>({name:(p.avatar||'🙂')+' '+p.name,score:gs().partyStars?.[p.id]||0})).sort((a,b)=>b.score-a.score);
     const s=settingsOf();if(s.gameMode!=='teams')return currentPlayers.slice().sort((a,b)=>(b.score||0)-(a.score||0)).map(p=>({name:(p.avatar||'🙂')+' '+p.name,score:Number(p.score)||0}));
     const groups={};currentPlayers.forEach(p=>{const key=p.team||'No team';if(!groups[key])groups[key]=[];groups[key].push(Number(p.score)||0);});
     return Object.entries(groups).map(([name,scores])=>({name:name+' Team',score:Math.round(scores.reduce((a,b)=>a+b,0)/scores.length),members:scores.length})).sort((a,b)=>b.score-a.score);
   }
-  function fillLeaderboard(target){const rows=getLeaderboardRows(),box=$(target);box.innerHTML='';if(!rows.length){box.innerHTML='<div class="empty">No scores yet.</div>';return;}rows.forEach((r,i)=>{const d=document.createElement('div');d.className='leader-row';d.innerHTML='<span class="rank">'+(i+1)+'</span><span class="who">'+escapeHtml(r.name)+(r.members?' <small>('+r.members+')</small>':'')+'</span><span class="pts">'+r.score+' pts</span>';box.appendChild(d);});}
-  function renderLeaderboard(){syncMusic('result');stopTimers();stopAllMedia();show('leaderboard');const s=settingsOf(),state=gs();$('leaderboard-title').textContent=s.gameKey==='creative'?'🏆 Leaderboard • Creative Round '+(Number(state.creativeIndex)+1):s.gameKey==='mix'?'🏆 Leaderboard • Round '+(Number(state.mixIndex)+1)+' of '+mixTotal():'🏆 Leaderboard • Round '+(Number(state.questionIndex)+1);fillLeaderboard('leaderboard');$('next-question').classList.toggle('hidden',role!=='host');$('next-question').textContent=s.gameKey==='quiz'?'Next Question':'Next Round';$('player-wait-next').classList.toggle('hidden',role==='host');}
+  function fillLeaderboard(target){const rows=getLeaderboardRows(),box=$(target);box.innerHTML='';if(!rows.length){box.innerHTML='<div class="empty">No scores yet.</div>';return;}rows.forEach((r,i)=>{const d=document.createElement('div');d.className='leader-row';d.innerHTML='<span class="rank">'+(i+1)+'</span><span class="who">'+escapeHtml(r.name)+(r.members?' <small>('+r.members+')</small>':'')+'</span><span class="pts">'+r.score+(isParty()?' ⭐':' pts')+'</span>';box.appendChild(d);});}
+  function renderLeaderboard(){if(isParty())partyUI().stop();syncMusic('result');stopTimers();stopAllMedia();show('leaderboard');const s=settingsOf(),state=gs();$('leaderboard-title').textContent=s.gameKey==='creative'?'🏆 Leaderboard • Creative Round '+(Number(state.creativeIndex)+1):mixedGame(s.gameKey)?'🏆 Leaderboard • Round '+(Number(state.mixIndex)+1)+' of '+mixTotal():'🏆 Leaderboard • Round '+(Number(state.questionIndex)+1);fillLeaderboard('leaderboard');$('next-question').classList.toggle('hidden',role!=='host');$('next-question').textContent=s.gameKey==='quiz'?'Next Question':'Next Round';$('player-wait-next').classList.toggle('hidden',role==='host');if(isParty())$('next-question').textContent=Number(gs().mixIndex)+1>=mixTotal()?'CLIMB TO THE CROWN →':'NEXT PARTY ROUND →';}
   function renderFinished(){syncMusic('finished');stopTimers();stopAllMedia();show('finished');fillLeaderboard('final-leaderboard');$('play-again').classList.toggle('hidden',role!=='host');}
   async function playAgain(){
-    if(role!=='host')return;await db.from('answers').delete().eq('room_id',roomId);const s=settingsOf();if(s.gameKey==='creative'||s.gameKey==='mix')await cleanupCreativeMedia(true);await db.from('players').update({score:0}).eq('room_id',roomId);
+    if(role!=='host')return;await db.from('answers').delete().eq('room_id',roomId);const s=settingsOf();if(s.gameKey==='creative'||mixedGame(s.gameKey))await cleanupCreativeMedia(true);await db.from('players').update({score:0}).eq('room_id',roomId);
     if(s.gameKey==='quiz'){const order=buildQuestionOrder(s.topics,s.questionCount),nextSettings={...(currentRoom.settings||{}),questionOrder:order};const {error}=await db.from('rooms').update({settings:nextSettings,game_state:{},status:'lobby',updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;rememberQuestionIds(order);currentRoom={...currentRoom,settings:nextSettings,game_state:{},status:'lobby'};await openExperience();return;}
-    if(s.gameKey==='mix'){const order=buildMixOrder(s.topics,s.roundCount),questionIds=order.filter(x=>x.startsWith('q:')).map(x=>x.slice(2)),creativeIds=order.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)),nextSettings={...(currentRoom.settings||{}),mixOrder:order,questionOrder:questionIds,questionCount:questionIds.length};const {error}=await db.from('rooms').update({settings:nextSettings,game_state:{},status:'lobby',updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;rememberQuestionIds(questionIds);rememberCreativeIds(creativeIds);currentRoom={...currentRoom,settings:nextSettings,game_state:{},status:'lobby'};await openExperience();return;}
+    if(mixedGame(s.gameKey)){const order=selectedMixOrder(s.topics,s.roundCount,s.gameKey),questionIds=order.filter(x=>x.startsWith('q:')).map(x=>x.slice(2)),creativeIds=order.filter(x=>x.startsWith('c:')).map(x=>x.slice(2)),nextSettings={...(currentRoom.settings||{}),mixOrder:order,questionOrder:questionIds,questionCount:questionIds.length};const {error}=await db.from('rooms').update({settings:nextSettings,game_state:{},status:'lobby',updated_at:new Date().toISOString()}).eq('id',roomId);if(error)throw error;rememberQuestionIds(questionIds);rememberCreativeIds(creativeIds);currentRoom={...currentRoom,settings:nextSettings,game_state:{},status:'lobby'};await openExperience();return;}
     await updateGameState({},'lobby');
   }
 
@@ -669,11 +680,11 @@
   function stopTimers(){if(timerHandle){clearInterval(timerHandle);timerHandle=null;}if(creativeTimerHandle){clearInterval(creativeTimerHandle);creativeTimerHandle=null;}}
 
   async function leave(){
-    stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;
-    if(db&&roomId){try{if(role==='player'&&playerId){await cleanupPlayerMedia(playerId);await db.from('players').delete().eq('id',playerId);}else if(role==='host'){if(settingsOf().gameKey==='creative'||settingsOf().gameKey==='mix')await cleanupCreativeMedia(true);await db.from('rooms').update({status:'closed',updated_at:new Date().toISOString()}).eq('id',roomId);}}catch(e){console.error(e);}}
+    if(partyController)partyController.stop();$('party-gifts').classList.add('hidden');stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;
+    if(db&&roomId){try{if(role==='player'&&playerId){await cleanupPlayerMedia(playerId);await db.from('players').delete().eq('id',playerId);}else if(role==='host'){if(settingsOf().gameKey==='creative'||mixedGame(settingsOf().gameKey))await cleanupCreativeMedia(true);await db.from('rooms').update({status:'closed',updated_at:new Date().toISOString()}).eq('id',roomId);}}catch(e){console.error(e);}}
     roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];clearSession();setHomeGuard(false);stopHostMusic();show('choice');
   }
-  async function roomClosed(){stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];setHomeGuard(false);stopHostMusic();serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
+  async function roomClosed(){if(partyController)partyController.stop();$('party-gifts').classList.add('hidden');stopTimers();stopPolling();stopAllMedia();if(channel&&db)await db.removeChannel(channel);channel=null;clearSession();roomId=roomCode=role=playerId=null;currentRoom=null;currentPlayers=[];currentAnswers=[];currentSubmissions=[];currentVotes=[];setHomeGuard(false);stopHostMusic();serviceStatus.textContent='That Spencer Live room has closed.';serviceStatus.className='status warn';show('choice');}
 
   // Base controls
   if($('music-toggle'))$('music-toggle').addEventListener('click',async()=>{if(!music)return;await music.setEnabled(!music.isEnabled());if(musicHostActive())await music.setHostActive(true);updateMusicButton();});
@@ -705,5 +716,6 @@
   const params=new URLSearchParams(location.search),join=params.get('join'),mode=params.get('mode');
   restore().then(restored=>{if(restored)return;if(join){$('join-code').value=cleanCode(join);show('join');lookupJoinRoom();}else if(mode==='host')show('host');else if(mode==='join')show('join');else show('choice');});
 })();
+
 
 
