@@ -120,3 +120,14 @@ The main Spencer Live Join action now performs a fresh room-type lookup instead 
 Run `node speedway/test-live.cjs` and `node speedway/test-join-routing.cjs`. Tests execute the production clients with an in-memory Supabase adapter whose builders are lazy, a shared clock, isolated host/rider contexts, dropped Realtime events and injected write failures. They cover a host and two riders, start failure/retry, repeated countdown events, a shared start epoch, pointer release, both finish-write and result-insert retries, final results, rematch, a rider leaving mid-heat, room closure, stale replies, immediate Join and stale room-code lookup. These are logic/integration simulations, not connections to the deployed service or an iPad browser.
 
 Existing `supabase/phase4-speedway.sql` remains a prerequisite. This patch requires no new migration and makes no deployed database changes. Read-only probes to the configured Supabase REST endpoints were blocked by this execution environment's proxy (403), so the deployed tables, grants, policies and Realtime publication were not verified. If room creation/joining still fails, inspect that service setup and its actual error response. Hosts remain spectator screens; two to four separately joined rider devices are needed to start a heat.
+
+
+## Creative media repeat-upload fix
+
+Creative capture now re-enables both sound and photo submit buttons for each new round, resets the record label to REC, and treats a new capture start time as a fresh session even when a replay reuses the same round index. Previously the successful upload left the button disabled permanently on that page.
+
+Recorder callbacks use their own chunks, MIME type and capture revision. Abandoned recordings and late microphone permission responses cannot populate another round. Failed uploads retain the clip and retry message across polling refreshes. Duplicate submissions while a request is active are ignored. Uploads capture their original room/player/round; a late completion cannot stop or overwrite a newer recording. A file uploaded after its capture round has ended is cleaned up instead of being inserted into the new round.
+
+The existing unique private storage paths, non-upsert upload method and one-entry-per-player-per-round rule are retained. No schema, bucket policy, credentials, SDK version or Speedway data changes are required.
+
+Validation: `node live/tests/media-capture.cjs` covers consecutive audio/photo rounds, MP4 chunks, re-recording, retry after failure, polling, stale recorder/permission callbacks, duplicate uploads, late upload cleanup and same-round replay reset. `live/tests/browser-media.cjs` uses native Chromium MediaRecorder with a synthetic audio stream and mocked private storage to exercise two consecutive recording/submission rounds. Requires Playwright and Chromium; optionally set MEDIA_BROWSER_PATH. Real-device microphone permissions and the live Supabase service still need session testing.
