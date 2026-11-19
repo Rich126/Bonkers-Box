@@ -173,6 +173,7 @@
 </style>
 <link rel="stylesheet" href="assets/spencer-theme.css?v=4.19">
 <script src="/version.js?v=4.21"></script>
+<script src="mario-language.js?v=4.21-es-1"></script>
 </head>
 <body class="sg-corporate">
 
@@ -3726,8 +3727,10 @@ const GAMES = [
 ];
 function MainMenu({ onSelectGame }) {
     const [marioMode, setMarioMode] = useState(() => { try { return localStorage.getItem("spencer_mario_mode_v1") === "true"; } catch (_) { return false; } });
+    useEffect(() => { window.SpencerMarioLanguage.apply(marioMode); return () => { document.documentElement.lang = "en"; }; }, [marioMode]);
+    const menuGames = marioMode ? GAMES.map(window.SpencerMarioLanguage.game) : GAMES;
     const toggleMarioMode = () => { const next = !marioMode; setMarioMode(next); try { localStorage.setItem("spencer_mario_mode_v1", String(next)); } catch (_) {} };
-    return (React.createElement("div", { className: "sg-main-menu", style: { minHeight: "100vh", background: marioMode ? "#AA151B" : "linear-gradient(135deg,#0f0c29,#302b63,#24243e)", padding: "20px 16px", fontFamily: "'Fredoka',sans-serif", color: "#fff", position: "relative", overflow: "hidden" } },
+    return (React.createElement("div", { className: "sg-main-menu", lang: marioMode ? "es" : "en", style: { minHeight: "100vh", background: marioMode ? "#AA151B" : "linear-gradient(135deg,#0f0c29,#302b63,#24243e)", padding: "20px 16px", fontFamily: "'Fredoka',sans-serif", color: "#fff", position: "relative", overflow: "hidden" } },
         marioMode && React.createElement("div", { "aria-hidden": true, style: { position: "fixed", inset: 0, background: "linear-gradient(to bottom,#AA151B 0%,#AA151B 25%,#F1BF00 25%,#F1BF00 75%,#AA151B 75%,#AA151B 100%)", pointerEvents: "none" } }),
         React.createElement("div", { style: { position: "fixed", top: "8%", left: "8%", fontSize: 48, animation: "menuFloat 4s infinite ease-in-out", opacity: .15, pointerEvents: "none" } }, "\uD83C\uDFAE"),
         React.createElement("div", { style: { position: "fixed", top: "15%", right: "10%", fontSize: 40, animation: "menuFloat2 5s infinite ease-in-out", opacity: .12, pointerEvents: "none" } }, "\uD83C\uDFB2"),
@@ -3736,17 +3739,17 @@ function MainMenu({ onSelectGame }) {
         Array.from({ length: 20 }).map((_, i) => React.createElement("div", { key: i, style: { position: "fixed", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, width: 2 + Math.random() * 3, height: 2 + Math.random() * 3, borderRadius: "50%", background: "rgba(255,255,255,.15)", animation: `pulse ${2 + Math.random() * 4}s ${Math.random() * 3}s infinite`, pointerEvents: "none" } })),
         React.createElement("div", { style: { maxWidth: 520, margin: "0 auto", position: "relative", zIndex: 1 } },
             React.createElement("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: 12 } },
-                React.createElement("button", { type: "button", "aria-pressed": marioMode, onClick: toggleMarioMode, style: { minHeight: 44, padding: "10px 15px", borderRadius: 24, border: "2px solid " + (marioMode ? "#F1BF00" : "#54718c"), background: "#0d263c", color: "#fff", fontWeight: 800, cursor: "pointer", boxShadow: "0 3px 12px rgba(0,0,0,.25)" } }, "🇪🇸 Mario mode: " + (marioMode ? "ON" : "OFF"))),
+                React.createElement("button", { type: "button", "aria-pressed": marioMode, onClick: toggleMarioMode, style: { minHeight: 44, padding: "10px 15px", borderRadius: 24, border: "2px solid " + (marioMode ? "#F1BF00" : "#54718c"), background: "#0d263c", color: "#fff", fontWeight: 800, cursor: "pointer", boxShadow: "0 3px 12px rgba(0,0,0,.25)" } }, marioMode ? "🇪🇸 Modo Mario: ACTIVADO" : "🇪🇸 Mario mode: OFF")),
             React.createElement("div", { style: { textAlign: "center", marginBottom: 28 } },
                 React.createElement("img", {
                     src: "assets/spencer-games-intro.png?v=edgefix1",
-                    alt: "Spencer Games — Family. Fun. Compete Together.",
+                    alt: marioMode ? "Spencer Games — Familia. Diversión. Competid juntos." : "Spencer Games — Family. Fun. Compete Together.",
                     style: {
                         display: "block", width: "min(100%, 420px)", height: "auto", margin: "0 auto",
                         borderRadius: 10, boxShadow: "0 12px 32px rgba(0,0,0,.34)", background: "#f7fafc", border: "1px solid #294158", padding: 8
                     }
                 })),
-            React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, GAMES.map(game => (React.createElement("button", { className: "sg-game-card", key: game.id, onClick: () => onSelectGame(game.id), style: {
+            React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, menuGames.map(game => (React.createElement("button", { className: "sg-game-card", key: game.id, onClick: () => onSelectGame(game.id), style: {
                     background: "linear-gradient(150deg,#0d263c,#081522)", border: "1px solid #294158", borderLeft: "4px solid #ff6b1a", borderRadius: 12,
                     padding: "20px 18px", cursor: "pointer", textAlign: "left",
                     transition: "all .2s ease", position: "relative", overflow: "hidden",
@@ -3761,7 +3764,7 @@ function MainMenu({ onSelectGame }) {
                         React.createElement("div", { style: { display: "flex", gap: 6, marginTop: 6 } }, game.tags.map(t => React.createElement("span", { className: "sg-game-tag", key: t, style: { background: "#173149", borderRadius: 5, padding: "2px 8px", fontSize: 9, color: "#cbd7e0" } }, t)))),
                     React.createElement("div", { style: { fontSize: 28, opacity: .4 } }, game.emoji2)))))),
             React.createElement("div", { style: { textAlign: "center", marginTop: 24, opacity: .3 } },
-                React.createElement("div", { style: { fontSize: 12, letterSpacing: 1 } }, "MORE GAMES COMING SOON..."),
+                React.createElement("div", { style: { fontSize: 12, letterSpacing: 1 } }, marioMode ? "MÁS JUEGOS PRÓXIMAMENTE..." : "MORE GAMES COMING SOON..."),
                 React.createElement("div", { style: { fontSize: 24, marginTop: 4 } }, "\uD83C\uDCCF \uD83C\uDFB6 \uD83C\uDFB0")))));
 }
 function BonkersBox() {
@@ -3995,7 +3998,7 @@ try {
  document.getElementById('bb-resume-game').onclick=function(){setPaused(false);};
  document.getElementById('bb-open-guide-pause').onclick=function(){setPaused(false);var help=document.getElementById('bb-help-modal');if(help){help.style.display='block';document.body.style.overflow='hidden';}};
  document.getElementById('bb-end-to-home').onclick=function(){
-   if(confirm('End the current game and return to the Spencer Games home screen? Current progress will be lost.')){
+   if(confirm(window.SpencerMarioLanguage.endConfirmation())){
      try{localStorage.removeItem('bonkersPausedAt');}catch(e){}
      location.reload();
    }
