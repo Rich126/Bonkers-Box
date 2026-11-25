@@ -12,3 +12,9 @@
 @media(prefers-reduced-motion:reduce){.car.arriving{transform:none;opacity:.35}.car svg,.jack-rig{transition:none}}
 
 .lights.service i{background:#f5be49;box-shadow:0 0 15px #f5be4955}
+
+.run-status{font-size:11px;line-height:1.6;color:#a7bfa6;margin-bottom:0}
+
+.nice-try{position:fixed;inset:0;z-index:2147483000;background:#071411;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:28px;text-align:center;overflow:auto}.nice-try img{width:min(55vw,260px);max-height:55dvh;object-fit:contain;border-radius:10px}.nice-try h1{font-size:clamp(26px,6vw,44px);line-height:1.15;margin:0;letter-spacing:-.04em}.nice-try p{font-size:14px;line-height:1.6;margin:0;max-width:400px;color:#c5dccd}.nice-try a{color:var(--mint);font-weight:800;padding:12px;min-height:44px}
+
+.test-preview{display:block;width:100%;margin-top:12px;min-height:44px}
