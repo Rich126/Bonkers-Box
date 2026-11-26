@@ -1,6 +1,6 @@
 # Pit Stop Sprint and site languages
 
-The default board is now **Checked runs** (`pitstop-v3`), with a fresh shuffled wheel order, server-side replay checks and a temporary GIF preview button. See [Checked runs and nice-try screen](PIT-STOP-CHECKED-RUNS.md) for current protections and their limits. The earlier v1/v2 records remain archived and accessible.
+The default board is now **Checked runs** (`pitstop-v3`), with a fresh shuffled wheel order, server-side replay checks and a nice-try GIF screen for detected scripted inputs. See [Checked runs and nice-try screen](PIT-STOP-CHECKED-RUNS.md) for current protections and their limits. The earlier v1/v2 records remain archived and accessible.
 
 Mario mode now uses `spencer_site_language_v2` (`en` by default; `es` only after explicit selection). The old front-page-only preference is ignored during this upgrade. The selected language persists and is shared with same-origin game frames and standalone game pages. Turning Mario mode off restores English. Mario mode also applies a Spanish-flag backdrop, a slim flag frame and a visible flag marker in every standalone game and embedded frame; full-screen canvases retain their playing surface inside that frame.
 
