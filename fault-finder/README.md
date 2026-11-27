@@ -2,6 +2,17 @@
 
 An original, single-player, top-down 16-bit factory mystery for Spencer Games v4.21. The player is an automation engineer with eight minutes to restore six machines. Original pixel scenery, engineer sprites and machines are drawn locally. English is the default; the shared site language setting enables Spanish and the Mario-mode flag.
 
+## Machine asset numbers
+
+Each machine has a fixed asset number in its floor label, service terminal, work orders and shift report:
+
+- **AUT0078** — Robot Bay A
+- **AUT0076** — Packing Cell
+- **AUT0077** — Control Rack
+- **AUT0079** — Transfer Line
+- **AUT0080** — Robot Bay B
+- **AUT0081** — Process Cell
+
 ## Second-pass rules (v2)
 
 Every machine starts with an intermittent fault. **Every listed recovery remedy fails on its first pass**, including the remedy which will ultimately work. The first-pass checklist contains only that cell's applicable remedies. Trying every distinct item once unlocks the second pass. Leaving its console or pausing does not reset its checklist; repeated attempts cannot skip items. Required first-pass failures do not lose points or add time penalties.

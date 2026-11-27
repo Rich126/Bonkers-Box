@@ -173,7 +173,7 @@
 </style>
 <link rel="stylesheet" href="assets/spencer-theme.css?v=4.19">
 <script src="/version.js?v=4.21"></script>
-<script src="language-es.js?v=4.21-factory-2"></script>
+<script src="language-es.js?v=4.21-factory-aut-1"></script>
 <script src="language.js?v=4.21-site-es-2"></script>
 <script src="fault-finder/event.js?v=1"></script>
 </head>
@@ -3825,7 +3825,7 @@ function BonkersBox() {
             React.createElement("div", { style: { maxWidth: 520, margin: "0 auto" } },
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
-        screen === "faultfinder" && React.createElement("iframe", { src: "fault-finder/index.html?v=2", title: "Fault Finder: Night Shift", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#102a32" } }),
+        screen === "faultfinder" && React.createElement("iframe", { src: "fault-finder/index.html?v=2-aut-1", title: "Fault Finder: Night Shift", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#102a32" } }),
         screen === "pitstop" && React.createElement("div", { style: { minHeight: "100dvh", background: "#071916", position: "relative" } },
             React.createElement("iframe", { src: "pit-stop/index.html?v=1", title: "Pit Stop Sprint", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#071916" } })),
         screen === "swatthat" && React.createElement("div", { style: { minHeight: "100dvh", background: "#85d9fb", position: "relative", zIndex: 99997 } },
