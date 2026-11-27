@@ -173,8 +173,9 @@
 </style>
 <link rel="stylesheet" href="assets/spencer-theme.css?v=4.19">
 <script src="/version.js?v=4.21"></script>
-<script src="language-es.js?v=4.21-site-es-1"></script>
+<script src="language-es.js?v=4.21-factory-1"></script>
 <script src="language.js?v=4.21-site-es-2"></script>
+<script src="fault-finder/event.js?v=1"></script>
 </head>
 <body class="sg-corporate">
 
@@ -3707,6 +3708,7 @@ function GuessOrDie({ players: initPlayers, onMenu }) {
                     React.createElement("button", { onClick: () => { reset(); onMenu(); }, style: { background: "none", border: "none", color: "rgba(255,255,255,.2)", cursor: "pointer", fontSize: 10, fontFamily: "'Fredoka'" } }, "\uD83C\uDFE0 Menu")))))));
 }
 const GAMES = [
+    { id: "faultfinder", name: "Fault Finder: Night Shift", desc: "Six machines down. Roam a 16-bit factory, investigate hidden faults and save the shift. A two-week special event!", icon: "fault-finder/icon.svg?v=1", emoji: "🔧", emoji2: "⚙️", color: "#A5E2B2", bg: "linear-gradient(135deg,#102a32,#355547)", tags: ["Limited • 2 weeks", "Solo", "16-bit"] },
     { id: "pitstop", name: "Pit Stop Sprint", desc: "Change all four tyres, beat the clock and climb the online leaderboard. Jump the green light or release early and get a 3-second penalty!", emoji: "🔧", emoji2: "🏎️", color: "#00DFBD", bg: "linear-gradient(135deg,#071916,#1c4636)", tags: ["Pit crew", "1 Player"] },
     { id: "dive", name: "Treasure Dive!", desc: "Party Mode: pirate shop, monster shields, ocean events and bonus awards!", emoji: "🌊", emoji2: "🤿", color: "#FFD700", bg: "linear-gradient(135deg,#0A4C6A,#063552)", tags: ["Luck", "2-6"] },
     { id: "speedway", name: "Speedway Slide", desc: "Solo time trials with your choice of laps, local Grand Prix racing, and Speedway Live online!", emoji: "🏍️", emoji2: "🔥", color: "#F59E0B", bg: "linear-gradient(135deg,#2b160b,#6b2f12)", tags: ["Racing", "1–8 Players"] },
@@ -3731,7 +3733,10 @@ const GAMES = [
 function MainMenu({ onSelectGame }) {
     const [marioMode, setMarioMode] = useState(() => { try { return window.SpencerLanguage.locale === "es"; } catch (_) { return false; } });
     useEffect(() => { const sync = () => setMarioMode(window.SpencerLanguage.locale === "es"); window.addEventListener("spencerlanguagechange", sync); return () => window.removeEventListener("spencerlanguagechange", sync); }, []);
-    const menuGames = marioMode ? GAMES.map(window.SpencerMarioLanguage.game) : GAMES;
+    const [factoryEventOpen, setFactoryEventOpen] = useState(() => !!window.FaultFinderEvent?.isOpen());
+    useEffect(() => { const sync = () => setFactoryEventOpen(!!window.FaultFinderEvent?.isOpen()); window.addEventListener("faultfindereventchange", sync); return () => window.removeEventListener("faultfindereventchange", sync); }, []);
+    const availableGames = GAMES.filter(game => game.id !== "faultfinder" || factoryEventOpen);
+    const menuGames = marioMode ? availableGames.map(window.SpencerMarioLanguage.game) : availableGames;
     const toggleMarioMode = () => { const next = !marioMode; setMarioMode(next); window.SpencerLanguage.setLocale(next ? "es" : "en"); };
     return (React.createElement("div", { className: "sg-main-menu", lang: marioMode ? "es" : "en", style: { minHeight: "100vh", background: marioMode ? "#AA151B" : "linear-gradient(135deg,#0f0c29,#302b63,#24243e)", padding: "20px 16px", fontFamily: "'Fredoka',sans-serif", color: "#fff", position: "relative", overflow: "hidden" } },
         marioMode && React.createElement("div", { "aria-hidden": true, style: { position: "fixed", inset: 0, background: "linear-gradient(to bottom,#AA151B 0%,#AA151B 25%,#F1BF00 25%,#F1BF00 75%,#AA151B 75%,#AA151B 100%)", pointerEvents: "none" } }),
@@ -3775,7 +3780,7 @@ function BonkersBox() {
     const [playerCount, setPlayerCount] = useState(4);
     const [players, setPlayers] = useState(ALL_AVATARS.slice(0, 4).map(p => (Object.assign(Object.assign({}, p), { score: 0 }))));
     const goMenu = () => setScreen("menu");
-    const selectGame = id => setScreen(id === "pitstop" ? "pitstop" : id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "tanks" ? "tanks" : id === "trackfield" ? "trackfield" : id === "supercross" ? "supercross" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
+    const selectGame = id => setScreen(id === "faultfinder" ? "faultfinder" : id === "pitstop" ? "pitstop" : id === "kvp" ? "kvp" : id === "rallycrossx" ? "rallycrossx" : id === "tanks" ? "tanks" : id === "trackfield" ? "trackfield" : id === "supercross" ? "supercross" : id === "speedway" ? "speedway" : id === "holeshot" ? "holeshot" : id === "flash" ? "flash" : id === "swatthat" ? "swatthat" : `setup-${id}`);
     return (React.createElement(React.Fragment, null,
         React.createElement("style", null, STYLES),
         screen === "menu" && React.createElement(MainMenu, { onSelectGame: selectGame }),
@@ -3820,6 +3825,7 @@ function BonkersBox() {
             React.createElement("div", { style: { maxWidth: 520, margin: "0 auto" } },
                 React.createElement(SmartyPantsSetup, { players: players, setPlayers: setPlayers, playerCount: playerCount, setPlayerCount: setPlayerCount, onStart: () => setScreen("god"), onBack: goMenu, title: "\uD83D\uDC80 Guess or Die \u2620\uFE0F", color: "#FFD740" })))),
         screen === "god" && React.createElement(GuessOrDie, { players: players, onMenu: goMenu }),
+        screen === "faultfinder" && React.createElement("iframe", { src: "fault-finder/index.html?v=1", title: "Fault Finder: Night Shift", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#102a32" } }),
         screen === "pitstop" && React.createElement("div", { style: { minHeight: "100dvh", background: "#071916", position: "relative" } },
             React.createElement("iframe", { src: "pit-stop/index.html?v=1", title: "Pit Stop Sprint", style: { width: "100%", height: "100dvh", border: 0, display: "block", background: "#071916" } })),
         screen === "swatthat" && React.createElement("div", { style: { minHeight: "100dvh", background: "#85d9fb", position: "relative", zIndex: 99997 } },
@@ -4104,6 +4110,7 @@ try {
 })();
 </script>
 
+<style>body:has(iframe[title="Fault Finder: Night Shift"]) #bb-help-button,body:has(iframe[title="Fault Finder: Night Shift"]) #bb-home-button{display:none!important}</style>
 </body>
 </html>
 
